@@ -1,6 +1,6 @@
 # coding=utf-8
-from ia.models import Problem
-from ia.methods import breadth_first_tree_search
+from ai.models import Problem
+from ai.methods import breadth_first_tree_search
 
 class MissionersProblem(Problem):
     '''Missioners and cannibals problem.'''
