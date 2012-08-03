@@ -1,4 +1,4 @@
-simple-ia
+simple-ai
 =========
 
-simple ia utilities
+simple ai utilities
