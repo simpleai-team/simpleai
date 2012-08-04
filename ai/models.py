@@ -61,3 +61,6 @@ class SearchNode(object):
             node = node.parent
 
         return list(reversed(path))
+
+    def __hash__(self):
+        return hash(self.state)
