@@ -1,0 +1,37 @@
+strict graph {
+    # There must be always an initial state
+	7	 [initial=1];
+
+    # An at least one goal state
+    5	 [goal=1];
+
+    # But it's valid to have many goal states
+	2	 [goal=1];    
+
+    # edges with no explicit weight have weight 1
+	1 -- 0	 [weight=3];
+	3 -- 1;
+	4 -- 0;
+	4 -- 1	 [weight=2];
+	4 -- 3	 [weight=3];
+	5 -- 2	 [weight=2];
+	6 -- 2;
+	6 -- 5	 [weight=3];
+	6 -- 0	 [weight=3];
+	7 -- 4	 [weight=3];
+	7 -- 1;
+	7 -- 3	 [weight=2];
+	8 -- 4	 [weight=2];
+	8 -- 0	 [weight=1];
+	8 -- 6	 [weight=3];
+
+    # An artificial path to test hill-climbing
+    # Nodes with no explicit value have value 0
+    4    [value=2];
+    5    [value=5];
+    6    [value=4];
+    7    [value=1];
+    8    [value=3];
+
+}
+
