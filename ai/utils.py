@@ -1,12 +1,7 @@
 # coding=utf-8
+
 import heapq
-
-
-class FifoList(list):
-    '''List that pops from the begining.'''
-
-    def pop(self, index=0):
-        return super(FifoList, self).pop(index)
+import bisect  # FIXME: unused?
 
 
 class AddOnceList(list):
@@ -28,13 +23,49 @@ class AddOnceList(list):
         super(AddOnceList, self).extend(new_elements)
 
 
-class AddOnceFifoList(FifoList, AddOnceList):
-    '''Combines a FifoList with a AddOnceList.'''
-    pass
+class Fringe(object):
+    '''Basic fringe of nodes (lifo).'''
+    def __init__(self, avoid_repeated=False):
+        if avoid_repeated:
+            self.nodes = AddOnceList()
+        else:
+            self.nodes = []
+
+    def add(self, node):
+        self.nodes.append(node)
+
+    def pop(self):
+        return self.nodes.pop()
+
+    def __len__(self):
+        return len(self.nodes)
+
+
+class FifoFringe(Fringe):
+    '''Fringe that pops from the begining.'''
+    def pop(self):
+        return self.nodes.pop(0)
+
+
+class SortedFringe(FifoFringe):
+    '''Fringe that pops the element based on a value function
+       (less value pops first).
+    '''
+    def __init__(self, sorting_function):
+        super(SortedFringe, self).__init__()
+        self.sorting_function = sorting_function
+
+    def add(self, node):
+        node.sorted_fringe_value = self.sorting_function(node)
+        for i, n in enumerate(self.nodes):
+            if node.sorted_fringe_value < n.sorted_fringe_value:
+                self.nodes.insert(i, node)
+                return
+        self.nodes.append(node)
 
 
 class BoundedPriorityQueue(list):
-    def __init__(self, limit, *args):
+    def __init__(self, limit=None, *args):
         self.limit = limit
         super(BoundedPriorityQueue, self).__init__(*args)
 
