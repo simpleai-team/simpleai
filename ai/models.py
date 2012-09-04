@@ -113,9 +113,11 @@ class SearchNodeValueOrdered(SearchNode):
 
 class SearchNodeHeuristicOrdered(SearchNode):
     def __lt__(self, other):
-        return self.problem.heuristic(self.state) < self.problem.heuristic(other.state)
+        return self.problem.heuristic(self.state) < \
+               self.problem.heuristic(other.state)
 
 
 class SearchNodeStarOrdered(SearchNode):
     def __lt__(self, other):
-        return self.problem.heuristic(self.state) + self.cost < self.problem.heuristic(other.state) + other.cost
+        return self.problem.heuristic(self.state) + self.cost < \
+               self.problem.heuristic(other.state) + other.cost

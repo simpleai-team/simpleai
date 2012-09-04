@@ -67,6 +67,11 @@ def beam_search_best_first(problem, beamsize=100):
 
 def beam_search_breadth_first(problem, beamsize=100):
     fringe = BoundedPriorityQueue(beamsize)
+    fringe.append(SearchNodeCostOrdered(state=problem.initial_state,
+                                        parent=None,
+                                        cost=0,
+                                        problem=problem,
+                                        depth=0))
     while fringe:
         successors = BoundedPriorityQueue(beamsize)
         for node in fringe:
@@ -76,7 +81,8 @@ def beam_search_breadth_first(problem, beamsize=100):
         fringe = successors
 
 
-def _search(problem, fringe, graph_search=False, depth_limit=None, node_factory=SearchNode):
+def _search(problem, fringe, graph_search=False, depth_limit=None,
+            node_factory=SearchNode):
     memory = set()
     fringe.append(node_factory(state=problem.initial_state,
                                parent=None,
@@ -91,8 +97,8 @@ def _search(problem, fringe, graph_search=False, depth_limit=None, node_factory=
         if depth_limit is None or node.depth < depth_limit:
             for n in node.expand():
                 if graph_search:
-                    if hash(n.state) not in memory:
-                        memory.add(hash(n.state))
+                    if n.state not in memory:
+                        memory.add(n.state)
                         fringe.append(n)
                 else:
                     fringe.append(n)
