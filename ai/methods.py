@@ -128,16 +128,20 @@ def _search(problem, fringe, graph_search=False, depth_limit=None,
         if problem.is_goal(node.state):
             return node
         if depth_limit is None or node.depth < depth_limit:
-            childs = node.expand()
-            if filter_nodes:
-                childs = filter_nodes(problem, node, childs)
-            for n in childs:
+            childs = []
+            for n in node.expand():
                 if graph_search:
                     if n.state not in memory:
                         memory.add(n.state)
-                        fringe.append(n)
+                        childs.append(n)
                 else:
-                    fringe.append(n)
+                    childs.append(n)
+
+            if filter_nodes:
+                childs = filter_nodes(problem, node, childs)
+
+            for n in childs:
+                fringe.append(n)
 
 
 # Math literally copied from aima-python
