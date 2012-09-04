@@ -1,6 +1,8 @@
 # coding=utf-8
 import unittest
-from ai.models import SearchNode
+from ai.models import (SearchNode, SearchNodeCostOrdered,
+                       SearchNodeValueOrdered, SearchNodeHeuristicOrdered,
+                       SearchNodeStarOrdered)
 
 
 class DummyProblem(object):
@@ -15,6 +17,12 @@ class DummyProblem(object):
 
     def cost(self, state1, action, state2):
         return 1
+
+    def value(self, state):
+        return len(state)
+
+    def heuristic(self, state):
+        return len(state)
 
 
 class TestSearchNode(unittest.TestCase):
@@ -57,3 +65,37 @@ class TestSearchNode(unittest.TestCase):
         self.assertTrue(n1 == n2)
         self.assertTrue(n1 == n3)
         self.assertFalse(n1 == n4)
+
+
+class TestSortedSearchNode(unittest.TestCase):
+    def setUp(self):
+        self.problem = DummyProblem()
+
+    def test_search_node_cost_sorted(self):
+        n1 = SearchNodeCostOrdered(problem=self.problem, state='i', cost=1)
+        n2 = SearchNodeCostOrdered(problem=self.problem, state='i', cost=2)
+
+        self.assertTrue(n1 < n2)
+        self.assertFalse(n2 < n1)
+
+    def test_search_node_value_sorted(self):
+        n1 = SearchNodeValueOrdered(problem=self.problem, state='i')
+        n2 = SearchNodeValueOrdered(problem=self.problem, state='ia1')
+
+        self.assertTrue(n1 < n2)
+        self.assertFalse(n2 < n1)
+
+    def test_search_node_heuristic_sorted(self):
+        n1 = SearchNodeHeuristicOrdered(problem=self.problem, state='i')
+        n2 = SearchNodeHeuristicOrdered(problem=self.problem, state='ia1')
+
+        self.assertTrue(n1 < n2)
+        self.assertFalse(n2 < n1)
+
+    def test_search_node_star_sorted(self):
+        n1 = SearchNodeStarOrdered(problem=self.problem, state='i', cost=1)
+        n2 = SearchNodeStarOrdered(problem=self.problem, state='ia1', cost=2)
+
+        self.assertTrue(n1 < n2)
+        self.assertFalse(n2 < n1)
+
