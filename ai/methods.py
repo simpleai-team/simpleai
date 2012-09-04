@@ -1,7 +1,8 @@
 # coding=utf-8
-from utils import FifoList, BoundedPriorityQueue, get_max_random_tie
+from utils import FifoList, BoundedPriorityQueue
 from models import (SearchNode, SearchNodeHeuristicOrdered,
-                    SearchNodeStarOrdered, SearchNodeCostOrdered)
+                    SearchNodeStarOrdered, SearchNodeCostOrdered,
+                    SearchNodeValueOrdered)
 import copy
 import math
 import random
@@ -54,21 +55,56 @@ def astar_search(problem, graph_search=False):
                    node_factory=SearchNodeStarOrdered)
 
 
-def beam_search_best_first(problem, beamsize=100):
-    return _search(problem, BoundedPriorityQueue(beamsize))
+def beam_search(problem, beam_size=100, graph_search=False, node_filter=None):
+    return _search(problem,
+                   BoundedPriorityQueue(beam_size),
+                   node_factory=SearchNodeValueOrdered,
+                   local_search=True)
 
 
-def beam_search_breadth_first(problem, beamsize=100):
-    fringe = BoundedPriorityQueue(beamsize)
-    fringe.append(SearchNodeCostOrdered(state=problem.initial_state,
-                                        problem=problem))
-    while fringe:
-        successors = BoundedPriorityQueue(beamsize)
-        for node in fringe:
-            if problem.is_goal(node.state):
-                return node
-            successors.extend(node.expand())
-        fringe = successors
+def hill_climbing(problem, graph_search=False, node_filter=None):
+    return beam_search(problem,
+                       beam_size=1,
+                       graph_search=graph_search,
+                       node_filter=node_filter)
+
+
+def _filter_random_uphill_neighbor(problem, node, childs):
+    neighbor = None
+    is_uphill = lambda x: problem.value(x.state) > problem.value(node.state)
+    uphill = filter(is_uphill, childs)
+    if uphill:
+        random.shuffle(uphill)
+        neighbor = uphill[0]
+    return [neighbor, ]
+
+
+def hill_climbing_stochastic(problem, graph_search=False):
+    '''Stochastic hill climbing, where a random neighbor is chosen among
+       those that have a better value'''
+    return hill_climbing(problem,
+                         graph_search=graph_search,
+                         node_filter=_filter_random_uphill_neighbor)
+
+
+def _filter_first_choice_random(problem, node, childs):
+    neighbor = None
+    eligible = copy.copy(childs)
+    current_value = problem.value(node.state)
+    while eligible:
+        candidate = eligible.pop()
+        if problem.value(candidate.state) > current_value:
+            neighbor = candidate
+            break
+    return neighbor
+
+
+def hill_climbing_first_choice(problem, graph_search=False):
+    '''First-choice hill climbing, where neighbors are randomly taken and the
+       first with a better value is chosen'''
+    return hill_climbing(problem,
+                         graph_search=graph_search,
+                         node_filter=_filter_first_choice_random)
 
 
 # Quite literally copied from aima
@@ -102,7 +138,7 @@ def _iterative_limited_search(problem, search_method, graph_search=False):
 
 
 def _search(problem, fringe, graph_search=False, depth_limit=None,
-            node_factory=SearchNode, local_search=False):
+            node_factory=SearchNode, local_search=False, node_filter=None):
     memory = set()
     fringe.append(node_factory(state=problem.initial_state,
                                problem=problem))
@@ -112,13 +148,20 @@ def _search(problem, fringe, graph_search=False, depth_limit=None,
         if problem.is_goal(node.state):
             return node
         if depth_limit is None or node.depth < depth_limit:
+            childs = []
             for n in node.expand():
                 if graph_search:
                     if n.state not in memory:
                         memory.add(n.state)
-                        fringe.append(n)
+                        childs.append(n)
                 else:
-                    fringe.append(n)
+                    childs.append(n)
+
+            if node_filter:
+                childs = node_filter(problem, node, childs)
+
+            for n in childs:
+                fringe.append(n)
 
 
 # Math literally copied from aima-python
@@ -129,66 +172,3 @@ def _exp_schedule(k=20, lam=0.005, limit=100):
             return k * math.exp(-lam * t)
         return 0
     return f
-
-
-def _get_best_neighbor(problem, neighbors, current):
-    neighbor = None
-    candidate = get_max_random_tie(neighbors, lambda x: problem.value(x.state))
-    if problem.value(candidate.state) <= problem.value(current.state):
-        neighbor = candidate
-    return neighbor
-
-
-def hill_climbing_basic(problem):
-    '''Basic hill climbing, where the best neighbor is chosen.'''
-    return _hill_climbing(problem, _get_best_uphill_neighbor)
-
-
-def _get_random_uphill_neighbor(problem, neighbors, current):
-    neighbor = None
-    is_uphill = lambda x: problem.value(x.state) > problem.value(current.state)
-    uphill = filter(is_uphill, neighbors)
-    if uphill:
-        random.shuffle(uphill)
-        neighbor = uphill[0]
-    return neighbor
-
-
-def hill_climbing_stochastic(problem):
-    '''Stochastic hill climbing, where a random neighbor is chosen among
-       those that have a better value'''
-    return _hill_climbing(problem, _get_random_uphill_neighbor)
-
-
-def _get_first_choice_random(problem, neighbors, current):
-    neighbor = None
-    eligible = copy.copy(neighbors)
-    current_value = problem.value(current.state)
-    while eligible:
-        candidate = eligible.pop()
-        if problem.value(candidate.state) > current_value:
-            neighbor = candidate
-            break
-    return neighbor
-
-
-def hill_climbing_first_choice(problem):
-    '''First-choice hill climbing, where neighbors are randomly taken and the
-       first with a better value is chosen'''
-    return _hill_climbing(problem, _get_first_choice_random)
-
-
-def _hill_climbing(problem, select_function):
-    '''Generic hill climbing search, takes a ``select_function`` that returns
-       the chosen neighbor, or None is there is not neighbor that meets the
-       requirements.'''
-    current = SearchNode(state=problem.initial_state, problem=problem)
-    while True:
-        neighbors = current.expand()
-        if not neighbors:
-            break
-        neighbor = select_function(problem, neighbors, current)
-        if neighbor is None:
-            break
-        current = neighbor
-    return current
