@@ -74,7 +74,7 @@ class SearchNode(object):
             new_nodes.append(SearchNode(state=new_state,
                                         parent=self,
                                         action=action,
-                                        cost=cost,
+                                        cost=self.cost + cost,
                                         problem=self.problem,
                                         depth=self.depth + 1))
         return new_nodes

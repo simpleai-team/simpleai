@@ -1,30 +1,30 @@
 # coding=utf-8
-from utils import FifoList, AddOnceList, AddOnceFifoList
+from utils import Fringe, FifoFringe, SortedFringe
 from models import SearchNode
 
 
 def breadth_first_tree_search(problem):
-    return _tree_search(problem, FifoList())
-
-
-def depth_first_tree_search(problem):
-    return _tree_search(problem, [])
+    return _search(problem, FifoFringe())
 
 
 def breadth_first_graph_search(problem):
-    return _tree_search(problem, AddOnceFifoList())
+    return _search(problem, FifoFringe(avoid_repeated=True))
+
+
+def depth_first_tree_search(problem):
+    return _search(problem, Fringe())
 
 
 def depth_first_graph_search(problem):
-    return _tree_search(problem, AddOnceList())
+    return _search(problem, Fringe(avoid_repeated=True))
 
 
 def limited_depth_first_tree_search(problem, depth_limit):
-    return _tree_search(problem, [], depth_limit=depth_limit)
+    return _search(problem, Fringe(), depth_limit=depth_limit)
 
 
 def limited_depth_first_graph_search(problem, depth_limit):
-    return _tree_search(problem, AddOnceList(), depth_limit=depth_limit)
+    return _search(problem, Fringe(avoid_repeated=True), depth_limit=depth_limit)
 
 
 def iterative_limited_depth_first_tree_search(problem):
@@ -33,6 +33,10 @@ def iterative_limited_depth_first_tree_search(problem):
 
 def iterative_limited_depth_first_graph_search(problem):
     return _iterative_limited_search(problem, limited_depth_first_graph_search)
+
+
+def uniform_cost_tree_search(problem):
+    return _search(problem, SortedFringe(sorting_function=lambda n: n.cost))
 
 
 def _iterative_limited_search(problem, search_method):
@@ -46,16 +50,16 @@ def _iterative_limited_search(problem, search_method):
     return solution
 
 
-def _tree_search(problem, fringe, depth_limit=None):
-    fringe.append(SearchNode(state=problem.initial_state,
-                             parent=None,
-                             cost=0,
-                             problem=problem,
-                             depth=0))
+def _search(problem, fringe, depth_limit=None):
+    fringe.add(SearchNode(state=problem.initial_state,
+                          parent=None,
+                          cost=0,
+                          problem=problem,
+                          depth=0))
     while fringe:
         node = fringe.pop()
         if problem.is_goal(node.state):
             return node
         if depth_limit is None or node.depth < depth_limit:
-            fringe.extend(node.expand())
+            map(fringe.add, node.expand())
     return None
