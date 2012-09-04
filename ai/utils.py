@@ -26,6 +26,7 @@ class AddOnceList(list):
                         if hash(x) not in self.memory]
         super(AddOnceList, self).extend(new_elements)
 
+
 class AddOnceFifoList(FifoList, AddOnceList):
     '''Combines a FifoList with a AddOnceList.'''
     pass
