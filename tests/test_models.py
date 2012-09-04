@@ -47,3 +47,13 @@ class TestSearchNode(unittest.TestCase):
         path = [(None, 'i'), ('a1', 'ia1'), ('a2', 'ia1a2')]
 
         self.assertEquals(n3.path(), path)
+
+    def test_equals(self):
+        n1 = SearchNode(problem=self.problem, state='i', parent=None)
+        n2 = SearchNode(problem=self.problem, state='i', parent=None)
+        n3 = SearchNode(problem=self.problem, state='i', action='a1', parent=None)
+        n4 = SearchNode(problem=self.problem, state='ia1', parent=None)
+
+        self.assertTrue(n1 == n2)
+        self.assertTrue(n1 == n3)
+        self.assertFalse(n1 == n4)
