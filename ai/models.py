@@ -97,11 +97,13 @@ class SearchNode(object):
     def __eq__(self, other):
         return isinstance(other, SearchNode) and self.state == other.state
 
-    def __lt__(self, other):
-        return self.cost < other.cost
-
     def __hash__(self):
         return hash(self.state)
+
+
+class SearchNodeCostOrdered(SearchNode):
+    def __lt__(self, other):
+        return self.cost < other.cost
 
 
 class SearchNodeValueOrdered(SearchNode):

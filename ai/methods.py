@@ -1,6 +1,7 @@
 # coding=utf-8
 from utils import FifoList, BoundedPriorityQueue
-from models import SearchNode, SearchNodeHeuristicOrdered, SearchNodeStarOrdered
+from models import (SearchNode, SearchNodeHeuristicOrdered,
+                    SearchNodeStarOrdered, SearchNodeCostOrdered)
 
 
 def breadth_first_search(problem, graph_search=False):
@@ -31,7 +32,8 @@ def iterative_limited_depth_first_search(problem, graph_search=False):
 def uniform_cost_search(problem, graph_search=False):
     return _search(problem,
                    BoundedPriorityQueue(),
-                   graph_search=graph_search)
+                   graph_search=graph_search,
+                   node_factory=SearchNodeCostOrdered)
 
 
 def greedy_search(problem, graph_search=False):
