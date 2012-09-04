@@ -55,17 +55,36 @@ def astar_search(problem, graph_search=False):
                    node_factory=SearchNodeStarOrdered)
 
 
-def beam_search(problem, beam_size=100, graph_search=False):
+def beam_search(problem, beam_size=100, graph_search=False, filter_nodes=None):
     return _search(problem,
                    BoundedPriorityQueue(beam_size),
                    node_factory=SearchNodeValueOrdered,
                    local_search=True)
 
 
-def hill_climbing(problem, graph_search=False):
+def hill_climbing(problem, graph_search=False, filter_nodes=None):
     return beam_search(problem,
                        beam_size=1,
-                       graph_search=graph_search)
+                       graph_search=graph_search,
+                       filter_nodes=filter_nodes)
+
+
+def _filter_random_uphill_neighbor(problem, node, childs):
+    neighbor = None
+    is_uphill = lambda x: problem.value(x.state) > problem.value(node.state)
+    uphill = filter(is_uphill, childs)
+    if uphill:
+        random.shuffle(uphill)
+        neighbor = uphill[0]
+    return [neighbor, ]
+
+
+def hill_climbing_stochastic(problem, graph_search=False):
+    '''Stochastic hill climbing, where a random neighbor is chosen among
+       those that have a better value'''
+    return hill_climbing(problem,
+                         graph_search=graph_search,
+                         filter_nodes=_filter_random_uphill_neighbor)
 
 
 # Quite literally copied from aima
@@ -99,7 +118,7 @@ def _iterative_limited_search(problem, search_method, graph_search=False):
 
 
 def _search(problem, fringe, graph_search=False, depth_limit=None,
-            node_factory=SearchNode, local_search=False):
+            node_factory=SearchNode, local_search=False, filter_nodes=None):
     memory = set()
     fringe.append(node_factory(state=problem.initial_state,
                                problem=problem))
@@ -109,7 +128,10 @@ def _search(problem, fringe, graph_search=False, depth_limit=None,
         if problem.is_goal(node.state):
             return node
         if depth_limit is None or node.depth < depth_limit:
-            for n in node.expand():
+            childs = node.expand()
+            if filter_nodes:
+                childs = filter_nodes(problem, node, childs)
+            for n in childs:
                 if graph_search:
                     if n.state not in memory:
                         memory.add(n.state)
@@ -127,21 +149,6 @@ def _exp_schedule(k=20, lam=0.005, limit=100):
         return 0
     return f
 
-
-def _get_random_uphill_neighbor(problem, neighbors, current):
-    neighbor = None
-    is_uphill = lambda x: problem.value(x.state) > problem.value(current.state)
-    uphill = filter(is_uphill, neighbors)
-    if uphill:
-        random.shuffle(uphill)
-        neighbor = uphill[0]
-    return neighbor
-
-
-def hill_climbing_stochastic(problem):
-    '''Stochastic hill climbing, where a random neighbor is chosen among
-       those that have a better value'''
-    return _hill_climbing(problem, _get_random_uphill_neighbor)
 
 
 def _get_first_choice_random(problem, neighbors, current):
