@@ -2,26 +2,53 @@
 
 
 class Problem(object):
-    '''Logic of a problem.'''
+    '''Abstract base class to represent and manipulate the search space of a
+       problem.
+       In this class, the search space is meant to be represented implicitly as
+       a graph.
+       Each state corresponds with a problem state (ie, a valid configuration)
+       and each problem action (ie, a valid transformation to a configuracion)
+       corresponds with an edge.
+
+       To use this class with a problem seen as a graph search you should at
+       least implement: `actions`, `result` and `is_goal`.
+       Optionally, it might be useful to also implement `cost`.
+
+       To use this class with a problem seen as an optimization over target
+       function you should at least implement: `actions`, `result` and `value`.
+       '''
 
     def __init__(self, initial_state):
         self.initial_state = initial_state
 
     def actions(self, state):
-        '''Returns the list of actions available from a state.'''
-        return []
+        '''Returns the actions available to perform from `state`.
+           The returned value is an iterable over actions.
+           Actions are problem-specific and no assumption should be made about
+           them.
+        '''
+        raise NotImplementedError
 
     def result(self, state, action):
-        '''Returns the resulting state of applying an action to a state.'''
-        return None
+        '''Returns the resulting state of applying `action` to `state`.'''
+        raise NotImplementedError
 
     def cost(self, state, action, state2):
-        '''Returns the cost of applying an action from state to state2.'''
+        '''Returns the cost of applying `action` from `state` to `state2`.
+           The returned value is a number (integer or floating point).
+           By default this function returns `1`.
+        '''
         return 1
 
     def is_goal(self, state):
-        '''Checks if a state is goal.'''
-        return False
+        '''Returns `True` if `state` is a goal state and `False` otherwise'''
+        raise NotImplementedError
+
+    def value(self, state):
+        '''Returns the value of `state` as it is needed by optimization
+           problems.
+           Value is a number (integer or floating point).'''
+        raise NotImplementedError
 
 
 class SearchNode(object):
