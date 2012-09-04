@@ -27,12 +27,14 @@ class Problem(object):
 class SearchNode(object):
     '''Node of a search process.'''
 
-    def __init__(self, state, parent=None, action=None, cost=0, problem=None):
+    def __init__(self, state, parent=None, action=None, cost=0, problem=None,
+                 depth=0):
         self.state = state
         self.parent = parent
         self.action = action
         self.cost = cost
         self.problem = problem or parent.problem
+        self.depth = 0
 
     def expand(self):
         '''Create successors.'''
@@ -45,7 +47,8 @@ class SearchNode(object):
             new_nodes.append(SearchNode(state=new_state,
                                         parent=self,
                                         cost=cost,
-                                        problem=self.problem))
+                                        problem=self.problem,
+                                        depth=self.depth + 1))
         return new_nodes
 
     def has_goal_state(self):
