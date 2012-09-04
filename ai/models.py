@@ -50,6 +50,11 @@ class Problem(object):
            Value is a number (integer or floating point).'''
         raise NotImplementedError
 
+    def heuristic(self, state):
+        '''Returns an estimate of the cost remaining to reach the solution
+           from `state`.'''
+        return 0
+
 
 class SearchNode(object):
     '''Node of a search process.'''
