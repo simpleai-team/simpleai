@@ -86,4 +86,7 @@ result = breadth_first_search(problem)
 #result = hill_climbing_first_choice(problem)
 #result = hill_climbing_first_choice(problem, graph_search=True)
 
+#result = simulated_annealing(problem)
+#result = simulated_annealing(problem, graph_search=True)
+
 print result.path()
