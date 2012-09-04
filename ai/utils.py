@@ -1,5 +1,4 @@
 # coding=utf-8
-import bisect
 
 class AddOnceList(list):
     '''List which doesn't allow adding two times the same element,
