@@ -55,18 +55,18 @@ def astar_search(problem, graph_search=False):
                    node_factory=SearchNodeStarOrdered)
 
 
-def beam_search(problem, beam_size=100, graph_search=False, filter_nodes=None):
+def beam_search(problem, beam_size=100, graph_search=False, node_filter=None):
     return _search(problem,
                    BoundedPriorityQueue(beam_size),
                    node_factory=SearchNodeValueOrdered,
                    local_search=True)
 
 
-def hill_climbing(problem, graph_search=False, filter_nodes=None):
+def hill_climbing(problem, graph_search=False, node_filter=None):
     return beam_search(problem,
                        beam_size=1,
                        graph_search=graph_search,
-                       filter_nodes=filter_nodes)
+                       node_filter=node_filter)
 
 
 def _filter_random_uphill_neighbor(problem, node, childs):
@@ -84,7 +84,7 @@ def hill_climbing_stochastic(problem, graph_search=False):
        those that have a better value'''
     return hill_climbing(problem,
                          graph_search=graph_search,
-                         filter_nodes=_filter_random_uphill_neighbor)
+                         node_filter=_filter_random_uphill_neighbor)
 
 
 def _filter_first_choice_random(problem, node, childs):
@@ -104,7 +104,7 @@ def hill_climbing_first_choice(problem, graph_search=False):
        first with a better value is chosen'''
     return hill_climbing(problem,
                          graph_search=graph_search,
-                         filter_nodes=_filter_first_choice_random)
+                         node_filter=_filter_first_choice_random)
 
 
 # Quite literally copied from aima
@@ -138,7 +138,7 @@ def _iterative_limited_search(problem, search_method, graph_search=False):
 
 
 def _search(problem, fringe, graph_search=False, depth_limit=None,
-            node_factory=SearchNode, local_search=False, filter_nodes=None):
+            node_factory=SearchNode, local_search=False, node_filter=None):
     memory = set()
     fringe.append(node_factory(state=problem.initial_state,
                                problem=problem))
@@ -157,8 +157,8 @@ def _search(problem, fringe, graph_search=False, depth_limit=None,
                 else:
                     childs.append(n)
 
-            if filter_nodes:
-                childs = filter_nodes(problem, node, childs)
+            if node_filter:
+                childs = node_filter(problem, node, childs)
 
             for n in childs:
                 fringe.append(n)
