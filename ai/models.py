@@ -81,7 +81,6 @@ class SearchNode(object):
                                         parent=self,
                                         action=action,
                                         cost=self.cost + cost,
-                                        problem=self.problem,
                                         depth=self.depth + 1))
         return new_nodes
 

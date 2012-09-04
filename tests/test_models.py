@@ -29,10 +29,7 @@ class TestSearchNode(unittest.TestCase):
     def setUp(self):
         self.problem = DummyProblem()
         self.node = SearchNode(state='i',
-                               parent=None,
-                               cost=0,
-                               problem=self.problem,
-                               depth=0)
+                               problem=self.problem)
         self.childs = self.node.expand()
 
     def test_expand_creates_node_for_each_action(self):
@@ -48,19 +45,19 @@ class TestSearchNode(unittest.TestCase):
         self.assertEquals(child.depth, 1)
 
     def test_path(self):
-        n1 = SearchNode(problem=self.problem, state='i', parent=None)
-        n2 = SearchNode(problem=self.problem, action='a1', state='ia1', parent=n1)
-        n3 = SearchNode(problem=self.problem, action='a2', state='ia1a2', parent=n2)
+        n1 = SearchNode(problem=self.problem, state='i')
+        n2 = SearchNode(action='a1', state='ia1', parent=n1)
+        n3 = SearchNode(action='a2', state='ia1a2', parent=n2)
 
         path = [(None, 'i'), ('a1', 'ia1'), ('a2', 'ia1a2')]
 
         self.assertEquals(n3.path(), path)
 
     def test_equals(self):
-        n1 = SearchNode(problem=self.problem, state='i', parent=None)
-        n2 = SearchNode(problem=self.problem, state='i', parent=None)
-        n3 = SearchNode(problem=self.problem, state='i', action='a1', parent=None)
-        n4 = SearchNode(problem=self.problem, state='ia1', parent=None)
+        n1 = SearchNode(problem=self.problem, state='i')
+        n2 = SearchNode(problem=self.problem, state='i')
+        n3 = SearchNode(problem=self.problem, state='i', action='a1')
+        n4 = SearchNode(problem=self.problem, state='ia1')
 
         self.assertTrue(n1 == n2)
         self.assertTrue(n1 == n3)

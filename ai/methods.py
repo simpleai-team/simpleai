@@ -61,10 +61,7 @@ def beam_search_best_first(problem, beamsize=100):
 def beam_search_breadth_first(problem, beamsize=100):
     fringe = BoundedPriorityQueue(beamsize)
     fringe.append(SearchNodeCostOrdered(state=problem.initial_state,
-                                        parent=None,
-                                        cost=0,
-                                        problem=problem,
-                                        depth=0))
+                                        problem=problem))
     while fringe:
         successors = BoundedPriorityQueue(beamsize)
         for node in fringe:
@@ -79,10 +76,7 @@ def simulated_annealing(problem, schedule=None):
     if not schedule:
         schedule = _exp_schedule()
     current = SearchNode(problem.initial_state,
-                         parent=None,
-                         cost=0,
-                         problem=problem,
-                         depth=0)
+                         problem=problem)
     for t in count():
         T = schedule(t)
         if T == 0:
@@ -111,10 +105,7 @@ def _search(problem, fringe, graph_search=False, depth_limit=None,
             node_factory=SearchNode):
     memory = set()
     fringe.append(node_factory(state=problem.initial_state,
-                               parent=None,
-                               cost=0,
-                               problem=problem,
-                               depth=0))
+                               problem=problem))
 
     while fringe:
         node = fringe.pop()
