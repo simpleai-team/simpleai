@@ -24,6 +24,7 @@ class DummyNode(object):
     def __lt__(self, other):
         return self.value < other.value
 
+
 class TestBoundedPriorityQueue(unittest.TestCase):
     def test_append_works(self):
         q = BoundedPriorityQueue()
