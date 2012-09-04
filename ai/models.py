@@ -99,6 +99,6 @@ class SearchNode(object):
         return hash(self.state)
 
 
-class SearchNodeValueOrder(object):
+class SearchNodeValueOrder(SearchNode):
     def __lt__(self, other):
         return self.problem.value(self.state) < self.problem.value(other.state)
