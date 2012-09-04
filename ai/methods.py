@@ -39,6 +39,11 @@ def uniform_cost_tree_search(problem):
     return _search(problem, SortedFringe(sorting_function=lambda n: n.cost))
 
 
+def uniform_cost_graph_search(problem):
+    return _search(problem, SortedFringe(sorting_function=lambda n: n.cost, avoid_repeated=True))
+
+
+
 def _iterative_limited_search(problem, search_method):
     solution = None
     limit = 0
