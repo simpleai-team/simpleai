@@ -15,9 +15,8 @@ class BoundedPriorityQueue(list):
 
     def append(self, x):
         if len(self) == self.limit:
-            heapq.heappushpop(self, x)
-        else:
-            heapq.heappush(self, x)
+            self.remove(heapq.nlargest(1, self)[0])
+        heapq.heappush(self, x)
 
     def pop(self):
         return heapq.heappop(self)

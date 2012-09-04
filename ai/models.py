@@ -105,7 +105,7 @@ class SearchNodeCostOrdered(SearchNode):
 
 class SearchNodeValueOrdered(SearchNode):
     def __lt__(self, other):
-        return self.problem.value(self.state) < self.problem.value(other.state)
+        return -self.problem.value(self.state) < -self.problem.value(other.state)
 
 
 class SearchNodeHeuristicOrdered(SearchNode):
