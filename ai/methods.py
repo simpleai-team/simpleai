@@ -27,6 +27,25 @@ def limited_depth_first_graph_search(problem, depth_limit):
     return _tree_search(problem, AddOnceList(), depth_limit=depth_limit)
 
 
+def iterative_limited_depth_first_tree_search(problem):
+    return _iterative_limited_search(problem, limited_depth_first_tree_search)
+
+
+def iterative_limited_depth_first_graph_search(problem):
+    return _iterative_limited_search(problem, limited_depth_first_graph_search)
+
+
+def _iterative_limited_search(problem, search_method):
+    solution = None
+    limit = 0
+
+    while not solution:
+        solution = search_method(problem, limit)
+        limit += 1
+
+    return solution
+
+
 def _tree_search(problem, fringe, depth_limit=None):
     fringe.append(SearchNode(state=problem.initial_state,
                              parent=None,
