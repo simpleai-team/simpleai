@@ -87,6 +87,26 @@ def hill_climbing_stochastic(problem, graph_search=False):
                          filter_nodes=_filter_random_uphill_neighbor)
 
 
+def _filter_first_choice_random(problem, node, childs):
+    neighbor = None
+    eligible = copy.copy(childs)
+    current_value = problem.value(node.state)
+    while eligible:
+        candidate = eligible.pop()
+        if problem.value(candidate.state) > current_value:
+            neighbor = candidate
+            break
+    return neighbor
+
+
+def hill_climbing_first_choice(problem, graph_search=False):
+    '''First-choice hill climbing, where neighbors are randomly taken and the
+       first with a better value is chosen'''
+    return hill_climbing(problem,
+                         graph_search=graph_search,
+                         filter_nodes=_filter_first_choice_random)
+
+
 # Quite literally copied from aima
 def simulated_annealing(problem, schedule=None):
     if not schedule:
@@ -152,38 +172,3 @@ def _exp_schedule(k=20, lam=0.005, limit=100):
             return k * math.exp(-lam * t)
         return 0
     return f
-
-
-
-def _get_first_choice_random(problem, neighbors, current):
-    neighbor = None
-    eligible = copy.copy(neighbors)
-    current_value = problem.value(current.state)
-    while eligible:
-        candidate = eligible.pop()
-        if problem.value(candidate.state) > current_value:
-            neighbor = candidate
-            break
-    return neighbor
-
-
-def hill_climbing_first_choice(problem):
-    '''First-choice hill climbing, where neighbors are randomly taken and the
-       first with a better value is chosen'''
-    return _hill_climbing(problem, _get_first_choice_random)
-
-
-def _hill_climbing(problem, select_function):
-    '''Generic hill climbing search, takes a ``select_function`` that returns
-       the chosen neighbor, or None is there is not neighbor that meets the
-       requirements.'''
-    current = SearchNode(state=problem.initial_state, problem=problem)
-    while True:
-        neighbors = current.expand()
-        if not neighbors:
-            break
-        neighbor = select_function(problem, neighbors, current)
-        if neighbor is None:
-            break
-        current = neighbor
-    return current
