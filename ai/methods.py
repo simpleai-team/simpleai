@@ -3,7 +3,9 @@ from utils import FifoList, BoundedPriorityQueue, get_max_random_tie
 from models import (SearchNode, SearchNodeHeuristicOrdered,
                     SearchNodeStarOrdered, SearchNodeCostOrdered)
 import copy
+import math
 import random
+from itertools import count
 
 
 def breadth_first_search(problem, graph_search=False):
@@ -52,17 +54,6 @@ def astar_search(problem, graph_search=False):
                    node_factory=SearchNodeStarOrdered)
 
 
-def _iterative_limited_search(problem, search_method, graph_search=False):
-    solution = None
-    limit = 0
-
-    while not solution:
-        solution = search_method(problem, limit, graph_search)
-        limit += 1
-
-    return solution
-
-
 def beam_search_best_first(problem, beamsize=100):
     return _search(problem, BoundedPriorityQueue(beamsize))
 
@@ -81,6 +72,39 @@ def beam_search_breadth_first(problem, beamsize=100):
                 return node
             successors.extend(node.expand())
         fringe = successors
+
+
+# Quite literally copied from aima
+def simulated_annealing(problem, schedule=None):
+    if not schedule:
+        schedule = _exp_schedule()
+    current = SearchNode(problem.initial_state,
+                         parent=None,
+                         cost=0,
+                         problem=problem,
+                         depth=0)
+    for t in count():
+        T = schedule(t)
+        if T == 0:
+            return current
+        neighbors = current.expand()
+        if not neighbors:
+            return current
+        succ = random.choice(neighbors)
+        delta_e = problem.value(succ.state) - problem.value(current.state)
+        if delta_e > 0 or random.random() < math.exp(delta_e / T):
+            current = succ
+
+
+def _iterative_limited_search(problem, search_method, graph_search=False):
+    solution = None
+    limit = 0
+
+    while not solution:
+        solution = search_method(problem, limit, graph_search)
+        limit += 1
+
+    return solution
 
 
 def _search(problem, fringe, graph_search=False, depth_limit=None,
@@ -104,6 +128,16 @@ def _search(problem, fringe, graph_search=False, depth_limit=None,
                         fringe.append(n)
                 else:
                     fringe.append(n)
+
+
+# Math literally copied from aima-python
+def _exp_schedule(k=20, lam=0.005, limit=100):
+    "One possible schedule function for simulated annealing"
+    def f(t):
+        if t < limit:
+            return k * math.exp(-lam * t)
+        return 0
+    return f
 
 
 def _get_best_neighbor(problem, neighbors, current):
