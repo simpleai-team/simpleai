@@ -30,3 +30,16 @@ class AddOnceList(list):
 class AddOnceFifoList(FifoList, AddOnceList):
     '''Combines a FifoList with a AddOnceList.'''
     pass
+
+
+class CostSortedList(list):
+    '''List that pops the element with less cost.'''
+    def pop(self):
+        if self:
+            cheapest, position = self[0], 0
+            for i, n in enumerate(self):
+                if n.cost < cheapest.cost:
+                    cheapest, position = n, i
+            return super(CostSortedList, self).pop(position)
+        else:
+            raise IndexError('pop from empty list')
