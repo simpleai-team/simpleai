@@ -1,5 +1,5 @@
 # coding=utf-8
-from utils import FifoList, BoundedPriorityQueue, get_max_random_tie
+from utils import FifoList, BoundedPriorityQueue
 from models import (SearchNode, SearchNodeHeuristicOrdered,
                     SearchNodeStarOrdered, SearchNodeCostOrdered,
                     SearchNodeValueOrdered)
