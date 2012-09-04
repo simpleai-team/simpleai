@@ -1,4 +1,6 @@
 # coding=utf-8
+import heapq
+
 
 class AddOnceList(list):
     '''List which doesn't allow adding two times the same element,
@@ -44,7 +46,8 @@ class FifoFringe(Fringe):
 
 
 class SortedFringe(FifoFringe):
-    '''Fringe that pops the element based on a value function (less value pops first).'''
+    '''Fringe that pops the element based on a value function
+       (less value pops first).'''
     def __init__(self, sorting_function, avoid_repeated=False):
         super(SortedFringe, self).__init__(avoid_repeated)
         self.sorting_function = sorting_function
@@ -57,3 +60,21 @@ class SortedFringe(FifoFringe):
                 return
         self.nodes.append(node)
 
+
+class BoundedPriorityQueue(list):
+    def __init__(self, limit=None, *args):
+        self.limit = limit
+        super(BoundedPriorityQueue, self).__init__(*args)
+
+    def append(self, x):
+        if len(self) == self.limit:
+            heapq.heappushpop(self, x)
+        else:
+            heapq.heappush(self, x)
+
+    def pop(self, x):
+        return heapq.heappop(self, x)
+
+    def extend(self, iterable):
+        for x in iterable:
+            self.append(x)

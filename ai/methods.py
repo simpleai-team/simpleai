@@ -1,5 +1,5 @@
 # coding=utf-8
-from utils import Fringe, FifoFringe, SortedFringe
+from utils import Fringe, FifoFringe, SortedFringe, BoundedPriorityQueue
 from models import SearchNode
 
 
@@ -24,7 +24,8 @@ def limited_depth_first_tree_search(problem, depth_limit):
 
 
 def limited_depth_first_graph_search(problem, depth_limit):
-    return _search(problem, Fringe(avoid_repeated=True), depth_limit=depth_limit)
+    return _search(problem, Fringe(avoid_repeated=True),
+                   depth_limit=depth_limit)
 
 
 def iterative_limited_depth_first_tree_search(problem):
@@ -50,6 +51,21 @@ def _iterative_limited_search(problem, search_method):
     return solution
 
 
+def beam_search_best_first(problem, beamsize=100):
+    return _search(problem, BoundedPriorityQueue(beamsize))
+
+
+def beam_search_breadth_first(problem, beamsize=100):
+    fringe = BoundedPriorityQueue(beamsize)
+    while fringe:
+        successors = BoundedPriorityQueue(beamsize)
+        for node in fringe:
+            if problem.is_goal(node.state):
+                return node
+            successors.extend(node.expand())
+        fringe = successors
+
+
 def _search(problem, fringe, depth_limit=None):
     fringe.add(SearchNode(state=problem.initial_state,
                           parent=None,
@@ -62,4 +78,3 @@ def _search(problem, fringe, depth_limit=None):
             return node
         if depth_limit is None or node.depth < depth_limit:
             map(fringe.add, node.expand())
-    return None

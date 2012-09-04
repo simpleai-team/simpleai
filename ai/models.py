@@ -71,7 +71,8 @@ class SearchNode(object):
             cost = self.problem.cost(self.state,
                                      action,
                                      new_state)
-            new_nodes.append(SearchNode(state=new_state,
+            nodefactory = self.__class__
+            new_nodes.append(nodefactory(state=new_state,
                                         parent=self,
                                         action=action,
                                         cost=self.cost + cost,
@@ -86,11 +87,18 @@ class SearchNode(object):
         while node:
             path.append((node.action, node.state))
             node = node.parent
-
         return list(reversed(path))
 
     def __eq__(self, other):
         return isinstance(other, SearchNode) and self.state == other.state
 
+    def __lt__(self, other):
+        return self.cost < other.cost
+
     def __hash__(self):
         return hash(self.state)
+
+
+class SearchNodeValueOrder(object):
+    def __lt__(self, other):
+        return self.problem.value(self.state) < self.problem.value(other.state)
