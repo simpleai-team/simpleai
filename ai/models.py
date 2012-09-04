@@ -75,10 +75,6 @@ class SearchNode(object):
                                         problem=self.problem))
         return new_nodes
 
-    def has_goal_state(self):
-        '''Check if the state is goal.'''
-        return self.problem.is_goal(self.state)
-
     def path(self):
         '''Path (list of nodes and actions) from root to this node.'''
         node = self
@@ -88,6 +84,9 @@ class SearchNode(object):
             node = node.parent
 
         return list(reversed(path))
+
+    def __eq__(self, other):
+        return isinstance(other, SearchNode) and self.state == other.state
 
     def __hash__(self):
         return hash(self.state)
