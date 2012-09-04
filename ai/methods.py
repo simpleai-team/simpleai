@@ -55,11 +55,17 @@ def astar_search(problem, graph_search=False):
                    node_factory=SearchNodeStarOrdered)
 
 
-def beam_search(problem, beamsize=100, graph_search=False):
+def beam_search(problem, beam_size=100, graph_search=False):
     return _search(problem,
-                   BoundedPriorityQueue(beamsize),
+                   BoundedPriorityQueue(beam_size),
                    node_factory=SearchNodeValueOrdered,
                    local_search=True)
+
+
+def hill_climbing(problem, graph_search=False):
+    return beam_search(problem,
+                       beam_size=1,
+                       graph_search=graph_search)
 
 
 # Quite literally copied from aima
@@ -120,19 +126,6 @@ def _exp_schedule(k=20, lam=0.005, limit=100):
             return k * math.exp(-lam * t)
         return 0
     return f
-
-
-def _get_best_neighbor(problem, neighbors, current):
-    neighbor = None
-    candidate = get_max_random_tie(neighbors, lambda x: problem.value(x.state))
-    if problem.value(candidate.state) <= problem.value(current.state):
-        neighbor = candidate
-    return neighbor
-
-
-def hill_climbing_basic(problem):
-    '''Basic hill climbing, where the best neighbor is chosen.'''
-    return _hill_climbing(problem, _get_best_uphill_neighbor)
 
 
 def _get_random_uphill_neighbor(problem, neighbors, current):
