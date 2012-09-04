@@ -3,64 +3,47 @@ from utils import Fringe, FifoFringe, SortedFringe
 from models import SearchNode
 
 
-def breadth_first_tree_search(problem):
-    return _search(problem, FifoFringe())
+def breadth_first_search(problem, graph_search=False):
+    return _search(problem,
+                   FifoFringe(avoid_repeated=graph_search))
 
 
-def breadth_first_graph_search(problem):
-    return _search(problem, FifoFringe(avoid_repeated=True))
+def depth_first_search(problem, graph_search=False):
+    return _search(problem,
+                   Fringe(avoid_repeated=graph_search))
 
 
-def depth_first_tree_search(problem):
-    return _search(problem, Fringe())
+def limited_depth_first_search(problem, depth_limit, graph_search=False):
+    return _search(problem,
+                   Fringe(avoid_repeated=graph_search),
+                   depth_limit=depth_limit)
 
 
-def depth_first_graph_search(problem):
-    return _search(problem, Fringe(avoid_repeated=True))
+def iterative_limited_depth_first_search(problem, graph_search=False):
+    return _iterative_limited_search(problem,
+                                     limited_depth_first_search,
+                                     graph_search=graph_search)
 
 
-def limited_depth_first_tree_search(problem, depth_limit):
-    return _search(problem, Fringe(), depth_limit=depth_limit)
+def uniform_cost_search(problem, graph_search=False):
+    return _search(problem,
+                   SortedFringe(sorting_function=lambda n: n.cost,
+                                avoid_repeated=graph_search))
 
 
-def limited_depth_first_graph_search(problem, depth_limit):
-    return _search(problem, Fringe(avoid_repeated=True), depth_limit=depth_limit)
-
-
-def iterative_limited_depth_first_tree_search(problem):
-    return _iterative_limited_search(problem, limited_depth_first_tree_search)
-
-
-def iterative_limited_depth_first_graph_search(problem):
-    return _iterative_limited_search(problem, limited_depth_first_graph_search)
-
-
-def uniform_cost_tree_search(problem):
-    return _search(problem, SortedFringe(sorting_function=lambda n: n.cost))
-
-
-def uniform_cost_graph_search(problem):
-    return _search(problem, SortedFringe(sorting_function=lambda n: n.cost,
-                                         avoid_repeated=True))
-
-
-def greedy_tree_search(problem):
+def greedy_search(problem, graph_search=False):
     sorting_function = lambda n: problem.heuristic(n.state)
-    return _search(problem, SortedFringe(sorting_function=sorting_function))
+    return _search(problem,
+                   SortedFringe(sorting_function=sorting_function,
+                                avoid_repeated=graph_search))
 
 
-def greedy_graph_search(problem):
-    sorting_function = lambda n: problem.heuristic(n.state)
-    return _search(problem, SortedFringe(sorting_function=sorting_function,
-                                         avoid_repeated=True))
-
-
-def _iterative_limited_search(problem, search_method):
+def _iterative_limited_search(problem, search_method, graph_search=False):
     solution = None
     limit = 0
 
     while not solution:
-        solution = search_method(problem, limit)
+        solution = search_method(problem, limit, graph_search)
         limit += 1
 
     return solution
