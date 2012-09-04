@@ -88,8 +88,9 @@ def run_algorithm(algorithm, filename):
                 edge = problem.G.get_edge(prev, state)
                 edge.attr["style"] = "solid"
             prev = state
-        return problem.G, goal.state, goal.cost, len(problem.seen)
-    return problem.G, None, None, len(problem.seen)
+        return problem.G, goal.state, goal.cost, problem.value(goal.state), \
+               len(problem.seen)
+    return problem.G, None, None, None, len(problem.seen)
 
 
 HTML_TEMPLATE = """
@@ -107,7 +108,8 @@ RUN_TEMPLATE = """
     <td>
       <b style="text-align: center"> {algorithm} </b> <br /> <br />
       Nodes expanded(or 'visited') = {visited}
-      <br /> Path cost = {cost} </td>
+      <br /> Path cost = {cost}
+      <br /> Final node value = {value} </td>
     {image_column}
 </tr>
 <tr>
@@ -129,7 +131,7 @@ def report(infile=None, algorithms=None, outfile="report.html",
     assert infile and algorithms
     rows = []
     for algorithm in algorithms:
-        G, goal, cost, visited = run_algorithm(algorithm, infile)
+        G, goal, cost, value, visited = run_algorithm(algorithm, infile)
         image = ""
         if with_images:
             out = tempfile.NamedTemporaryFile(delete=False)
@@ -139,7 +141,8 @@ def report(infile=None, algorithms=None, outfile="report.html",
             out.close()
             image = IMAGE_TEMPLATE.format(image=image)
         s = RUN_TEMPLATE.format(algorithm=algorithm.__name__,
-                                visited=visited, cost=cost, image_column=image)
+                                visited=visited, cost=cost, value=value,
+                                image_column=image, )
         rows.append(s)
     s = HTML_TEMPLATE.format(graph=infile, rows="".join(rows))
     open(outfile, "w").write(s)
