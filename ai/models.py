@@ -34,7 +34,7 @@ class SearchNode(object):
         self.action = action
         self.cost = cost
         self.problem = problem or parent.problem
-        self.depth = 0
+        self.depth = depth
 
     def expand(self):
         '''Create successors.'''
