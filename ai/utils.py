@@ -25,3 +25,21 @@ class BoundedPriorityQueue(list):
     def extend(self, iterable):
         for x in iterable:
             self.append(x)
+
+
+def get_max_random_tie(seq, fn):
+    '''Returns the element in seq with the highest value for fn,
+       breaks tie in random.
+    '''
+    best_score = fn(seq[0])
+    n = 0
+    for x in seq:
+        x_score = fn(x)
+        if x_score > best_score:
+            best, best_score = x, x_score
+            n = 1
+        elif x_score == best_score:
+            n += 1
+            if random.randrange(n) == 0:
+                best = x
+    return best
