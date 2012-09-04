@@ -1,7 +1,8 @@
 # coding=utf-8
-from utils import FifoList, BoundedPriorityQueue
+from utils import FifoList, BoundedPriorityQueue, get_max_random_tie
 from models import (SearchNode, SearchNodeHeuristicOrdered,
                     SearchNodeStarOrdered, SearchNodeCostOrdered)
+import copy
 import math
 import random
 from itertools import count
@@ -137,3 +138,66 @@ def _exp_schedule(k=20, lam=0.005, limit=100):
             return k * math.exp(-lam * t)
         return 0
     return f
+
+
+def _get_best_neighbor(problem, neighbors, current):
+    neighbor = None
+    candidate = get_max_random_tie(neighbors, lambda x: problem.value(x.state))
+    if problem.value(candidate.state) <= problem.value(current.state):
+        neighbor = candidate
+    return neighbor
+
+
+def hill_climbing_basic(problem):
+    '''Basic hill climbing, where the best neighbor is chosen.'''
+    return _hill_climbing(problem, _get_best_uphill_neighbor)
+
+
+def _get_random_uphill_neighbor(problem, neighbors, current):
+    neighbor = None
+    is_uphill = lambda x: problem.value(x.state) > problem.value(current.state)
+    uphill = filter(is_uphill, neighbors)
+    if uphill:
+        random.shuffle(uphill)
+        neighbor = uphill[0]
+    return neighbor
+
+
+def hill_climbing_stochastic(problem):
+    '''Stochastic hill climbing, where a random neighbor is chosen among
+       those that have a better value'''
+    return _hill_climbing(problem, _get_random_uphill_neighbor)
+
+
+def _get_first_choice_random(problem, neighbors, current):
+    neighbor = None
+    eligible = copy.copy(neighbors)
+    current_value = problem.value(current.state)
+    while eligible:
+        candidate = eligible.pop()
+        if problem.value(candidate.state) > current_value:
+            neighbor = candidate
+            break
+    return neighbor
+
+
+def hill_climbing_first_choice(problem):
+    '''First-choice hill climbing, where neighbors are randomly taken and the
+       first with a better value is chosen'''
+    return _hill_climbing(problem, _get_first_choice_random)
+
+
+def _hill_climbing(problem, select_function):
+    '''Generic hill climbing search, takes a ``select_function`` that returns
+       the chosen neighbor, or None is there is not neighbor that meets the
+       requirements.'''
+    current = SearchNode(state=problem.initial_state, problem=problem)
+    while True:
+        neighbors = current.expand()
+        if not neighbors:
+            break
+        neighbor = select_function(problem, neighbors, current)
+        if neighbor is None:
+            break
+        current = neighbor
+    return current
