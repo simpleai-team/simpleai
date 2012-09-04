@@ -54,7 +54,7 @@ def _tree_search(problem, fringe, depth_limit=None):
                              depth=0))
     while fringe:
         node = fringe.pop()
-        if node.has_goal_state():
+        if problem.is_goal(node.state):
             return node
         if depth_limit is None or node.depth < depth_limit:
             fringe.extend(node.expand())
