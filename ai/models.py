@@ -68,7 +68,7 @@ class SearchNode(object):
         self.problem = problem or parent.problem
         self.depth = depth
 
-    def expand(self):
+    def expand(self, preserve_tree=True):
         '''Create successors.'''
         new_nodes = []
         for action in self.problem.actions(self.state):
@@ -78,7 +78,8 @@ class SearchNode(object):
                                      new_state)
             nodefactory = self.__class__
             new_nodes.append(nodefactory(state=new_state,
-                                        parent=self,
+                                        parent=self if preserve_tree else None,
+                                        problem=self.problem,
                                         action=action,
                                         cost=self.cost + cost,
                                         depth=self.depth + 1))

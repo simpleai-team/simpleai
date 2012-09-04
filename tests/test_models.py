@@ -44,6 +44,10 @@ class TestSearchNode(unittest.TestCase):
         self.assertIs(child.problem, self.problem)
         self.assertEquals(child.depth, 1)
 
+    def test_successors_dont_have_parent_when_no_preserve_tree(self):
+        childs = self.node.expand(preserve_tree=False)
+        self.assertEquals(childs[0].parent, None)
+
     def test_path(self):
         n1 = SearchNode(problem=self.problem, state='i')
         n2 = SearchNode(action='a1', state='ia1', parent=n1)
