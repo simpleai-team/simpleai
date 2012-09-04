@@ -102,7 +102,7 @@ def _iterative_limited_search(problem, search_method, graph_search=False):
 
 
 def _search(problem, fringe, graph_search=False, depth_limit=None,
-            node_factory=SearchNode):
+            node_factory=SearchNode, local_search=False):
     memory = set()
     fringe.append(node_factory(state=problem.initial_state,
                                problem=problem))
