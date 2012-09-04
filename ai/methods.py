@@ -40,8 +40,19 @@ def uniform_cost_tree_search(problem):
 
 
 def uniform_cost_graph_search(problem):
-    return _search(problem, SortedFringe(sorting_function=lambda n: n.cost, avoid_repeated=True))
+    return _search(problem, SortedFringe(sorting_function=lambda n: n.cost,
+                                         avoid_repeated=True))
 
+
+def greedy_tree_search(problem):
+    sorting_function = lambda n: problem.heuristic(n.state)
+    return _search(problem, SortedFringe(sorting_function=sorting_function))
+
+
+def greedy_graph_search(problem):
+    sorting_function = lambda n: problem.heuristic(n.state)
+    return _search(problem, SortedFringe(sorting_function=sorting_function,
+                                         avoid_repeated=True))
 
 
 def _iterative_limited_search(problem, search_method):
