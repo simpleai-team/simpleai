@@ -1,7 +1,5 @@
 # coding=utf-8
-
 import heapq
-import bisect  # FIXME: unused?
 
 
 class AddOnceList(list):
@@ -49,10 +47,9 @@ class FifoFringe(Fringe):
 
 class SortedFringe(FifoFringe):
     '''Fringe that pops the element based on a value function
-       (less value pops first).
-    '''
-    def __init__(self, sorting_function):
-        super(SortedFringe, self).__init__()
+       (less value pops first).'''
+    def __init__(self, sorting_function, avoid_repeated=False):
+        super(SortedFringe, self).__init__(avoid_repeated)
         self.sorting_function = sorting_function
 
     def add(self, node):
