@@ -1,4 +1,5 @@
 # coding=utf-8
+import heapq
 
 
 class FifoList(list):
@@ -26,6 +27,26 @@ class AddOnceList(list):
                         if hash(x) not in self.memory]
         super(AddOnceList, self).extend(new_elements)
 
+
 class AddOnceFifoList(FifoList, AddOnceList):
     '''Combines a FifoList with a AddOnceList.'''
     pass
+
+
+class BoundedPriorityQueue(list):
+    def __init__(self, limit, *args):
+        self.limit = limit
+        super(BoundedPriorityQueue, self).__init__(*args)
+
+    def append(self, x):
+        if len(self) == self.limit:
+            heapq.heappushpop(self, x)
+        else:
+            heapq.heappush(self, x)
+
+    def pop(self, x):
+        return heapq.heappop(self, x)
+
+    def extend(self, iterable):
+        for x in iterable:
+            self.append(x)
