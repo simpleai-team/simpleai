@@ -1,7 +1,8 @@
 # coding=utf-8
 from utils import FifoList, BoundedPriorityQueue, get_max_random_tie
 from models import (SearchNode, SearchNodeHeuristicOrdered,
-                    SearchNodeStarOrdered, SearchNodeCostOrdered)
+                    SearchNodeStarOrdered, SearchNodeCostOrdered,
+                    SearchNodeValueOrdered)
 import copy
 import math
 import random
@@ -54,21 +55,11 @@ def astar_search(problem, graph_search=False):
                    node_factory=SearchNodeStarOrdered)
 
 
-def beam_search_best_first(problem, beamsize=100):
-    return _search(problem, BoundedPriorityQueue(beamsize))
-
-
-def beam_search_breadth_first(problem, beamsize=100):
-    fringe = BoundedPriorityQueue(beamsize)
-    fringe.append(SearchNodeCostOrdered(state=problem.initial_state,
-                                        problem=problem))
-    while fringe:
-        successors = BoundedPriorityQueue(beamsize)
-        for node in fringe:
-            if problem.is_goal(node.state):
-                return node
-            successors.extend(node.expand())
-        fringe = successors
+def beam_search(problem, beamsize=100, graph_search=False):
+    return _search(problem,
+                   BoundedPriorityQueue(beamsize),
+                   node_factory=SearchNodeValueOrdered,
+                   local_search=True)
 
 
 # Quite literally copied from aima
