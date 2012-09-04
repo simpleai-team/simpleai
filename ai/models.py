@@ -50,6 +50,11 @@ class Problem(object):
            Value is a number (integer or floating point).'''
         raise NotImplementedError
 
+    def heuristic(self, state):
+        '''Returns an estimate of the cost remaining to reach the solution
+           from `state`.'''
+        return 0
+
 
 class SearchNode(object):
     '''Node of a search process.'''
@@ -99,6 +104,18 @@ class SearchNode(object):
         return hash(self.state)
 
 
-class SearchNodeValueOrder(SearchNode):
+class SearchNodeValueOrdered(SearchNode):
     def __lt__(self, other):
         return self.problem.value(self.state) < self.problem.value(other.state)
+
+
+class SearchNodeHeuristicOrdered(SearchNode):
+    def __lt__(self, other):
+        return self.problem.heuristic(self.state) < \
+               self.problem.heuristic(other.state)
+
+
+class SearchNodeStarOrdered(SearchNode):
+    def __lt__(self, other):
+        return self.problem.heuristic(self.state) + self.cost < \
+               self.problem.heuristic(other.state) + other.cost
