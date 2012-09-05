@@ -1,12 +1,13 @@
 # coding=utf-8
 import unittest
 from tests.dummies import DummyProblem, GOAL
-from ai.methods import (breadth_first_search, depth_first_search,
-                        limited_depth_first_search,
-                        iterative_limited_depth_first_search,
-                        uniform_cost_search, greedy_search, astar_search,
-                        beam_search, hill_climbing, hill_climbing_stochastic,
-                        hill_climbing_first_choice, simulated_annealing)
+from simple_ai.methods import (breadth_first_search, depth_first_search,
+                               limited_depth_first_search,
+                               iterative_limited_depth_first_search,
+                               uniform_cost_search, greedy_search, astar_search,
+                               beam_search, hill_climbing,
+                               hill_climbing_stochastic,
+                               hill_climbing_first_choice, simulated_annealing)
 
 
 class TestSearch(unittest.TestCase):

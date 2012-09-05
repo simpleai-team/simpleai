@@ -37,8 +37,8 @@ state.
 
 
     # coding=utf-8
-    from ai.models import Problem
-    from ai.methods import *
+    from simple_ai.models import Problem
+    from simple_ai.methods import *
     import copy
     
     
