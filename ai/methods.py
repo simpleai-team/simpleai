@@ -62,6 +62,22 @@ def beam_search(problem, beam_size=100, graph_search=False, node_filter=None):
                    local_search=True)
 
 
+def beam_search_breadth_first(problem, beamsize=100):
+    fringe = BoundedPriorityQueue(beamsize)
+    fringe.append(SearchNodeCostOrdered(state=problem.initial_state,
+                                        parent=None,
+                                        cost=0,
+                                        problem=problem,
+                                        depth=0))
+    while fringe:
+        successors = BoundedPriorityQueue(beamsize)
+        for node in fringe:
+            if problem.is_goal(node.state):
+                return node
+            successors.extend(node.expand())
+        fringe = successors
+
+
 def hill_climbing(problem, graph_search=False, node_filter=None):
     return beam_search(problem,
                        beam_size=1,
