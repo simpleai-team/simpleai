@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-with open('README.md') as readme:
-    __doc__ = readme.read()
-
 from distutils.core import setup
 
 setup(
