@@ -13,7 +13,7 @@ GOAL = 'iabcabc'
 
 class DummyProblem(object):
     def actions(self, state):
-        return ['a', 'b', 'c']
+        return ['a', 'b', 'c'] if len(state) < len(GOAL) else []
 
     def result(self, state, action):
         return state + action
