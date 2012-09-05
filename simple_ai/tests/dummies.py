@@ -32,3 +32,17 @@ class DummyProblem(object):
 
     def cost(self, state1, action, state2):
         return 1
+
+
+class DummyGeneticProblem(object):
+    def value(self, state):
+        return 1
+
+    def crossover(self, state1, state2):
+        return state1 + 1
+
+    def mutate(self, state):
+        return None  # Mutants are like that
+
+    def generate_random_state(self):
+        return 4  # Please see http://xkcd.com/221/

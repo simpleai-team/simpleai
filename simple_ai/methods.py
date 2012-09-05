@@ -1,5 +1,5 @@
 # coding=utf-8
-from utils import FifoList, BoundedPriorityQueue
+from utils import FifoList, BoundedPriorityQueue, Inverse_transform_sampler
 from models import (SearchNode, SearchNodeHeuristicOrdered,
                     SearchNodeStarOrdered, SearchNodeCostOrdered,
                     SearchNodeValueOrdered)
@@ -68,7 +68,8 @@ def beam_search(problem, beam_size=100):
         fringe = successors
 
 
-def beam_search_best_first(problem, beam_size=100, graph_search=False, node_filter=None):
+def beam_search_best_first(problem, beam_size=100, graph_search=False,
+                           node_filter=None):
     return _search(problem,
                    BoundedPriorityQueue(beam_size),
                    node_factory=SearchNodeValueOrdered,
@@ -137,6 +138,26 @@ def simulated_annealing(problem, schedule=None):
         delta_e = problem.value(succ.state) - problem.value(current.state)
         if delta_e > 0 or random.random() < math.exp(delta_e / T):
             current = succ
+
+
+def genetic_search(problem, limit=1000, pmut=0.1, populationsize=100):
+    population = [problem.generate_random_state()
+                  for _ in xrange(populationsize)]
+    for _ in xrange(limit):
+        new = []
+        fitness = [problem.value(x) for x in population]
+        sampler = Inverse_transform_sampler(fitness, population)
+        for _ in population:
+            node1 = sampler.sample()
+            node2 = sampler.sample()
+            child = problem.crossover(node1, node2)
+            if random.random() < pmut:
+                # Noooouuu! she is... he is... *IT* is a mutant!
+                child = problem.mutate(child)
+            new.append(child)
+        population = new
+    best = max(population, key=lambda x: problem.value(x))
+    return SearchNode(state=best, problem=problem)
 
 
 def _iterative_limited_search(problem, search_method, graph_search=False):
