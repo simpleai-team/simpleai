@@ -7,10 +7,8 @@ import copy
 class EightPuzzleProblem(Problem):
     ''' 8 puzzle problem, a smaller version of the fifteen puzzle:
         http://en.wikipedia.org/wiki/Fifteen_puzzle
-       
         States are defined as a list of lists of integers, being 0 the
         empty tile.
-        
         Actions denote where the empty tile goes, meaning that another tile
         takes its place.
     '''
@@ -79,7 +77,8 @@ class EightPuzzleProblem(Problem):
         row_no = 0
         for row in state:
             for i in row:
-                total += abs(int((i-1)/3) - row_no) + abs((i-1)%3 - row.index(i))
+                total += abs(int((i - 1) / 3) - row_no) + \
+                    abs((i - 1) % 3 - row.index(i))
             row_no += 1
         return total
 
