@@ -18,7 +18,7 @@ class HelloProblem(Problem):
         return state == GOAL
 
     def heuristic(self, state):
-        # count wrong chars
+        # how far are we from the goal?
         wrong = sum([1 if state[i] != GOAL[i] else 0
                     for i in range(len(state))])
         missing = len(GOAL) - len(state)
