@@ -55,7 +55,20 @@ def astar_search(problem, graph_search=False):
                    node_factory=SearchNodeStarOrdered)
 
 
-def beam_search(problem, beam_size=100, graph_search=False, node_filter=None):
+def beam_search(problem, beam_size=100):
+    fringe = BoundedPriorityQueue(beam_size)
+    fringe.append(SearchNodeValueOrdered(state=problem.initial_state,
+                                         problem=problem))
+    while fringe:
+        successors = BoundedPriorityQueue(beam_size)
+        for node in fringe:
+            if problem.is_goal(node.state):
+                return node
+            successors.extend(node.expand())
+        fringe = successors
+
+
+def beam_search_best_first(problem, beam_size=100, graph_search=False, node_filter=None):
     return _search(problem,
                    BoundedPriorityQueue(beam_size),
                    node_factory=SearchNodeValueOrdered,
@@ -63,10 +76,10 @@ def beam_search(problem, beam_size=100, graph_search=False, node_filter=None):
 
 
 def hill_climbing(problem, graph_search=False, node_filter=None):
-    return beam_search(problem,
-                       beam_size=1,
-                       graph_search=graph_search,
-                       node_filter=node_filter)
+    return beam_search_best_first(problem,
+                                  beam_size=1,
+                                  graph_search=graph_search,
+                                  node_filter=node_filter)
 
 
 def _filter_random_uphill_neighbor(problem, node, childs):
