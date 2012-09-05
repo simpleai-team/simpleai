@@ -22,104 +22,42 @@ Examples
 
 Simple AI allows you to define problems and look for the solution with
 different strategies. Another samples are in the *samples* directory, but
-here is one.
+here is an easy one.
 
-The following problem defines the 8 Puzzle problem (a smaller version of the
-Fifteen puzzle: http://en.wikipedia.org/wiki/Fifteen_puzzle). States are
-defined as a list of lists of integers, representing the order of the tiles and
-0 being the empty tile. The actions are defined as where the empty tile should
-go with that action.
-
-After you have the result you can
-
-    print result.path()
-
-to get the sequence of actions that lead to the solution from the initial
-state.
+This problem tries to create the string "HELLO WORLD" using the A* algorithm:
 
 
-    # coding=utf-8
     from simpleai.models import Problem
-    from simpleai.methods import *
-    import copy
-    
-    
-    class EightPuzzleProblem(Problem):
-    
-        def __init__(self):
-            initial = [
-                [0, 2, 3],
-                [1, 8, 5],
-                [4, 7, 6]]
-            super(EightPuzzleProblem, self).__init__(initial_state=initial)
-    
-        def _get_empty_coordinates(self, state):
-            '''Returns the coordinates of the empty tile as dictionary'''
-            for row in state:
-                if 0 in row:
-                    break
-            return {'row': state.index(row), 'column': row.index(0)}
-    
-        def _switch_tiles(self, state, tile1, tile2):
-            '''Makes a copy of ``state`` and switches the ``tile1`` with
-               the ``tile2``'''
-            new_state = copy.deepcopy(state)
-            aux = new_state[tile2[0]][tile2[1]]
-            new_state[tile2[0]][tile2[1]] = new_state[tile1[0]][tile1[1]]
-            new_state[tile1[0]][tile1[1]] = aux
-            return new_state
-    
+    from simpleai.methods import astar_search
+
+    GOAL = 'HELLO WORLD'
+
+    class HelloProblem(Problem):
         def actions(self, state):
-            actions = []
-            coordinates = self._get_empty_coordinates(state)
-            if coordinates['row'] > 0:
-                actions.append('up')
-            if coordinates['row'] < 2:
-                actions.append('down')
-            if coordinates['column'] > 0:
-                actions.append('left')
-            if coordinates['column'] < 2:
-                actions.append('right')
-            return actions
-    
+            if len(state) < len(GOAL):
+                return [c for c in ' ABCDEFGHIJKLMNOPQRSTUVWXYZ']
+            else:
+                return []
+
         def result(self, state, action):
-            coordinates = self._get_empty_coordinates(state)
-            empty_tile = (coordinates['row'], coordinates['column'])
-            if action == 'up' and coordinates['row'] > 0:
-                tile2 = (coordinates['row'] - 1, coordinates['column'])
-            if action == 'down' and coordinates['row'] < 2:
-                tile2 = (coordinates['row'] + 1, coordinates['column'])
-            if action == 'left' and coordinates['column'] > 0:
-                tile2 = (coordinates['row'], coordinates['column'] - 1)
-            if action == 'right' and coordinates['column'] < 2:
-                tile2 = (coordinates['row'], coordinates['column'] + 1)
-            new_state = self._switch_tiles(state, empty_tile, tile2)
-            return new_state
-    
+            return state + action
+
         def is_goal(self, state):
-            ''' Check if the state is goal:
-                | 1 2 3 |
-                | 4 5 6 |
-                | 7 8   |
-            '''
-            return (state[0] == [1, 2, 3] and
-                    state[1] == [4, 5, 6] and state[2] == [7, 8, 0])
-    
+            return state == GOAL
+
         def heuristic(self, state):
-            total = 0
-            row_no = 0
-            for row in state:
-                for i in row:
-                    total += abs(int((i - 1) / 3) - row_no) + \
-                        abs((i - 1) % 3 - row.index(i))
-                row_no += 1
-            return total
-    
-    problem = EightPuzzleProblem()
-    
+            # how far are we from the goal?
+            wrong = sum([1 if state[i] != GOAL[i] else 0
+                        for i in range(len(state))])
+            missing = len(GOAL) - len(state)
+            return wrong + missing
+
+
+    problem = HelloProblem(initial_state='')
     result = astar_search(problem)
 
-
+    print result
+    print result.path()
 
 Authors
 =======
