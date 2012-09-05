@@ -1,6 +1,6 @@
 # coding=utf-8
 import unittest
-from tests.dummies import DummyProblem, GOAL
+from simple_ai.tests.dummies import DummyProblem, GOAL
 from simple_ai.methods import (breadth_first_search, depth_first_search,
                                limited_depth_first_search,
                                iterative_limited_depth_first_search,

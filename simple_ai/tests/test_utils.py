@@ -1,6 +1,6 @@
 # coding=utf-8
 import unittest
-from tests.dummies import DummyNode
+from simple_ai.tests.dummies import DummyNode
 from simple_ai.utils import FifoList, BoundedPriorityQueue
 
 
