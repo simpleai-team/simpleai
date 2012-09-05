@@ -99,11 +99,11 @@ class SearchNode(object):
                                      new_state)
             nodefactory = self.__class__
             new_nodes.append(nodefactory(state=new_state,
-                                        parent=None if local_search else self,
-                                        problem=self.problem,
-                                        action=action,
-                                        cost=self.cost + cost,
-                                        depth=self.depth + 1))
+                                         parent=None if local_search else self,
+                                         problem=self.problem,
+                                         action=action,
+                                         cost=self.cost + cost,
+                                         depth=self.depth + 1))
         return new_nodes
 
     def path(self):
