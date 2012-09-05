@@ -74,8 +74,8 @@ result = breadth_first_search(problem)
 #result = astar_search(problem)
 #result = astar_search(problem, graph_search=True)
 
-#result = beam_search(problem, beam_size=10)
-#result = beam_search(problem, beam_size=10, graph_search=True)
+#result = beam_search(problem, beam_size=5)
+#result = beam_search(problem, beam_size=5, graph_search=True)
 
 #result = hill_climbing(problem)
 #result = hill_climbing(problem, graph_search=True)
