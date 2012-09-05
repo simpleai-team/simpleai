@@ -27,7 +27,8 @@ class DummyProblem(object):
 
     def value(self, state):
         # correct actions
-        return sum(1 if state[i] == GOAL[i] else 0 for i in range(min(7, len(state)))) - 1
+        return sum(1 if state[i] == GOAL[i] else 0
+                   for i in range(min(len(GOAL), len(state)))) - 1
 
     def cost(self, state1, action, state2):
         return 1
