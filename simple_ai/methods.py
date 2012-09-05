@@ -1,12 +1,12 @@
 # coding=utf-8
-from utils import FifoList, BoundedPriorityQueue
+from utils import FifoList, BoundedPriorityQueue, Inverse_transform_sampler
 from models import (SearchNode, SearchNodeHeuristicOrdered,
                     SearchNodeStarOrdered, SearchNodeCostOrdered,
                     SearchNodeValueOrdered)
 import copy
 import math
 import random
-from itertools import count, izip
+from itertools import count
 
 
 def breadth_first_search(problem, graph_search=False):
@@ -68,7 +68,8 @@ def beam_search(problem, beam_size=100):
         fringe = successors
 
 
-def beam_search_best_first(problem, beam_size=100, graph_search=False, node_filter=None):
+def beam_search_best_first(problem, beam_size=100, graph_search=False,
+                           node_filter=None):
     return _search(problem,
                    BoundedPriorityQueue(beam_size),
                    node_factory=SearchNodeValueOrdered,
@@ -205,23 +206,3 @@ def _exp_schedule(k=20, lam=0.005, limit=100):
             return k * math.exp(-lam * t)
         return 0
     return f
-
-
-class Inverse_transform_sampler(object):
-    def __init__(self, weights, objects):
-        assert weights and objects and len(weights) == len(objects)
-        self.objects = objects
-        tot = float(sum(weights))
-        accumulated = 0
-        self.probs = []
-        for w, x in izip(weights, objects):
-            p = w / tot
-            accumulated += p
-            self.probs.append(accumulated)
-
-    def sample(self):
-        target = random.random()
-        i = 0
-        while i + 1 != len(self.probs) and target > self.probs[i]:
-            i += 1
-        return self.objects[i]
