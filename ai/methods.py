@@ -6,7 +6,7 @@ from models import (SearchNode, SearchNodeHeuristicOrdered,
 import copy
 import math
 import random
-from itertools import count
+from itertools import count, izip
 
 
 def breadth_first_search(problem, graph_search=False):
@@ -142,6 +142,26 @@ def simulated_annealing(problem, schedule=None):
             current = succ
 
 
+def genetic_search(problem, limit=1000, pmut=0.1, populationsize=100):
+    population = [problem.generate_random_state()
+                  for _ in xrange(populationsize)]
+    for _ in xrange(limit):
+        new = []
+        fitness = [problem.value(x) for x in population]
+        sampler = Inverse_transform_sampler(fitness, population)
+        for _ in population:
+            node1 = sampler.sample()
+            node2 = sampler.sample()
+            child = problem.crossover(node1, node2)
+            if random.random() < pmut:
+                # Noooouuu! she is... he is... *IT* is a mutant!
+                child = problem.mutate(child)
+            new.append(child)
+        population = new
+    best = max(population, key=lambda x: problem.value(x))
+    return SearchNode(state=best, problem=problem)
+
+
 def _iterative_limited_search(problem, search_method, graph_search=False):
     solution = None
     limit = 0
@@ -188,3 +208,23 @@ def _exp_schedule(k=20, lam=0.005, limit=100):
             return k * math.exp(-lam * t)
         return 0
     return f
+
+
+class Inverse_transform_sampler(object):
+    def __init__(self, weights, objects):
+        assert weights and objects and len(weights) == len(objects)
+        self.objects = objects
+        tot = float(sum(weights))
+        accumulated = 0
+        self.probs = []
+        for w, x in izip(weights, objects):
+            p = w / tot
+            accumulated += p
+            self.probs.append(accumulated)
+
+    def sample(self):
+        target = random.random()
+        i = 0
+        while i + 1 != len(self.probs) and target > self.probs[i]:
+            i += 1
+        return self.objects[i]

@@ -55,6 +55,27 @@ class Problem(object):
            from `state`.'''
         return 0
 
+    def crossover(self, state1, state2):
+        """
+        Crossover method for genetic search. It should return a new state that
+        is the 'mix' (somehow) of `state1` and `state2`.
+        """
+        raise NotImplementedError
+
+    def mutate(self, state):
+        """
+        Mutation method for genetic search. It should return a new state that
+        is a slight random variation of `state`.
+        """
+        raise NotImplementedError
+
+    def generate_random_state(self):
+        """
+        Generates a random state for genetic search. It's mainly used for the
+        seed states in the initilization of genetic search.
+        """
+        raise NotImplementedError
+
 
 class SearchNode(object):
     '''Node of a search process.'''
@@ -107,7 +128,8 @@ class SearchNodeValueOrdered(SearchNode):
     def __lt__(self, other):
         # value must work inverted, because heapq sorts 1-9
         # and we need 9-1 sorting
-        return -self.problem.value(self.state) < -self.problem.value(other.state)
+        return -self.problem.value(self.state) < \
+               -self.problem.value(other.state)
 
 
 class SearchNodeHeuristicOrdered(SearchNode):
