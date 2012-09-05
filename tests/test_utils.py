@@ -1,5 +1,6 @@
 # coding=utf-8
 import unittest
+from tests.dummies import DummyNode
 from ai.utils import FifoList, BoundedPriorityQueue
 
 
@@ -15,14 +16,6 @@ class TestFifoList(unittest.TestCase):
 
     def test_pop_with_index_works(self):
         self.assertEquals(self.f.pop(1), 2)
-
-
-class DummyNode(object):
-    def __init__(self, value):
-        self.value = value
-
-    def __lt__(self, other):
-        return self.value < other.value
 
 
 class TestBoundedPriorityQueue(unittest.TestCase):

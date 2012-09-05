@@ -96,7 +96,7 @@ def _filter_first_choice_random(problem, node, childs):
         if problem.value(candidate.state) > current_value:
             neighbor = candidate
             break
-    return neighbor
+    return [neighbor, ]
 
 
 def hill_climbing_first_choice(problem, graph_search=False):
