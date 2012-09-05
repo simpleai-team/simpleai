@@ -1,6 +1,8 @@
 Simple AI
 =========
 
+(Project home: http://github.com/fisadev/simpleai)
+
 This packages is based and inspired in aima-python:
 https://code.google.com/p/aima-python/
 
