@@ -14,7 +14,7 @@ setup(
     author = u'Juan Pedro Fisanotti',
     author_email = 'fisadev@gmail.com',
     url='',
-    packages=['simepl_ai'],
+    packages=['simeple_ai'],
     classifiers = [
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
