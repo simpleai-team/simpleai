@@ -64,8 +64,8 @@ class TestOrderedSearchNodeClasses(unittest.TestCase):
         n1 = SearchNodeValueOrdered(problem=self.problem, state='i')
         n2 = SearchNodeValueOrdered(problem=self.problem, state='ia1')
 
-        self.assertTrue(n1 < n2)
-        self.assertFalse(n2 < n1)
+        self.assertFalse(n1 < n2)
+        self.assertTrue(n2 < n1)
 
     def test_search_node_heuristic_sorted(self):
         n1 = SearchNodeHeuristicOrdered(problem=self.problem, state='i')
