@@ -105,6 +105,8 @@ class SearchNodeCostOrdered(SearchNode):
 
 class SearchNodeValueOrdered(SearchNode):
     def __lt__(self, other):
+        # value must work inverted, because heapq sorts 1-9
+        # and we need 9-1 sorting
         return -self.problem.value(self.state) < -self.problem.value(other.state)
 
 
