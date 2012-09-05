@@ -9,6 +9,10 @@ class BadInputGraph(Exception):
 
 
 class DotGraphSearchProblem(Problem):
+    """
+    Playground for stuff in the library... eats a .dot graph and allows you
+    to try it with the search methods.
+    """
     def __init__(self, filename):
         self.G = AGraph(filename)
         xs = [(nodo, nodo.attr.get("initial", None))

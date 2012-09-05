@@ -1,13 +1,15 @@
 # coding=utf-8
 import unittest
-from tests.dummies import DummyProblem, GOAL
+from tests.dummies import DummyProblem, GOAL, DummyGeneticProblem
 from simple_ai.methods import (breadth_first_search, depth_first_search,
                                limited_depth_first_search,
                                iterative_limited_depth_first_search,
                                uniform_cost_search, greedy_search, astar_search,
                                beam_search, hill_climbing,
                                hill_climbing_stochastic,
-                               hill_climbing_first_choice, simulated_annealing)
+                               hill_climbing_first_choice, simulated_annealing,
+                               genetic_search)
+from simple_ai.models import SearchNode
 
 
 class TestSearch(unittest.TestCase):
@@ -77,3 +79,40 @@ class TestSearch(unittest.TestCase):
         self.problem.actions = dummy_actions
         result = simulated_annealing(self.problem)
         self.assertEquals(result.state, GOAL)
+
+
+class TestGeneticSearch(unittest.TestCase):
+
+    def setUp(self):
+        self.problem = DummyGeneticProblem()
+
+    def test_solution_is_node(self):
+        node = genetic_search(self.problem, limit=1, pmut=0, populationsize=1)
+        self.assertIsInstance(node, SearchNode)
+
+    def test_calls_crossover(self):
+        node = genetic_search(self.problem, limit=1, pmut=0, populationsize=5)
+        self.assertEqual(node.state, 5)
+
+    def test_calls_mutation(self):
+        node = genetic_search(self.problem, limit=1, pmut=1, populationsize=5)
+        self.assertEqual(node.state, None)
+
+    def test_count_generations(self):
+        node = genetic_search(self.problem, limit=10, pmut=0, populationsize=5)
+        self.assertEqual(node.state, 14)  # initial is 4, plus 10 generations
+
+    def test_zero_fitness_get_waxed(self):
+        count = [-1]
+
+        def g():
+            count[0] = count[0] + 1  # Nasty trick uh? try without the list
+            return [0, 0, 1, 0, 0][count[0]]
+
+        def fitness(state):
+            return state
+
+        self.problem.generate_random_state = g
+        self.problem.value = fitness
+        node = genetic_search(self.problem, limit=1, pmut=0, populationsize=5)
+        self.assertEqual(node.state, 2)
