@@ -7,14 +7,14 @@ with open('README.md') as readme:
 from distutils.core import setup
 
 setup(
-    name='simple-ai',
+    name='simpleai',
     version='0.1',
     description=u'An implementation of AI algorithms based on aima-python',
     long_description=open('README.md').read(),
     author = u'Juan Pedro Fisanotti',
     author_email = 'fisadev@gmail.com',
     url='',
-    packages=['simple_ai', 'simple_ai.tests'],
+    packages=['simpleai', 'simpleai.tests'],
     license='LICENSE.txt',
     classifiers = [
         'Intended Audience :: Developers',

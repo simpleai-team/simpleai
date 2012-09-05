@@ -1,7 +1,7 @@
 from pygraphviz import AGraph
 import base64
 import tempfile
-from simple_ai.models import Problem
+from simpleai.models import Problem
 
 
 class BadInputGraph(Exception):

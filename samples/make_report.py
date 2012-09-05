@@ -7,7 +7,7 @@ parser.add_argument("dotfile", action="store")
 cfg = parser.parse_args()
 
 
-from simple_ai.methods import (breadth_first_search,
+from simpleai.methods import (breadth_first_search,
                         astar_search,
                         beam_search_best_first,
                         beam_search_breadth_first,

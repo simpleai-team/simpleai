@@ -1,7 +1,7 @@
 # coding=utf-8
 import unittest
-from simple_ai.tests.dummies import DummyProblem, GOAL, DummyGeneticProblem
-from simple_ai.methods import (breadth_first_search, depth_first_search,
+from simpleai.tests.dummies import DummyProblem, GOAL, DummyGeneticProblem
+from simpleai.methods import (breadth_first_search, depth_first_search,
                                limited_depth_first_search,
                                iterative_limited_depth_first_search,
                                uniform_cost_search, greedy_search, astar_search,
@@ -9,7 +9,7 @@ from simple_ai.methods import (breadth_first_search, depth_first_search,
                                hill_climbing_stochastic,
                                hill_climbing_first_choice, simulated_annealing,
                                genetic_search)
-from simple_ai.models import SearchNode
+from simpleai.models import SearchNode
 
 
 class TestSearch(unittest.TestCase):

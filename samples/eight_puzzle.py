@@ -1,6 +1,6 @@
 # coding=utf-8
-from simple_ai.models import Problem
-from simple_ai.methods import *
+from simpleai.models import Problem
+from simpleai.methods import *
 import copy
 
 
