@@ -18,9 +18,9 @@ class TestSearchNode(unittest.TestCase):
 
     def test_successors_have_correct_values(self):
         child = self.childs[0]
-        self.assertEquals(child.state, 'ia1')
+        self.assertEquals(child.state, 'ia')
         self.assertIs(child.parent, self.node)
-        self.assertEquals(child.action, 'a1')
+        self.assertEquals(child.action, 'a')
         self.assertEquals(child.cost, 1)
         self.assertIs(child.problem, self.problem)
         self.assertEquals(child.depth, 1)
@@ -31,18 +31,18 @@ class TestSearchNode(unittest.TestCase):
 
     def test_path(self):
         n1 = SearchNode(problem=self.problem, state='i')
-        n2 = SearchNode(action='a1', state='ia1', parent=n1)
-        n3 = SearchNode(action='a2', state='ia1a2', parent=n2)
+        n2 = SearchNode(action='a', state='ia', parent=n1)
+        n3 = SearchNode(action='b', state='iab', parent=n2)
 
-        path = [(None, 'i'), ('a1', 'ia1'), ('a2', 'ia1a2')]
+        path = [(None, 'i'), ('a', 'ia'), ('b', 'iab')]
 
         self.assertEquals(n3.path(), path)
 
     def test_equals(self):
         n1 = SearchNode(problem=self.problem, state='i')
         n2 = SearchNode(problem=self.problem, state='i')
-        n3 = SearchNode(problem=self.problem, state='i', action='a1')
-        n4 = SearchNode(problem=self.problem, state='ia1')
+        n3 = SearchNode(problem=self.problem, state='i', action='a')
+        n4 = SearchNode(problem=self.problem, state='ia')
 
         self.assertTrue(n1 == n2)
         self.assertTrue(n1 == n3)
@@ -61,22 +61,22 @@ class TestOrderedSearchNodeClasses(unittest.TestCase):
         self.assertFalse(n2 < n1)
 
     def test_search_node_value_sorted(self):
-        n1 = SearchNodeValueOrdered(problem=self.problem, state='i')
-        n2 = SearchNodeValueOrdered(problem=self.problem, state='ia1')
+        n1 = SearchNodeValueOrdered(problem=self.problem, state='iab')
+        n2 = SearchNodeValueOrdered(problem=self.problem, state='iba')
 
-        self.assertFalse(n1 < n2)
-        self.assertTrue(n2 < n1)
+        self.assertTrue(n1 < n2)
+        self.assertFalse(n2 < n1)
 
     def test_search_node_heuristic_sorted(self):
-        n1 = SearchNodeHeuristicOrdered(problem=self.problem, state='i')
-        n2 = SearchNodeHeuristicOrdered(problem=self.problem, state='ia1')
+        n1 = SearchNodeHeuristicOrdered(problem=self.problem, state='iab')
+        n2 = SearchNodeHeuristicOrdered(problem=self.problem, state='iba')
 
         self.assertTrue(n1 < n2)
         self.assertFalse(n2 < n1)
 
     def test_search_node_star_sorted(self):
-        n1 = SearchNodeStarOrdered(problem=self.problem, state='i', cost=1)
-        n2 = SearchNodeStarOrdered(problem=self.problem, state='ia1', cost=2)
+        n1 = SearchNodeStarOrdered(problem=self.problem, state='iab', cost=1)
+        n2 = SearchNodeStarOrdered(problem=self.problem, state='iba', cost=2)
 
         self.assertTrue(n1 < n2)
         self.assertFalse(n2 < n1)

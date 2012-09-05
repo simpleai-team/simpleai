@@ -9,23 +9,28 @@ class DummyNode(object):
         return self.value < other.value
 
 
+GOAL = 'iabcabc'
+
 class DummyProblem(object):
     def actions(self, state):
-        return ['a1', 'a2', 'a3']
+        return ['a', 'b', 'c']
 
     def result(self, state, action):
         return state + action
 
     def is_goal(self, state):
-        return state == 'ia1'
+        return state == GOAL
+
+    def heuristic(self, state):
+        # incorrect actions
+        distance = (6 - self.value(state))
+        if len(state) > len(GOAL):
+            distance += len(state) - len(GOAL)
+        return distance
+
+    def value(self, state):
+        # correct actions
+        return sum(1 if state[i] == GOAL[i] else 0 for i in range(min(7, len(state)))) - 1
 
     def cost(self, state1, action, state2):
         return 1
-
-    def value(self, state):
-        return len(state)
-
-    def heuristic(self, state):
-        return len(state)
-
-
