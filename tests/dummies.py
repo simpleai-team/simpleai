@@ -22,11 +22,8 @@ class DummyProblem(object):
         return state == GOAL
 
     def heuristic(self, state):
-        # incorrect actions
-        distance = (6 - self.value(state))
-        if len(state) > len(GOAL):
-            distance += len(state) - len(GOAL)
-        return distance
+        # incorrect or missing actions
+        return (len(GOAL) - self.value(state)) - 1
 
     def value(self, state):
         # correct actions
