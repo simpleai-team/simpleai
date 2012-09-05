@@ -68,7 +68,7 @@ class TestSearchNode(unittest.TestCase):
         self.assertFalse(n1 == n4)
 
 
-class TestSortedSearchNode(unittest.TestCase):
+class TestOrderedSearchNodeClasses(unittest.TestCase):
     def setUp(self):
         self.problem = DummyProblem()
 
