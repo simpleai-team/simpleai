@@ -17,7 +17,6 @@ setup(
     packages=['simepl_ai'],
     classifiers = [
         'Intended Audience :: Developers',
-        'Framework :: Django',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
         'Operating System :: OS Independent',
