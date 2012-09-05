@@ -1,7 +1,7 @@
 # coding=utf-8
 import unittest
 from tests.dummies import DummyProblem
-from ai.models import (SearchNode, SearchNodeCostOrdered,
+from simple_ai.models import (SearchNode, SearchNodeCostOrdered,
                        SearchNodeValueOrdered, SearchNodeHeuristicOrdered,
                        SearchNodeStarOrdered)
 
