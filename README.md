@@ -6,8 +6,8 @@ Simple AI
 This packages is based and inspired in aima-python:
 https://code.google.com/p/aima-python/
 
-We implement all the searches in aima-python plus (LISTAR). Besides, we make
-some improvements in terms of efficiency and error handling.
+We implement most of the searches in aima-python plus some extra options. Besides, we make
+some improvements in terms of code readability, installation, testing, and others.
 
 Installation
 ============
@@ -62,14 +62,9 @@ This problem tries to create the string "HELLO WORLD" using the A* algorithm:
 Authors
 =======
 
-Juan Pedro Fisanotti
-fisadev@gmail.com
-
-Rafael Carrascosa
-rcarrascosa@machinalis.com
-
-Santiago Romero
-sromero@machinalis.com
+* Juan Pedro Fisanotti <fisadev@gmail.com>
+* Rafael Carrascosa <rcarrascosa@machinalis.com>
+* Santiago Romero <sromero@machinalis.com>
 
 Special acknowledgements to Machinalis (http://www.machinalis.com/) for the
 time provided to work on this project.
