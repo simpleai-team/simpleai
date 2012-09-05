@@ -84,6 +84,8 @@ class EightPuzzleProblem(Problem):
 
 problem = EightPuzzleProblem()
 
+# NOTE: because of using a mutable type (list) as state, you can't use
+# graph_search=True for this problem
 result = astar_search(problem)
-#result = depth_first_search(problem, graph_search=True)
+
 print result.path()
