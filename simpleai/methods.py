@@ -55,70 +55,65 @@ def astar_search(problem, graph_search=False):
                    node_factory=SearchNodeStarOrdered)
 
 
-def beam_search(problem, beam_size=100):
-    fringe = BoundedPriorityQueue(beam_size)
-    fringe.append(SearchNodeValueOrdered(state=problem.initial_state,
-                                         problem=problem))
-    while fringe:
-        successors = BoundedPriorityQueue(beam_size)
-        for node in fringe:
-            if problem.is_goal(node.state):
-                return node
-            successors.extend(node.expand())
-        fringe = successors
+def _all_expander(fringe, problem):
+    for node in fringe:
+        fringe.extend(node.expand())
 
 
-def beam_search_best_first(problem, beam_size=100, graph_search=False,
-                           node_filter=None):
-    return _search(problem,
-                   BoundedPriorityQueue(beam_size),
-                   node_factory=SearchNodeValueOrdered,
-                   local_search=True)
+def beam_search(problem, beam_size=100, iterations_limit=0):
+    return _local_search(problem,
+                         _all_expander,
+                         iterations_limit=iterations_limit,
+                         fringe_size=beam_size)
 
 
-def hill_climbing(problem, graph_search=False, node_filter=None):
-    return beam_search_best_first(problem,
-                                  beam_size=1,
-                                  graph_search=graph_search,
-                                  node_filter=node_filter)
+def _first_expander(fringe, problem):
+    fringe.extend(fringe[0].expand())
 
 
-def _filter_random_uphill_neighbor(problem, node, childs):
-    neighbor = None
-    is_uphill = lambda x: problem.value(x.state) > problem.value(node.state)
-    uphill = filter(is_uphill, childs)
-    if uphill:
-        random.shuffle(uphill)
-        neighbor = uphill[0]
-    return [neighbor, ]
+def beam_search_best_first(problem, beam_size=100, iterations_limit=0):
+    return _local_search(problem,
+                         _first_expander,
+                         iterations_limit=iterations_limit,
+                         fringe_size=beam_size)
 
 
-def hill_climbing_stochastic(problem, graph_search=False):
+def hill_climbing(problem, iterations_limit=0):
+    return _local_search(problem,
+                         _first_expander,
+                         iterations_limit=iterations_limit,
+                         fringe_size=1)
+
+
+def _random_best_expander(fringe, problem):
+    current = fringe[0]
+    betters = [n for n in current.expand()
+               if problem.value(n) > problem.value(current)]
+    if betters:
+        random.shuffle(betters)
+        fringe.append(betters[0])
+
+
+def hill_climbing_stochastic(problem, iterations_limit=0):
     '''Stochastic hill climbing, where a random neighbor is chosen among
        those that have a better value'''
-    return hill_climbing(problem,
-                         graph_search=graph_search,
-                         node_filter=_filter_random_uphill_neighbor)
+    return _local_search(problem,
+                         _random_best_expander,
+                         iterations_limit=iterations_limit,
+                         fringe_size=1)
 
 
-def _filter_first_choice_random(problem, node, childs):
-    neighbor = None
-    eligible = copy.copy(childs)
-    current_value = problem.value(node.state)
-    while eligible:
-        candidate = eligible.pop()
-        if problem.value(candidate.state) > current_value:
-            neighbor = candidate
-            break
-    return [neighbor, ]
+def hill_climbing_random_restarts(problem, restarts_limit, iterations_limit=0):
+    restarts = 0
+    best = None
+    while restarts < restarts_limit:
+        new = hill_climbing(problem, iterations_limit=iterations_limit)
+        if not best or problem.value(best) < problem.value(new):
+            best = new
 
+        restarts += 1
 
-def hill_climbing_first_choice(problem, graph_search=False):
-    '''First-choice hill climbing, where neighbors are randomly taken and the
-       first with a better value is chosen'''
-    return hill_climbing(problem,
-                         graph_search=graph_search,
-                         node_filter=_filter_first_choice_random)
+    return best
 
 
 # Quite literally copied from aima
@@ -172,7 +167,7 @@ def _iterative_limited_search(problem, search_method, graph_search=False):
 
 
 def _search(problem, fringe, graph_search=False, depth_limit=None,
-            node_factory=SearchNode, local_search=False, node_filter=None):
+            node_factory=SearchNode):
     memory = set()
     fringe.append(node_factory(state=problem.initial_state,
                                problem=problem))
@@ -191,11 +186,31 @@ def _search(problem, fringe, graph_search=False, depth_limit=None,
                 else:
                     childs.append(n)
 
-            if node_filter:
-                childs = node_filter(problem, node, childs)
-
             for n in childs:
                 fringe.append(n)
+
+
+def _local_search(problem, fringe_expander, iterations_limit=0, fringe_size=1):
+    fringe = BoundedPriorityQueue(fringe_size)
+    fringe.append(SearchNodeValueOrdered(state=problem.initial_state,
+                                         problem=problem))
+
+    iterations = 0
+    run = True
+    best = None
+    while run:
+        old_best = fringe[0]
+        fringe_expander(fringe, problem)
+        best = fringe[0]
+
+        iterations += 1
+
+        if iterations_limit and iterations >= iterations_limit:
+            run = False
+        elif problem.value(old_best) >= problem.value(best):
+            run = False
+
+    return best
 
 
 # Math literally copied from aima-python
