@@ -55,7 +55,7 @@ def astar_search(problem, graph_search=False):
                    node_factory=SearchNodeStarOrdered)
 
 
-def _all_expander(fringe, problem):
+def _all_expander(fringe, problem, iteration):
     for node in fringe:
         fringe.extend(node.expand())
 
@@ -67,7 +67,7 @@ def beam_search(problem, beam_size=100, iterations_limit=0):
                          fringe_size=beam_size)
 
 
-def _first_expander(fringe, problem):
+def _first_expander(fringe, problem, iteration):
     fringe.extend(fringe[0].expand())
 
 
@@ -85,7 +85,7 @@ def hill_climbing(problem, iterations_limit=0):
                          fringe_size=1)
 
 
-def _random_best_expander(fringe, problem):
+def _random_best_expander(fringe, problem, iteration):
     current = fringe[0]
     betters = [n for n in current.expand()
                if problem.value(n) > problem.value(current)]
@@ -116,23 +116,31 @@ def hill_climbing_random_restarts(problem, restarts_limit, iterations_limit=0):
     return best
 
 
-# Quite literally copied from aima
-def simulated_annealing(problem, schedule=None):
-    if not schedule:
-        schedule = _exp_schedule()
-    current = SearchNode(problem.initial_state,
-                         problem=problem)
-    for t in count():
-        T = schedule(t)
-        if T == 0:
-            return current
+# Math literally copied from aima-python
+def _exp_schedule(iteration, k=20, lam=0.005, limit=100):
+    "One possible schedule function for simulated annealing"
+    return k * math.exp(-lam * iteration)
+
+
+def _create_simulated_annealing_expander(schedule):
+    def _expander(fringe, problem, iteration):
+        T = schedule(iteration)
+        current = fringe[0]
         neighbors = current.expand()
-        if not neighbors:
-            return current
-        succ = random.choice(neighbors)
-        delta_e = problem.value(succ.state) - problem.value(current.state)
-        if delta_e > 0 or random.random() < math.exp(delta_e / T):
-            current = succ
+        if neighbors:
+            succ = random.choice(neighbors)
+            delta_e = problem.value(succ.state) - problem.value(current.state)
+            if delta_e > 0 or random.random() < math.exp(delta_e / T):
+                fringe.pop()
+                fringe.append(succ)
+    return _expander
+
+
+def simulated_annealing(problem, schedule=_exp_schedule, iterations_limit=0):
+    return _local_search(problem,
+                         _create_simulated_annealing_expander(schedule),
+                         iterations_limit=iterations_limit,
+                         fringe_size=1)
 
 
 def genetic_search(problem, limit=1000, pmut=0.1, populationsize=100):
@@ -195,17 +203,17 @@ def _local_search(problem, fringe_expander, iterations_limit=0, fringe_size=1):
     fringe.append(SearchNodeValueOrdered(state=problem.initial_state,
                                          problem=problem))
 
-    iterations = 0
+    iteration = 0
     run = True
     best = None
     while run:
         old_best = fringe[0]
-        fringe_expander(fringe, problem)
+        fringe_expander(fringe, problem, iteration)
         best = fringe[0]
 
-        iterations += 1
+        iteration += 1
 
-        if iterations_limit and iterations >= iterations_limit:
+        if iterations_limit and iteration >= iterations_limit:
             run = False
         elif problem.value(old_best) >= problem.value(best):
             run = False
@@ -213,11 +221,4 @@ def _local_search(problem, fringe_expander, iterations_limit=0, fringe_size=1):
     return best
 
 
-# Math literally copied from aima-python
-def _exp_schedule(k=20, lam=0.005, limit=100):
-    "One possible schedule function for simulated annealing"
-    def f(t):
-        if t < limit:
-            return k * math.exp(-lam * t)
-        return 0
-    return f
+
