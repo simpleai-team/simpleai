@@ -1,6 +1,6 @@
 # coding=utf-8
 from simpleai.models import Problem
-from simpleai.methods import astar_search
+from simpleai.search import astar
 
 GOAL = 'HELLO WORLD'
 
@@ -26,7 +26,7 @@ class HelloProblem(Problem):
 
 
 problem = HelloProblem(initial_state='')
-result = astar_search(problem)
+result = astar(problem)
 
 print result
 print result.path()

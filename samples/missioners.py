@@ -1,6 +1,8 @@
 # coding=utf-8
 from simpleai.models import Problem
-from simpleai.methods import *
+from simpleai.search import *
+from simpleai.local_search import *
+
 
 class MissionersProblem(Problem):
     '''Missioners and cannibals problem.'''
@@ -51,42 +53,41 @@ class MissionersProblem(Problem):
 
 problem = MissionersProblem()
 
-result = breadth_first_search(problem)
-#result = breadth_first_search(problem, graph_search=True)
+result = breadth_first(problem)
+#result = breadth_first(problem, graph_search=True)
 
-#result = depth_first_search(problem)
-#result = depth_first_search(problem, graph_search=True)
+#result = depth_first(problem)
+#result = depth_first(problem, graph_search=True)
 
-#result = limited_depth_first_search(problem, depth_limit=10)
-#result = limited_depth_first_search(problem, depth_limit=11)
-#result = limited_depth_first_search(problem, depth_limit=10, graph_search=True)
-#result = limited_depth_first_search(problem, depth_limit=11, graph_search=True)
+#result = limited_depth_first(problem, depth_limit=10)
+#result = limited_depth_first(problem, depth_limit=11)
+#result = limited_depth_first(problem, depth_limit=10, graph_search=True)
+#result = limited_depth_first(problem, depth_limit=11, graph_search=True)
 
-#result = iterative_limited_depth_first_search(problem)
-#result = iterative_limited_depth_first_search(problem, graph_search=True)
+#result = iterative_limited_depth_first(problem)
+#result = iterative_limited_depth_first(problem, graph_search=True)
 
-#result = uniform_cost_search(problem)
-#result = uniform_cost_search(problem, graph_search=True)
+#result = uniform_cost(problem)
+#result = uniform_cost(problem, graph_search=True)
 
-#result = greedy_search(problem)
-#result = greedy_search(problem, graph_search=True)
+#result = greedy(problem)
+#result = greedy(problem, graph_search=True)
 
-#result = astar_search(problem)
-#result = astar_search(problem, graph_search=True)
+#result = astar(problem)
+#result = astar(problem, graph_search=True)
 
-#result = beam_search(problem, beam_size=5)
-#result = beam_search(problem, beam_size=5, graph_search=True)
+#result = beam(problem, fringe_size=5)
+#result = beam(problem, fringe_size=5, iterations_limit=20)
 
 #result = hill_climbing(problem)
-#result = hill_climbing(problem, graph_search=True)
+#result = hill_climbing(problem, iterations_limit=20)
 
 #result = hill_climbing_stochastic(problem)
-#result = hill_climbing_stochastic(problem, graph_search=True)
+#result = hill_climbing_stochastic(problem, iterations_limit=20)
 
-#result = hill_climbing_first_choice(problem)
-#result = hill_climbing_first_choice(problem, graph_search=True)
+#result = hill_climbing_random_restarts(problem, restarts_limit=20)
+#result = hill_climbing_random_restarts(problem, restarts_limit=20, iterations_limit=20)
 
 #result = simulated_annealing(problem)
-#result = simulated_annealing(problem, graph_search=True)
 
 print result.path()
