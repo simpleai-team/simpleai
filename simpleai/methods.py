@@ -88,7 +88,7 @@ def hill_climbing(problem, iterations_limit=0):
 def _random_best_expander(fringe, problem, iteration):
     current = fringe[0]
     betters = [n for n in current.expand()
-               if problem.value(n) > problem.value(current)]
+               if n.value() > current.value()]
     if betters:
         random.shuffle(betters)
         fringe.append(betters[0])
@@ -108,7 +108,7 @@ def hill_climbing_random_restarts(problem, restarts_limit, iterations_limit=0):
     best = None
     while restarts < restarts_limit:
         new = hill_climbing(problem, iterations_limit=iterations_limit)
-        if not best or problem.value(best) < problem.value(new):
+        if not best or best.value() < new.value():
             best = new
 
         restarts += 1
@@ -129,7 +129,7 @@ def _create_simulated_annealing_expander(schedule):
         neighbors = current.expand()
         if neighbors:
             succ = random.choice(neighbors)
-            delta_e = problem.value(succ.state) - problem.value(current.state)
+            delta_e = succ.value() - current.value()
             if delta_e > 0 or random.random() < math.exp(delta_e / T):
                 fringe.pop()
                 fringe.append(succ)
@@ -148,7 +148,7 @@ def genetic_search(problem, limit=1000, pmut=0.1, populationsize=100):
                   for _ in xrange(populationsize)]
     for _ in xrange(limit):
         new = []
-        fitness = [problem.value(x) for x in population]
+        fitness = [x.value() for x in population]
         sampler = Inverse_transform_sampler(fitness, population)
         for _ in population:
             node1 = sampler.sample()
@@ -159,7 +159,7 @@ def genetic_search(problem, limit=1000, pmut=0.1, populationsize=100):
                 child = problem.mutate(child)
             new.append(child)
         population = new
-    best = max(population, key=lambda x: problem.value(x))
+    best = max(population, key=lambda x: x.value())
     return SearchNode(state=best, problem=problem)
 
 
@@ -215,7 +215,7 @@ def _local_search(problem, fringe_expander, iterations_limit=0, fringe_size=1):
 
         if iterations_limit and iteration >= iterations_limit:
             run = False
-        elif problem.value(old_best) >= problem.value(best):
+        elif old_best.value() >= best.value():
             run = False
 
     return best
