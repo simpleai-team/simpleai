@@ -1,5 +1,5 @@
 # coding=utf-8
-from utils import BoundedPriorityQueue, Inverse_transform_sampler
+from utils import BoundedPriorityQueue, InverseTransformSampler
 from models import SearchNodeValueOrdered
 import math
 import random
@@ -101,7 +101,7 @@ def simulated_annealing(problem, schedule=_exp_schedule, iterations_limit=0):
 def _create_genetic_expander(problem, mutation_chance):
     def _expander(fringe, iteration):
         fitness = [x.value() for x in fringe]
-        sampler = Inverse_transform_sampler(fitness, fringe)
+        sampler = InverseTransformSampler(fitness, fringe)
         new_generation = []
         for _ in fringe:
             node1 = sampler.sample()

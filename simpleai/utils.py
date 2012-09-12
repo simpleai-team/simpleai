@@ -32,7 +32,7 @@ class BoundedPriorityQueue(list):
             self.remove(x)
 
 
-class Inverse_transform_sampler(object):
+class InverseTransformSampler(object):
     def __init__(self, weights, objects):
         assert weights and objects and len(weights) == len(objects)
         self.objects = objects
