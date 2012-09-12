@@ -76,17 +76,14 @@ result = breadth_first(problem)
 #result = astar(problem)
 #result = astar(problem, graph_search=True)
 
-#result = beam(problem, fringe_size=5)
-#result = beam(problem, fringe_size=5, iterations_limit=20)
+#result = beam(problem, beam_size=5)
+#result = beam(problem, beam_size=5, iterations_limit=20)
 
 #result = hill_climbing(problem)
 #result = hill_climbing(problem, iterations_limit=20)
 
 #result = hill_climbing_stochastic(problem)
 #result = hill_climbing_stochastic(problem, iterations_limit=20)
-
-#result = hill_climbing_random_restarts(problem, restarts_limit=20)
-#result = hill_climbing_random_restarts(problem, restarts_limit=20, iterations_limit=20)
 
 #result = simulated_annealing(problem)
 
