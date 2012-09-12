@@ -27,6 +27,10 @@ class BoundedPriorityQueue(list):
         for x in iterable:
             self.append(x)
 
+    def clear(self):
+        for x in self:
+            self.remove(x)
+
 
 class Inverse_transform_sampler(object):
     def __init__(self, weights, objects):
