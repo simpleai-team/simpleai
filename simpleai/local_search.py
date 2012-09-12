@@ -7,7 +7,7 @@ import random
 
 def _all_expander(fringe, iteration):
     for node in fringe:
-        fringe.extend(node.expand())
+        fringe.extend(node.expand(local_search=True))
 
 
 def beam(problem, beam_size=100, iterations_limit=0):
@@ -18,7 +18,7 @@ def beam(problem, beam_size=100, iterations_limit=0):
 
 
 def _first_expander(fringe, iteration):
-    fringe.extend(fringe[0].expand())
+    fringe.extend(fringe[0].expand(local_search=True))
 
 
 def beam_best_first(problem, beam_size=100, iterations_limit=0):
@@ -37,7 +37,7 @@ def hill_climbing(problem, iterations_limit=0):
 
 def _random_best_expander(fringe, iteration):
     current = fringe[0]
-    betters = [n for n in current.expand()
+    betters = [n for n in current.expand(local_search=True)
                if n.value() > current.value()]
     if betters:
         random.shuffle(betters)
@@ -81,7 +81,7 @@ def _create_simulated_annealing_expander(schedule):
     def _expander(fringe, iteration):
         T = schedule(iteration)
         current = fringe[0]
-        neighbors = current.expand()
+        neighbors = current.expand(local_search=True)
         if neighbors:
             succ = random.choice(neighbors)
             delta_e = succ.value() - current.value()
