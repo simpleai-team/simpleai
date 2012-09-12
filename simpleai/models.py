@@ -131,7 +131,7 @@ class SearchNodeValueOrdered(SearchNode):
     def __lt__(self, other):
         # value must work inverted, because heapq sorts 1-9
         # and we need 9-1 sorting
-        return -self.value() < other.value()
+        return -self.value() < -other.value()
 
 
 class SearchNodeHeuristicOrdered(SearchNode):
