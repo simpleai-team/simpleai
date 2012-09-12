@@ -115,6 +115,9 @@ class SearchNode(object):
             node = node.parent
         return list(reversed(path))
 
+    def value(self):
+        return self.problem.value(self.state)
+
     def __eq__(self, other):
         return isinstance(other, SearchNode) and self.state == other.state
 
@@ -128,8 +131,7 @@ class SearchNodeValueOrdered(SearchNode):
     def __lt__(self, other):
         # value must work inverted, because heapq sorts 1-9
         # and we need 9-1 sorting
-        return -self.problem.value(self.state) < \
-               -self.problem.value(other.state)
+        return -self.value() < -other.value()
 
 
 class SearchNodeHeuristicOrdered(SearchNode):

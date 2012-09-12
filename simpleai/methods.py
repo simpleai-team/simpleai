@@ -55,109 +55,126 @@ def astar_search(problem, graph_search=False):
                    node_factory=SearchNodeStarOrdered)
 
 
-def beam_search(problem, beam_size=100):
-    fringe = BoundedPriorityQueue(beam_size)
-    fringe.append(SearchNodeValueOrdered(state=problem.initial_state,
-                                         problem=problem))
-    while fringe:
-        successors = BoundedPriorityQueue(beam_size)
-        for node in fringe:
-            if problem.is_goal(node.state):
-                return node
-            successors.extend(node.expand())
-        fringe = successors
+def _all_expander(fringe, iteration):
+    for node in fringe:
+        fringe.extend(node.expand())
 
 
-def beam_search_best_first(problem, beam_size=100, graph_search=False,
-                           node_filter=None):
-    return _search(problem,
-                   BoundedPriorityQueue(beam_size),
-                   node_factory=SearchNodeValueOrdered,
-                   local_search=True)
+def beam_search(problem, beam_size=100, iterations_limit=0):
+    return _local_search(problem,
+                         _all_expander,
+                         iterations_limit=iterations_limit,
+                         fringe_size=beam_size)
 
 
-def hill_climbing(problem, graph_search=False, node_filter=None):
-    return beam_search_best_first(problem,
-                                  beam_size=1,
-                                  graph_search=graph_search,
-                                  node_filter=node_filter)
+def _first_expander(fringe, iteration):
+    fringe.extend(fringe[0].expand())
 
 
-def _filter_random_uphill_neighbor(problem, node, childs):
-    neighbor = None
-    is_uphill = lambda x: problem.value(x.state) > problem.value(node.state)
-    uphill = filter(is_uphill, childs)
-    if uphill:
-        random.shuffle(uphill)
-        neighbor = uphill[0]
-    return [neighbor, ]
+def beam_search_best_first(problem, beam_size=100, iterations_limit=0):
+    return _local_search(problem,
+                         _first_expander,
+                         iterations_limit=iterations_limit,
+                         fringe_size=beam_size)
 
 
-def hill_climbing_stochastic(problem, graph_search=False):
+def hill_climbing(problem, iterations_limit=0):
+    return _local_search(problem,
+                         _first_expander,
+                         iterations_limit=iterations_limit,
+                         fringe_size=1)
+
+
+def _random_best_expander(fringe, iteration):
+    current = fringe[0]
+    betters = [n for n in current.expand()
+               if n.value() > current.value()]
+    if betters:
+        random.shuffle(betters)
+        fringe.append(betters[0])
+
+
+def hill_climbing_stochastic(problem, iterations_limit=0):
     '''Stochastic hill climbing, where a random neighbor is chosen among
        those that have a better value'''
-    return hill_climbing(problem,
-                         graph_search=graph_search,
-                         node_filter=_filter_random_uphill_neighbor)
+    return _local_search(problem,
+                         _random_best_expander,
+                         iterations_limit=iterations_limit,
+                         fringe_size=1)
 
 
-def _filter_first_choice_random(problem, node, childs):
-    neighbor = None
-    eligible = copy.copy(childs)
-    current_value = problem.value(node.state)
-    while eligible:
-        candidate = eligible.pop()
-        if problem.value(candidate.state) > current_value:
-            neighbor = candidate
-            break
-    return [neighbor, ]
+def hill_climbing_random_restarts(problem, restarts_limit, iterations_limit=0):
+    restarts = 0
+    best = None
+    while restarts < restarts_limit:
+        new =  _local_search(problem,
+                             _first_expander,
+                             iterations_limit=iterations_limit,
+                             fringe_size=1,
+                             random_initial_states=True)
+
+        if not best or best.value() < new.value():
+            best = new
+
+        restarts += 1
+
+    return best
 
 
-def hill_climbing_first_choice(problem, graph_search=False):
-    '''First-choice hill climbing, where neighbors are randomly taken and the
-       first with a better value is chosen'''
-    return hill_climbing(problem,
-                         graph_search=graph_search,
-                         node_filter=_filter_first_choice_random)
+# Math literally copied from aima-python
+def _exp_schedule(iteration, k=20, lam=0.005, limit=100):
+    "One possible schedule function for simulated annealing"
+    return k * math.exp(-lam * iteration)
 
 
-# Quite literally copied from aima
-def simulated_annealing(problem, schedule=None):
-    if not schedule:
-        schedule = _exp_schedule()
-    current = SearchNode(problem.initial_state,
-                         problem=problem)
-    for t in count():
-        T = schedule(t)
-        if T == 0:
-            return current
+def _create_simulated_annealing_expander(schedule):
+    def _expander(fringe, iteration):
+        T = schedule(iteration)
+        current = fringe[0]
         neighbors = current.expand()
-        if not neighbors:
-            return current
-        succ = random.choice(neighbors)
-        delta_e = problem.value(succ.state) - problem.value(current.state)
-        if delta_e > 0 or random.random() < math.exp(delta_e / T):
-            current = succ
+        if neighbors:
+            succ = random.choice(neighbors)
+            delta_e = succ.value() - current.value()
+            if delta_e > 0 or random.random() < math.exp(delta_e / T):
+                fringe.pop()
+                fringe.append(succ)
+    return _expander
 
 
-def genetic_search(problem, limit=1000, pmut=0.1, populationsize=100):
-    population = [problem.generate_random_state()
-                  for _ in xrange(populationsize)]
-    for _ in xrange(limit):
-        new = []
-        fitness = [problem.value(x) for x in population]
-        sampler = Inverse_transform_sampler(fitness, population)
-        for _ in population:
+def simulated_annealing(problem, schedule=_exp_schedule, iterations_limit=0):
+    return _local_search(problem,
+                         _create_simulated_annealing_expander(schedule),
+                         iterations_limit=iterations_limit,
+                         fringe_size=1)
+
+
+def _create_genetic_expander(problem, mutation_chance):
+    def _expander(fringe, iteration):
+        fitness = [x.value() for x in fringe]
+        sampler = Inverse_transform_sampler(fitness, fringe)
+        new_generation = []
+        for _ in fringe:
             node1 = sampler.sample()
             node2 = sampler.sample()
-            child = problem.crossover(node1, node2)
-            if random.random() < pmut:
+            child = problem.crossover(node1.state, node2.state)
+            if random.random() < mutation_chance:
                 # Noooouuu! she is... he is... *IT* is a mutant!
                 child = problem.mutate(child)
-            new.append(child)
-        population = new
-    best = max(population, key=lambda x: problem.value(x))
-    return SearchNode(state=best, problem=problem)
+            new_generation.append(child)
+
+        fringe.clear()
+        for s in new_generation:
+            fringe.append(SearchNodeValueOrdered(state=s, problem=problem))
+
+    return _expander
+
+
+def genetic_search(problem, population_size=100, mutation_chance=0.1, iterations_limit=0):
+    return _local_search(problem,
+                         _create_genetic_expander(problem, mutation_chance),
+                         iterations_limit=iterations_limit,
+                         fringe_size=1,
+                         random_initial_states=True)
 
 
 def _iterative_limited_search(problem, search_method, graph_search=False):
@@ -172,7 +189,7 @@ def _iterative_limited_search(problem, search_method, graph_search=False):
 
 
 def _search(problem, fringe, graph_search=False, depth_limit=None,
-            node_factory=SearchNode, local_search=False, node_filter=None):
+            node_factory=SearchNode):
     memory = set()
     fringe.append(node_factory(state=problem.initial_state,
                                problem=problem))
@@ -191,18 +208,36 @@ def _search(problem, fringe, graph_search=False, depth_limit=None,
                 else:
                     childs.append(n)
 
-            if node_filter:
-                childs = node_filter(problem, node, childs)
-
             for n in childs:
                 fringe.append(n)
 
 
-# Math literally copied from aima-python
-def _exp_schedule(k=20, lam=0.005, limit=100):
-    "One possible schedule function for simulated annealing"
-    def f(t):
-        if t < limit:
-            return k * math.exp(-lam * t)
-        return 0
-    return f
+def _local_search(problem, fringe_expander, iterations_limit=0, fringe_size=1, random_initial_states=False):
+    fringe = BoundedPriorityQueue(fringe_size)
+    if random_initial_states:
+        for _ in xrange(fringe_size):
+            s = problem.generate_random_state()
+            fringe.append(SearchNodeValueOrdered(state=s, problem=problem))
+    else:
+        fringe.append(SearchNodeValueOrdered(state=problem.initial_state,
+                                             problem=problem))
+
+    iteration = 0
+    run = True
+    best = None
+    while run:
+        old_best = fringe[0]
+        fringe_expander(fringe, iteration)
+        best = fringe[0]
+
+        iteration += 1
+
+        if iterations_limit and iteration >= iterations_limit:
+            run = False
+        elif old_best.value() >= best.value():
+            run = False
+
+    return best
+
+
+
