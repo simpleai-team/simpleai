@@ -1,6 +1,6 @@
 # coding=utf-8
 from simpleai.models import Problem
-from simpleai.methods import *
+from simpleai.search import astar
 import copy
 
 
@@ -86,6 +86,6 @@ problem = EightPuzzleProblem()
 
 # NOTE: because of using a mutable type (list) as state, you can't use
 # graph_search=True for this problem
-result = astar_search(problem)
+result = astar(problem)
 
 print result.path()

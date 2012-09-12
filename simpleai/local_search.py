@@ -1,58 +1,8 @@
 # coding=utf-8
-from utils import FifoList, BoundedPriorityQueue, Inverse_transform_sampler
-from models import (SearchNode, SearchNodeHeuristicOrdered,
-                    SearchNodeStarOrdered, SearchNodeCostOrdered,
-                    SearchNodeValueOrdered)
-import copy
+from utils import BoundedPriorityQueue, Inverse_transform_sampler
+from models import SearchNodeValueOrdered
 import math
 import random
-from itertools import count
-
-
-def breadth_first_search(problem, graph_search=False):
-    return _search(problem,
-                   FifoList(),
-                   graph_search=graph_search)
-
-
-def depth_first_search(problem, graph_search=False):
-    return _search(problem,
-                   [],
-                   graph_search=graph_search)
-
-
-def limited_depth_first_search(problem, depth_limit, graph_search=False):
-    return _search(problem,
-                   [],
-                   graph_search=graph_search,
-                   depth_limit=depth_limit)
-
-
-def iterative_limited_depth_first_search(problem, graph_search=False):
-    return _iterative_limited_search(problem,
-                                     limited_depth_first_search,
-                                     graph_search=graph_search)
-
-
-def uniform_cost_search(problem, graph_search=False):
-    return _search(problem,
-                   BoundedPriorityQueue(),
-                   graph_search=graph_search,
-                   node_factory=SearchNodeCostOrdered)
-
-
-def greedy_search(problem, graph_search=False):
-    return _search(problem,
-                   BoundedPriorityQueue(),
-                   graph_search=graph_search,
-                   node_factory=SearchNodeHeuristicOrdered)
-
-
-def astar_search(problem, graph_search=False):
-    return _search(problem,
-                   BoundedPriorityQueue(),
-                   graph_search=graph_search,
-                   node_factory=SearchNodeStarOrdered)
 
 
 def _all_expander(fringe, iteration):
@@ -60,7 +10,7 @@ def _all_expander(fringe, iteration):
         fringe.extend(node.expand())
 
 
-def beam_search(problem, beam_size=100, iterations_limit=0):
+def beam(problem, beam_size=100, iterations_limit=0):
     return _local_search(problem,
                          _all_expander,
                          iterations_limit=iterations_limit,
@@ -71,7 +21,7 @@ def _first_expander(fringe, iteration):
     fringe.extend(fringe[0].expand())
 
 
-def beam_search_best_first(problem, beam_size=100, iterations_limit=0):
+def beam_best_first(problem, beam_size=100, iterations_limit=0):
     return _local_search(problem,
                          _first_expander,
                          iterations_limit=iterations_limit,
@@ -107,11 +57,11 @@ def hill_climbing_random_restarts(problem, restarts_limit, iterations_limit=0):
     restarts = 0
     best = None
     while restarts < restarts_limit:
-        new =  _local_search(problem,
-                             _first_expander,
-                             iterations_limit=iterations_limit,
-                             fringe_size=1,
-                             random_initial_states=True)
+        new = _local_search(problem,
+                            _first_expander,
+                            iterations_limit=iterations_limit,
+                            fringe_size=1,
+                            random_initial_states=True)
 
         if not best or best.value() < new.value():
             best = new
@@ -169,7 +119,8 @@ def _create_genetic_expander(problem, mutation_chance):
     return _expander
 
 
-def genetic_search(problem, population_size=100, mutation_chance=0.1, iterations_limit=0):
+def genetic(problem, population_size=100, mutation_chance=0.1,
+            iterations_limit=0):
     return _local_search(problem,
                          _create_genetic_expander(problem, mutation_chance),
                          iterations_limit=iterations_limit,
@@ -177,42 +128,8 @@ def genetic_search(problem, population_size=100, mutation_chance=0.1, iterations
                          random_initial_states=True)
 
 
-def _iterative_limited_search(problem, search_method, graph_search=False):
-    solution = None
-    limit = 0
-
-    while not solution:
-        solution = search_method(problem, limit, graph_search)
-        limit += 1
-
-    return solution
-
-
-def _search(problem, fringe, graph_search=False, depth_limit=None,
-            node_factory=SearchNode):
-    memory = set()
-    fringe.append(node_factory(state=problem.initial_state,
-                               problem=problem))
-
-    while fringe:
-        node = fringe.pop()
-        if problem.is_goal(node.state):
-            return node
-        if depth_limit is None or node.depth < depth_limit:
-            childs = []
-            for n in node.expand():
-                if graph_search:
-                    if n.state not in memory:
-                        memory.add(n.state)
-                        childs.append(n)
-                else:
-                    childs.append(n)
-
-            for n in childs:
-                fringe.append(n)
-
-
-def _local_search(problem, fringe_expander, iterations_limit=0, fringe_size=1, random_initial_states=False):
+def _local_search(problem, fringe_expander, iterations_limit=0, fringe_size=1,
+                  random_initial_states=False):
     fringe = BoundedPriorityQueue(fringe_size)
     if random_initial_states:
         for _ in xrange(fringe_size):
@@ -238,6 +155,3 @@ def _local_search(problem, fringe_expander, iterations_limit=0, fringe_size=1, r
             run = False
 
     return best
-
-
-

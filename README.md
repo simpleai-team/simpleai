@@ -28,7 +28,7 @@ This problem tries to create the string "HELLO WORLD" using the A* algorithm:
 
 
     from simpleai.models import Problem
-    from simpleai.methods import astar_search
+    from simpleai.search import astar
 
     GOAL = 'HELLO WORLD'
 
@@ -54,11 +54,11 @@ This problem tries to create the string "HELLO WORLD" using the A* algorithm:
 
 
     problem = HelloProblem(initial_state='')
-    result = astar_search(problem)
+    result = astar(problem)
 
     print result
     print result.path()
-
+    
 Authors
 =======
 

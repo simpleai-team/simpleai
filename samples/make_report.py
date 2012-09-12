@@ -7,21 +7,16 @@ parser.add_argument("dotfile", action="store")
 cfg = parser.parse_args()
 
 
-from simpleai.methods import (breadth_first_search,
-                        astar_search,
-                        beam_search_best_first,
-                        beam_search_breadth_first,
-                        simulated_annealing,
-                       )
+from simpleai.search import breadth_first, astar
+from simpleai.local_search import beam, simulated_annealing
 
 
 print "Running algorithms and writting report.html..."
 report(infile=cfg.dotfile,
        algorithms=[
-            breadth_first_search,
-            astar_search,
-            beam_search_best_first,
-            beam_search_breadth_first,
+            breadth_first,
+            astar,
+            beam,
             simulated_annealing,
            ],
        outfile="report.html",
