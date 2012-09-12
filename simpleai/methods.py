@@ -55,7 +55,7 @@ def astar_search(problem, graph_search=False):
                    node_factory=SearchNodeStarOrdered)
 
 
-def _all_expander(fringe, problem, iteration):
+def _all_expander(fringe, iteration):
     for node in fringe:
         fringe.extend(node.expand())
 
@@ -67,7 +67,7 @@ def beam_search(problem, beam_size=100, iterations_limit=0):
                          fringe_size=beam_size)
 
 
-def _first_expander(fringe, problem, iteration):
+def _first_expander(fringe, iteration):
     fringe.extend(fringe[0].expand())
 
 
@@ -85,7 +85,7 @@ def hill_climbing(problem, iterations_limit=0):
                          fringe_size=1)
 
 
-def _random_best_expander(fringe, problem, iteration):
+def _random_best_expander(fringe, iteration):
     current = fringe[0]
     betters = [n for n in current.expand()
                if n.value() > current.value()]
@@ -123,7 +123,7 @@ def _exp_schedule(iteration, k=20, lam=0.005, limit=100):
 
 
 def _create_simulated_annealing_expander(schedule):
-    def _expander(fringe, problem, iteration):
+    def _expander(fringe, iteration):
         T = schedule(iteration)
         current = fringe[0]
         neighbors = current.expand()
@@ -143,8 +143,8 @@ def simulated_annealing(problem, schedule=_exp_schedule, iterations_limit=0):
                          fringe_size=1)
 
 
-def _create_genetic_expander(mutation_chance):
-    def _expander(fringe, problem, iteration):
+def _create_genetic_expander(problem, mutation_chance):
+    def _expander(fringe, iteration):
         fitness = [x.value() for x in fringe]
         sampler = Inverse_transform_sampler(fitness, fringe)
         new_generation = []
@@ -166,7 +166,7 @@ def _create_genetic_expander(mutation_chance):
 
 def genetic_search(problem, population_size=100, mutation_chance=0.1, iterations_limit=0):
     return _local_search(problem,
-                         _create_genetic_expander(mutation_chance),
+                         _create_genetic_expander(problem, mutation_chance),
                          iterations_limit=iterations_limit,
                          fringe_size=1,
                          random_initial_states=True)
@@ -223,7 +223,7 @@ def _local_search(problem, fringe_expander, iterations_limit=0, fringe_size=1, r
     best = None
     while run:
         old_best = fringe[0]
-        fringe_expander(fringe, problem, iteration)
+        fringe_expander(fringe, iteration)
         best = fringe[0]
 
         iteration += 1
