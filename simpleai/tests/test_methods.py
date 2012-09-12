@@ -6,9 +6,8 @@ from simpleai.methods import (breadth_first_search, depth_first_search,
                                iterative_limited_depth_first_search,
                                uniform_cost_search, greedy_search, astar_search,
                                beam_search, hill_climbing,
-                               hill_climbing_stochastic,
-                               hill_climbing_first_choice, simulated_annealing,
-                               genetic_search)
+                               hill_climbing_stochastic, simulated_annealing,
+                               hill_climbing_random_restarts, genetic_search)
 from simpleai.models import SearchNode
 
 
@@ -60,8 +59,8 @@ class TestSearch(unittest.TestCase):
         result = hill_climbing_stochastic(self.problem)
         self.assertEquals(result.state, GOAL)
 
-    def test_hill_climbing_first_choice(self):
-        result = hill_climbing_first_choice(self.problem)
+    def test_hill_climbing_random_restarts(self):
+        result = hill_climbing_random_restarts(self.problem, restarts_limit=2)
         self.assertEquals(result.state, GOAL)
 
     def test_simulated_annealing(self):
@@ -87,19 +86,19 @@ class TestGeneticSearch(unittest.TestCase):
         self.problem = DummyGeneticProblem()
 
     def test_solution_is_node(self):
-        node = genetic_search(self.problem, limit=1, pmut=0, populationsize=1)
+        node = genetic_search(self.problem, iterations_limit=1, mutation_chance=0, population_size=1)
         self.assertIsInstance(node, SearchNode)
 
     def test_calls_crossover(self):
-        node = genetic_search(self.problem, limit=1, pmut=0, populationsize=5)
+        node = genetic_search(self.problem, iterations_limit=1, mutation_chance=0, population_size=5)
         self.assertEqual(node.state, 5)
 
     def test_calls_mutation(self):
-        node = genetic_search(self.problem, limit=1, pmut=1, populationsize=5)
+        node = genetic_search(self.problem, iterations_limit=1, mutation_chance=1, population_size=5)
         self.assertEqual(node.state, None)
 
     def test_count_generations(self):
-        node = genetic_search(self.problem, limit=10, pmut=0, populationsize=5)
+        node = genetic_search(self.problem, iterations_limit=10, mutation_chance=0, population_size=5)
         self.assertEqual(node.state, 14)  # initial is 4, plus 10 generations
 
     def test_zero_fitness_get_waxed(self):
@@ -114,5 +113,5 @@ class TestGeneticSearch(unittest.TestCase):
 
         self.problem.generate_random_state = g
         self.problem.value = fitness
-        node = genetic_search(self.problem, limit=1, pmut=0, populationsize=5)
-        self.assertEqual(node.state, 2)
+        node = genetic_search(self.problem, iterations_limit=1, mutation_chance=0, population_size=5)
+        self.assertEqual(node.state, 1)
