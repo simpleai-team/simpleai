@@ -10,7 +10,7 @@ def _all_expander(fringe, iteration):
         fringe.extend(node.expand())
 
 
-def beam_search(problem, beam_size=100, iterations_limit=0):
+def beam(problem, beam_size=100, iterations_limit=0):
     return _local_search(problem,
                          _all_expander,
                          iterations_limit=iterations_limit,
@@ -21,7 +21,7 @@ def _first_expander(fringe, iteration):
     fringe.extend(fringe[0].expand())
 
 
-def beam_search_best_first(problem, beam_size=100, iterations_limit=0):
+def beam_best_first(problem, beam_size=100, iterations_limit=0):
     return _local_search(problem,
                          _first_expander,
                          iterations_limit=iterations_limit,
@@ -119,8 +119,8 @@ def _create_genetic_expander(problem, mutation_chance):
     return _expander
 
 
-def genetic_search(problem, population_size=100, mutation_chance=0.1,
-                   iterations_limit=0):
+def genetic(problem, population_size=100, mutation_chance=0.1,
+            iterations_limit=0):
     return _local_search(problem,
                          _create_genetic_expander(problem, mutation_chance),
                          iterations_limit=iterations_limit,
