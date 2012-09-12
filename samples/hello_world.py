@@ -28,5 +28,5 @@ class HelloProblem(Problem):
 problem = HelloProblem(initial_state='')
 result = astar(problem)
 
-print result
+print result.state
 print result.path()
