@@ -143,24 +143,33 @@ def simulated_annealing(problem, schedule=_exp_schedule, iterations_limit=0):
                          fringe_size=1)
 
 
-def genetic_search(problem, limit=1000, pmut=0.1, populationsize=100):
-    population = [problem.generate_random_state()
-                  for _ in xrange(populationsize)]
-    for _ in xrange(limit):
-        new = []
-        fitness = [x.value() for x in population]
-        sampler = Inverse_transform_sampler(fitness, population)
-        for _ in population:
+def _create_genetic_expander(mutation_chance):
+    def _expander(fringe, problem, iteration):
+        fitness = [x.value() for x in fringe]
+        sampler = Inverse_transform_sampler(fitness, fringe)
+        new_generation = []
+        for _ in fringe:
             node1 = sampler.sample()
             node2 = sampler.sample()
-            child = problem.crossover(node1, node2)
-            if random.random() < pmut:
+            child = problem.crossover(node1.state, node2.state)
+            if random.random() < mutation_chance:
                 # Noooouuu! she is... he is... *IT* is a mutant!
                 child = problem.mutate(child)
-            new.append(child)
-        population = new
-    best = max(population, key=lambda x: x.value())
-    return SearchNode(state=best, problem=problem)
+            new_generation.append(child)
+
+        fringe.clear()
+        for s in new_generation:
+            fringe.append(SearchNodeValueOrdered(state=s, problem=problem))
+
+    return _expander
+
+
+def genetic_search(problem, population_size=100, mutation_chance=0.1, iterations_limit=0):
+    return _local_search(problem,
+                         _create_genetic_expander(mutation_chance),
+                         iterations_limit=iterations_limit,
+                         fringe_size=1,
+                         random_initial_states=True)
 
 
 def _iterative_limited_search(problem, search_method, graph_search=False):
@@ -198,10 +207,16 @@ def _search(problem, fringe, graph_search=False, depth_limit=None,
                 fringe.append(n)
 
 
-def _local_search(problem, fringe_expander, iterations_limit=0, fringe_size=1):
+def _local_search(problem, fringe_expander, iterations_limit=0, fringe_size=1, random_initial_states=False):
     fringe = BoundedPriorityQueue(fringe_size)
-    fringe.append(SearchNodeValueOrdered(state=problem.initial_state,
-                                         problem=problem))
+    if random_initial_states:
+        initials = [problem.generate_random_state()
+                    for _ in xrange(fringe_size)]
+        for s in initials:
+            fringe.append(SearchNodeValueOrdered(state=s, problem=problem))
+    else:
+        fringe.append(SearchNodeValueOrdered(state=problem.initial_state,
+                                             problem=problem))
 
     iteration = 0
     run = True
