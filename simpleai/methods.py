@@ -107,7 +107,12 @@ def hill_climbing_random_restarts(problem, restarts_limit, iterations_limit=0):
     restarts = 0
     best = None
     while restarts < restarts_limit:
-        new = hill_climbing(problem, iterations_limit=iterations_limit)
+        new =  _local_search(problem,
+                             _first_expander,
+                             iterations_limit=iterations_limit,
+                             fringe_size=1,
+                             random_initial_states=True)
+
         if not best or best.value() < new.value():
             best = new
 
@@ -210,9 +215,8 @@ def _search(problem, fringe, graph_search=False, depth_limit=None,
 def _local_search(problem, fringe_expander, iterations_limit=0, fringe_size=1, random_initial_states=False):
     fringe = BoundedPriorityQueue(fringe_size)
     if random_initial_states:
-        initials = [problem.generate_random_state()
-                    for _ in xrange(fringe_size)]
-        for s in initials:
+        for _ in xrange(fringe_size):
+            s = problem.generate_random_state()
             fringe.append(SearchNodeValueOrdered(state=s, problem=problem))
     else:
         fringe.append(SearchNodeValueOrdered(state=problem.initial_state,
