@@ -7,9 +7,9 @@ HIGHEST_DEGREE_VARIABLE = 'degree'
 LEAST_CONSTRAINING_VALUE = 'lvc'
 
 
-def backtrack(csp_problem, variable_heuristic='', value_heuristic=''):
+def backtrack(problem, variable_heuristic='', value_heuristic=''):
     assignment = {}
-    domains = deepcopy(csp_problem.domains)
+    domains = deepcopy(problem.domains)
 
     if variable_heuristic == MOST_CONSTRAINED_VARIABLE:
         variable_chooser = _most_constrained_variable_chooser
@@ -23,7 +23,7 @@ def backtrack(csp_problem, variable_heuristic='', value_heuristic=''):
     else:
         values_sorter = _basic_values_sorter
 
-    return _backtracking(csp_problem,
+    return _backtracking(problem,
                          assignment,
                          domains,
                          variable_chooser,
