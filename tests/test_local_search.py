@@ -1,6 +1,6 @@
 # coding=utf-8
 import unittest
-from simpleai.tests.dummies import DummyProblem, GOAL, DummyGeneticProblem
+from tests.dummies import DummyProblem, GOAL, DummyGeneticProblem
 from simpleai.local_search import (beam, hill_climbing,
                                    hill_climbing_stochastic,
                                    simulated_annealing,

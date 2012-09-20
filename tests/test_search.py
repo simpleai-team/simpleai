@@ -1,6 +1,6 @@
 # coding=utf-8
 import unittest
-from simpleai.tests.dummies import DummyProblem, GOAL
+from tests.dummies import DummyProblem, GOAL
 from simpleai.search import (breadth_first, depth_first, limited_depth_first,
                              iterative_limited_depth_first, uniform_cost,
                              greedy, astar)
