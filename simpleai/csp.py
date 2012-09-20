@@ -102,11 +102,13 @@ def _backtracking(problem, assignment, domains, variable_chooser,
 
             # TODO propagation and inferences
 
-            return _backtracking(problem,
-                                 new_assignment,
-                                 new_domains,
-                                 variable_chooser,
-                                 values_sorter)
+            result = _backtracking(problem,
+                                   new_assignment,
+                                   new_domains,
+                                   variable_chooser,
+                                   values_sorter)
+            if result:
+                return result
 
     return None
 
