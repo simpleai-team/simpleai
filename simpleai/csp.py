@@ -44,15 +44,12 @@ def _highest_degree_variable_chooser(problem, variables, domains):
     return sorted(variables, key=lambda v: problem.var_degrees[v], reverse=True)[0]
 
 
-def _count_conflicts(problem, assignment, variable, value):
+def _count_conflicts(problem, assignment):
     conflicts = 0
-    new_assignment = deepcopy(assignment)
-    new_assignment[variable] = value
-
-    for neighbors, constraint in problem.var_contraints[variable]:
+    for neighbors, constraint in problem.constraints:
         # if all the neighbors on the constraint have values, check if conflict
-        if all(n in new_assignment for n in neighbors):
-            variables, values = zip(*[(n, new_assignment[n])
+        if all(n in assignment for n in neighbors):
+            variables, values = zip(*[(n, assignment[n])
                                       for n in neighbors])
             if not constraint(variables, values):
                 conflicts += 1
@@ -60,14 +57,19 @@ def _count_conflicts(problem, assignment, variable, value):
     return conflicts
 
 
-def _basic_values_sorter(problem, variable, domains):
+def _basic_values_sorter(problem, assignment, variable, domains):
     return domains[variable][:]
 
 
-def _least_constraining_values_sorter(problem, variable, domains):
+def _least_constraining_values_sorter(problem, assignment, variable, domains):
     # the value that generates less conflicts
+    def update_assignment(value):
+        new_assignment = deepcopy(assignment)
+        new_assignment[variable] = value
+        return new_assignment
+
     values = sorted(domains[variable][:],
-                    key=lambda v: _count_conflicts(variable, v))
+                    key=lambda v: _count_conflicts(problem, update_assignment(v)))
     return values
 
 
@@ -80,14 +82,14 @@ def _backtracking(problem, assignment, domains, variable_chooser,
                if v not in assignment]
     variable = variable_chooser(problem, pending, domains)
 
-    values = values_sorter(problem, variable, domains)
+    values = values_sorter(problem, assignment, variable, domains)
 
     for value in values:
-        if not _count_conflicts(problem, assignment, variable, value): # TODO on aima also checks if using fc
-            new_assignment = deepcopy(assignment)
-            new_domains = deepcopy(domains)
+        new_assignment = deepcopy(assignment)
+        new_assignment[variable] = value
 
-            new_assignment[variable] = value
+        if not _count_conflicts(problem, new_assignment): # TODO on aima also checks if using fc
+            new_domains = deepcopy(domains)
 
             # TODO propagation and inferences
 
