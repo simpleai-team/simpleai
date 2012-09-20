@@ -1,9 +1,6 @@
 # coding=utf-8
 from copy import deepcopy
-from itertools import product
-from simpleai.models import CspAssignment
 
-"hiperarc_consistency = tomo cada var, y me fijo que para todas las restricciones todos sus valores tengan posibles valores en el resto de las variables restringidas"
 
 MOST_CONSTRAINED_VARIABLE = 'mcv'
 HIGHEST_DEGREE_VARIABLE = 'degree'
