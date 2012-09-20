@@ -73,7 +73,8 @@ def _least_constraining_values_sorter(problem, assignment, variable, domains):
         return new_assignment
 
     values = sorted(domains[variable][:],
-                    key=lambda v: _count_conflicts(problem, assignment, variable, v))
+                    key=lambda v: _count_conflicts(problem, assignment,
+                                                   variable, v))
     return values
 
 
