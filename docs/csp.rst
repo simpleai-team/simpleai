@@ -42,9 +42,9 @@ Example:
             return values[1] % 2 == 0  # first odd, expect second to be even
 
     constraints = [
-        (('A', 'B', 'C'), const_different)
-        (('A', 'C'), const_one_bigger_other)
-        (('A', 'C'), const_one_odd_one_even)
+        (('A', 'B', 'C'), const_different),
+        (('A', 'C'), const_one_bigger_other),
+        (('A', 'C'), const_one_odd_one_even),
     ]
 
     my_problem = CspProblem(variables, domains, constraints)
