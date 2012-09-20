@@ -35,7 +35,7 @@ Example:
         
     # a constraint thet expects two variables to be one odd and the other even, 
     # no matter which one is which type
-    def const_one_odd_one_even(variables, values)
+    def const_one_odd_one_even(variables, values):
         if values[0] % 2 == 0:
             return values[1] % 2 == 1  # first even, expect second to be odd
         else:
