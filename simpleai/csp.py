@@ -44,7 +44,11 @@ def _highest_degree_variable_chooser(problem, variables, domains):
     return sorted(variables, key=lambda v: problem.var_degrees[v], reverse=True)[0]
 
 
-def _count_conflicts(problem, assignment):
+def _count_conflicts(problem, assignment, variable=None, value=None):
+    if variable and value:
+        assignment = deepcopy(assignment)
+        assignment[variable] = value
+
     conflicts = 0
     for neighbors, constraint in problem.constraints:
         # if all the neighbors on the constraint have values, check if conflict
@@ -69,7 +73,7 @@ def _least_constraining_values_sorter(problem, assignment, variable, domains):
         return new_assignment
 
     values = sorted(domains[variable][:],
-                    key=lambda v: _count_conflicts(problem, update_assignment(v)))
+                    key=lambda v: _count_conflicts(problem, assignment, variable, v))
     return values
 
 
