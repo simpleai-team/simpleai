@@ -137,9 +137,11 @@ def min_conflicts(problem, initial_assignment=None, iterations_limit=0):
 
         conflict_variables = [v for v in problem.variables
                               if any(v in conflict[0] for conflict in conflicts)]
-        variable = random.choice(conflict_variables)
-        value = _min_conflicts_value(problem, assignement, variable)
-        assignement[variable] = value
+
+        if conflict_variables:
+            variable = random.choice(conflict_variables)
+            value = _min_conflicts_value(problem, assignement, variable)
+            assignement[variable] = value
 
         iteration += 1
 
