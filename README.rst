@@ -9,9 +9,9 @@ This implementation takes some of the ideas from the Norvig's implementation (th
 
 At this moment, the implementation includes:
 
-* Search algorithms (not informed and informed) :doc:`read the doc </csp>`
-* Local Search algorithms :doc:`read the doc </csp>`
-* Constraint Satisfaction Problems algorithms :doc:`read the doc </csp>`
+* Search algorithms (not informed and informed)
+* Local Search algorithms
+* Constraint Satisfaction Problems algorithms
 
 Installation
 ============
