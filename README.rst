@@ -62,6 +62,13 @@ This problem tries to create the string "HELLO WORLD" using the A* algorithm:
 
     print result.state
     print result.path()
+
+
+More detailed documentation
+===========================
+
+You can read the docs online at INSERT_LINK_HERE. Or for offline access, you can clone the project code repository and read them from the *docs* folder.
+
     
 Authors
 =======
