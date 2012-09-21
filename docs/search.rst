@@ -41,7 +41,16 @@ Example:
         def is_goal(self, state):
             return state == GOAL
 
-if you want to use informed search algorithms (like A* or greedy search), then you will have to add an extra method to your class:
+if you want to use search algorithms that consider the cost of actions on their logic (like uniform cost search), then you will have to implement an extra method in your class:
+
+* **cost**: this methods receives two states and an action, and must return the cost of applying the action from the first state to the seccond state.
+
+Example:
+
+    def cost(self, state, action, state2):
+        return 1
+
+if you want to use informed search algorithms (like A* or greedy search), then you will have to add another extra method:
 
 * **heuristic**: this method receives a state, and must return an integer value of the estimation of the remaining cost from that state to the solution. (remember, your heuristic must be admisible, refear to AIMA for more details on how to build heuristics).
 
