@@ -68,3 +68,33 @@ Finally, you have to create an instance of your problem to use it on the searchi
 Example:
 
     my_problem = HelloProblem(initial_state='')
+
+
+Searching for solutions
+-----------------------
+
+Now, with your problem defined and instantiated, you can call any of the search algorithms. The classic search algorithms are located on the ``simpleai.search`` package.
+
+For example, if you want to use breadth first search, you would do:
+
+    from simpleai.search import breadth_first
+
+    # class HelloProblem..., my_problem = ... (steps from the previous section)
+
+    result = breadth_first(problem)
+
+And what will you receive on ``result``? You will receive the soultion node from the search tree, which has this notable attributes:
+
+    result.state  # the goal state
+    result.path()  # the path from the initial state to the goal state
+
+All the implemented algorithms have their docstring defined with the parameters they receive and the methods from Problem they require. In any python console you can just import them and ask for their help:
+
+    help(breadth_first)
+
+The implemented algorithms are: ``breadth_first``, ``depth_first``, ``limited_depth_first``, ``iterative_limited_depth_first``, ``uniform_cost``, ``greedy``, ``astar``.
+
+
+**IMPORTANT**: when using ``graph_search=True`` on this methods, your states must be python inmutable values to be able to have an indexed memory of visited states. So you should use strings, numbers, inmutable tuples (composed by inmutable values), or a custom class that implements the necessary to be inmutable.
+
+
