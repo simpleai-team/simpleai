@@ -5,18 +5,37 @@ from models import (SearchNode, SearchNodeHeuristicOrdered,
 
 
 def breadth_first(problem, graph_search=False):
+    '''
+    Breadth first search.
+
+    If graph_search=True, will avoid exploring repeated states.
+    Requires: Problem.actions, Problem.result, Problen.is_goal.
+    '''
     return _search(problem,
                    FifoList(),
                    graph_search=graph_search)
 
 
 def depth_first(problem, graph_search=False):
+    '''
+    Depth first search.
+
+    If graph_search=True, will avoid exploring repeated states.
+    Requires: Problem.actions, Problem.result, Problen.is_goal.
+    '''
     return _search(problem,
                    [],
                    graph_search=graph_search)
 
 
 def limited_depth_first(problem, depth_limit, graph_search=False):
+    '''
+    Limited depth first search.
+
+    Depth_limit is the maximum depth allowed, being depth 0 the initial state.
+    If graph_search=True, will avoid exploring repeated states.
+    Requires: Problem.actions, Problem.result, Problen.is_goal.
+    '''
     return _search(problem,
                    [],
                    graph_search=graph_search,
@@ -24,12 +43,24 @@ def limited_depth_first(problem, depth_limit, graph_search=False):
 
 
 def iterative_limited_depth_first(problem, graph_search=False):
+    '''
+    Iterative limited depth first search.
+
+    If graph_search=True, will avoid exploring repeated states.
+    Requires: Problem.actions, Problem.result, Problen.is_goal.
+    '''
     return _iterative_limited_search(problem,
                                      limited_depth_first,
                                      graph_search=graph_search)
 
 
 def uniform_cost(problem, graph_search=False):
+    '''
+    Uniform cost search.
+
+    If graph_search=True, will avoid exploring repeated states.
+    Requires: Problem.actions, Problem.result, Problen.is_goal, Problem.cost.
+    '''
     return _search(problem,
                    BoundedPriorityQueue(),
                    graph_search=graph_search,
@@ -37,6 +68,13 @@ def uniform_cost(problem, graph_search=False):
 
 
 def greedy(problem, graph_search=False):
+    '''
+    Greedy search.
+
+    If graph_search=True, will avoid exploring repeated states.
+    Requires: Problem.actions, Problem.result, Problen.is_goal, Problem.cost,
+    and Problem.heuristic.
+    '''
     return _search(problem,
                    BoundedPriorityQueue(),
                    graph_search=graph_search,
@@ -44,6 +82,13 @@ def greedy(problem, graph_search=False):
 
 
 def astar(problem, graph_search=False):
+    '''
+    A* search.
+
+    If graph_search=True, will avoid exploring repeated states.
+    Requires: Problem.actions, Problem.result, Problen.is_goal, Problem.cost,
+    and Problem.heuristic.
+    '''
     return _search(problem,
                    BoundedPriorityQueue(),
                    graph_search=graph_search,
@@ -51,6 +96,9 @@ def astar(problem, graph_search=False):
 
 
 def _iterative_limited_search(problem, search_method, graph_search=False):
+    '''
+    Internal function that calls a search_method N times, incrementing a limit.
+    '''
     solution = None
     limit = 0
 
@@ -63,6 +111,9 @@ def _iterative_limited_search(problem, search_method, graph_search=False):
 
 def _search(problem, fringe, graph_search=False, depth_limit=None,
             node_factory=SearchNode):
+    '''
+    Basic search algorithm, base of all the other search algorithms.
+    '''
     memory = set()
     fringe.append(node_factory(state=problem.initial_state,
                                problem=problem))
