@@ -53,3 +53,9 @@ On our example, we would add:
                         for i in range(len(state))])
             missing = len(GOAL) - len(state)
             return wrong + missing
+
+Finally, you have to create an instance of your problem to use it on the searching algorithms. The Problem class initializer receives one parameter: the initial_state from which the search will begin.
+
+Example:
+
+    my_problem = HelloProblem(initial_state='')
