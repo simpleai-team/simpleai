@@ -49,9 +49,14 @@ def iterative_limited_depth_first(problem, graph_search=False):
     If graph_search=True, will avoid exploring repeated states.
     Requires: Problem.actions, Problem.result, Problen.is_goal.
     '''
-    return _iterative_limited_search(problem,
-                                     limited_depth_first,
-                                     graph_search=graph_search)
+    solution = None
+    limit = 0
+
+    while not solution:
+        solution = limited_depth_first(problem, limit, graph_search)
+        limit += 1
+
+    return solution
 
 
 def uniform_cost(problem, graph_search=False):
@@ -93,20 +98,6 @@ def astar(problem, graph_search=False):
                    BoundedPriorityQueue(),
                    graph_search=graph_search,
                    node_factory=SearchNodeStarOrdered)
-
-
-def _iterative_limited_search(problem, search_method, graph_search=False):
-    '''
-    Internal function that calls a search_method N times, incrementing a limit.
-    '''
-    solution = None
-    limit = 0
-
-    while not solution:
-        solution = search_method(problem, limit, graph_search)
-        limit += 1
-
-    return solution
 
 
 def _search(problem, fringe, graph_search=False, depth_limit=None,
