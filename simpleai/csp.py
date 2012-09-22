@@ -9,6 +9,15 @@ LEAST_CONSTRAINING_VALUE = 'lvc'
 
 
 def backtrack(problem, variable_heuristic='', value_heuristic=''):
+    '''
+    Backtracking search.
+
+    variable_heuristic is the heuristic for variable choosing, can be
+    MOST_CONSTRAINED_VARIABLE, HIGHEST_DEGREE_VARIABLE, or blank for simple
+    ordered choosing.
+    value_heuristic is the heuristic for value choosing, can be
+    LEAST_CONSTRAINING_VALUE or blank for simple ordered choosing.
+    '''
     assignment = {}
     domains = deepcopy(problem.domains)
 
@@ -32,23 +41,40 @@ def backtrack(problem, variable_heuristic='', value_heuristic=''):
 
 
 def _basic_variable_chooser(problem, variables, domains):
+    '''
+    Choose the next variable in order.
+    '''
     return variables[0]
 
 
 def _most_constrained_variable_chooser(problem, variables, domains):
+    '''
+    Choose the variable that has less available values.
+    '''
     # the variable with fewer values available
     return sorted(variables, key=lambda v: len(domains[v]))[0]
 
 
 def _highest_degree_variable_chooser(problem, variables, domains):
+    '''
+    Choose the variable that is involved on more constraints.
+    '''
     # the variable involved in more constraints
     return sorted(variables, key=lambda v: problem.var_degrees[v], reverse=True)[0]
 
 
 def _count_conflicts(problem, assignment, variable=None, value=None):
+    '''
+    Count the number of violated constraints on a given assignement.
+    '''
     return len(_find_conflicts(problem, assignment, variable, value))
 
 def _find_conflicts(problem, assignment, variable=None, value=None):
+    '''
+    Find violated constraints on a given assignment, with the possibility
+    of specifying a new variable and value to add to the assignment before
+    checking.
+    '''
     if variable and value:
         assignment = deepcopy(assignment)
         assignment[variable] = value
@@ -66,10 +92,16 @@ def _find_conflicts(problem, assignment, variable=None, value=None):
 
 
 def _basic_values_sorter(problem, assignment, variable, domains):
+    '''
+    Sort values in the same original order.
+    '''
     return domains[variable][:]
 
 
 def _least_constraining_values_sorter(problem, assignment, variable, domains):
+    '''
+    Sort values based on how many conflicts they generate if assigned.
+    '''
     # the value that generates less conflicts
     def update_assignment(value):
         new_assignment = deepcopy(assignment)
@@ -84,6 +116,9 @@ def _least_constraining_values_sorter(problem, assignment, variable, domains):
 
 def _backtracking(problem, assignment, domains, variable_chooser,
                   values_sorter):
+    '''
+    Internal recursive backtracking algorithm.
+    '''
     if len(assignment) == len(problem.variables):
         return assignment
 
@@ -114,14 +149,24 @@ def _backtracking(problem, assignment, domains, variable_chooser,
 
 
 def _min_conflicts_value(problem, assignement, variable):
-    """Return the value that will give var the least number of conflicts.
-    If there is a tie, choose at random."""
+    '''
+    Return the value generate the less number of conflicts.
+    '''
     return sorted(problem.domains[variable],
                   key=lambda v: _count_conflicts(problem, assignement,
                                                  variable, v))[0]
 
 
 def min_conflicts(problem, initial_assignment=None, iterations_limit=0):
+    '''
+    Min conflicts search.
+
+    initial_assignment the initial assignment, or None to generate a random
+    one.
+    If iterations_limit is specified, the algorithm will end after that
+    number of iterations. Else, it will continue until if finds an assignement
+    that doesn't generate conflicts (a solution).
+    '''
     assignement = {}
     if initial_assignment:
         assignement.update(initial_assignment)
