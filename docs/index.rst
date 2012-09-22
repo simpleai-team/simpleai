@@ -1,1 +1,15 @@
+.. simpleai documentation master file, created by
+   sphinx-quickstart on Sat Sep 22 18:54:36 2012.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+Welcome to simpleai's documentation!
+====================================
+
+Contents:
+
+* :doc:`search_problems`
+* :doc:`local_search_problems`
+* :doc:`constraints_satisfaction_problems`
+
 .. include:: ../README.rst
