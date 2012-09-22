@@ -57,3 +57,23 @@ Example:
     my_problem = CspProblem(variables, domains, constraints)
 
 
+Searching for solutions
+-----------------------
+
+Now, with your csp problem instantiated, you can call the csp search algorithms. They are located on the ``simpleai.csp`` package.
+
+For example, if you want to use backtracking search, you would do:
+
+    from simpleai.csp import backtrack
+
+    # my_problem = ... (steps from the previous section)
+
+    result = backtrack(problem)
+
+And what will you receive on ``result``? You will receive a dictionary with the assigned values to the variables if a solution was found, or None if couldn't find a solution.
+
+All the implemented algorithms have their docstring defined. In any python console you can just import them and ask for their help:
+
+    help(backtrack)
+
+The implemented algorithms are: ``backtrack``, ``min_conflicts``.
