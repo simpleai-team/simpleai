@@ -67,7 +67,7 @@ This problem tries to create the string "HELLO WORLD" using the A* algorithm::
 More detailed documentation
 ===========================
 
-You can read the docs online at INSERT_LINK_HERE. Or for offline access, you can clone the project code repository and read them from the ``docs`` folder.
+You can read the docs online `here <http://simpleai.readthedocs.org/en/latest/>`_. Or for offline access, you can clone the project code repository and read them from the ``docs`` folder.
 
     
 Authors
