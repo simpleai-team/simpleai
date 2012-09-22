@@ -78,3 +78,5 @@ Example:
             mutated = ''.join([state[i] if i != mutation_point else mutation
                                for i in range(len(state))])
             return mutated
+
+* **value**: same as the other local search algorithms.
