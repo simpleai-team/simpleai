@@ -25,7 +25,7 @@ Examples
 ========
 
 Simple AI allows you to define problems and look for the solution with
-different strategies. Another samples are in the *samples* directory, but
+different strategies. Another samples are in the ``samples`` directory, but
 here is an easy one.
 
 This problem tries to create the string "HELLO WORLD" using the A* algorithm:
@@ -67,7 +67,7 @@ This problem tries to create the string "HELLO WORLD" using the A* algorithm:
 More detailed documentation
 ===========================
 
-You can read the docs online at INSERT_LINK_HERE. Or for offline access, you can clone the project code repository and read them from the *docs* folder.
+You can read the docs online at INSERT_LINK_HERE. Or for offline access, you can clone the project code repository and read them from the ``docs`` folder.
 
     
 Authors
