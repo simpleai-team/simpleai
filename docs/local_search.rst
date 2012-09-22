@@ -14,11 +14,29 @@ To use local search you will have to implement a problem class just as the one y
 
 * you **won't** need to implement the **is_goal** method, because local search algorithms check for states with "better values", and not for "goal states".
 
-* you **must** implement a new method: **value**. This method receives a state, and returns a valuation ("score") of that value. Better states must have higher scores.
+* you **must** implement a new method called **value**: This method receives a state, and returns a valuation ("score") of that value. Better states must have higher scores.
 
 Example:
 
-    def value(self, state):
-        # how many correct letters there are?
-        return sum(1 if state[i] == GOAL[i] else 0
-                   for i in range(min(len(GOAL), len(state))))
+    # class Problem...
+
+        def value(self, state):
+            # how many correct letters there are?
+            return sum(1 if state[i] == GOAL[i] else 0
+                       for i in range(min(len(GOAL), len(state))))
+
+For algorithms that require generation of random initial states (like hill climbing with random restarts, or genetic search), you must define a new method:
+
+* **generate_random_state**: this method receives nothing, and must return a randomly generated state.
+
+Example:
+
+    import random
+
+    # class Problem...
+
+        def generate_random_state(self):
+            # generate a random initial string
+            # note that with this example, not always we will find a solution
+            letters = ' ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+            return random.choice(letter)
