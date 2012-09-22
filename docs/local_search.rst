@@ -80,3 +80,13 @@ Example:
             return mutated
 
 * **value**: same as the other local search algorithms.
+
+
+Searching for solutions
+-----------------------
+
+This works exactly as for search algorithms, with the only difference that they are located on the ``simpleai.local_search`` package.
+
+They have help like the search algorithms, and return the same type of result.
+
+The implemented local search algorithms are: ``hill_climbing``, ``hill_climbing_stochastic``, ``hill_climbing_random_restarts``, ``simulated_annealing``, ``beam``, ``beam_best_first``, ``genetic``.
