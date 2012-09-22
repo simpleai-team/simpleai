@@ -1,17 +1,24 @@
 Constraint satisfaction problems
 ================================
 
-**Is strongly recommended to have knowledge of CSP problems. You can learn about then on the AIMA book, 3rd edition, chapter 6.**
+AIMA Book chapters recommended: 2 (Intelligent agents), 3 (Solving problems by searching), 4 (Beyond classical search), 6 (Constraint satisfaction problems)
 
 SimpleAI provides you with a class that you will instantiate to represent your csp problems, and a few csp algorithms that you can use to find solutions for the csp problems.
 
-You must simply create an instance of this class, specifying the variables, the variable domains, and the constraints as construction parameters.
+Defining your problem
+---------------------
 
-The variables will be a tuple with the variable names. The domains will be a dictionary with the variable names as keys, and the domains as values (in the form of any iterable you want). The constraints will be a list of tuples with two components each: a tuple with the variables involved on the constraint, and a reference to a function that checks the constraint. 
+You must simply create an instance of this class, specifying the variables, the variable domains, and the constraints as construction parameters:
+
+* **variables** will be a tuple with the variable names. 
+* **domains** will be a dictionary with the variable names as keys, and the domains as values (in the form of any iterable you want).
+* **constraints** will be a list of tuples with two components each: a tuple with the variables involved on the constraint, and a reference to a function that checks the constraint. 
 
 **FAQ** why not merge variables and domains on one single dict? Answer: because we need to preserve the order of the variables, and dicts don't have order. We could use an OrderedDict to solve this, but it's only present on python 2.7.
 
 The constraint functions will receive two parameters to check the constraint: a variables tuple and a values tuple, both containing **only** the restricted variables and their values, and in the **same** order than the constrained variables tuple you provided. The function should return True if the values are "correct" (no constraint violation detected), or False if the constraint is violated (think this functions as answers to the question "can I use this values?").
+
+We will illustrate with a simple example that tries to assign numbers to 3 variables (letters), but with a few restrictions.
 
 Example:
 
