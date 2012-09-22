@@ -7,7 +7,7 @@ setup(
     name='simpleai',
     version='0.3',
     description=u'An implementation of AI algorithms based on aima-python',
-    long_description=open('README.md').read(),
+    long_description=open('README.rst').read(),
     author = u'Juan Pedro Fisanotti',
     author_email = 'fisadev@gmail.com',
     url='http://github.com/fisadev/simpleai',
