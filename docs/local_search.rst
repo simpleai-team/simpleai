@@ -1,7 +1,7 @@
 Local search algorithms
 =======================
 
-AIMA Book chapters recommended: 2 (Intelligent agents), 3 (Solving problems by searching), 4 (Beyond classical search)
+*AIMA Book chapters recommended: 2 (Intelligent agents), 3 (Solving problems by searching), 4 (Beyond classical search)*
 
 The usage of the local search algorithms are **very** similar to the search algorithms explained on the :doc:`search` section, so you should start by reading that section and then come to this.
 

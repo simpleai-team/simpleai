@@ -1,7 +1,7 @@
 Constraint satisfaction problems
 ================================
 
-AIMA Book chapters recommended: 2 (Intelligent agents), 3 (Solving problems by searching), 4 (Beyond classical search), 6 (Constraint satisfaction problems)
+*AIMA Book chapters recommended: 2 (Intelligent agents), 3 (Solving problems by searching), 4 (Beyond classical search), 6 (Constraint satisfaction problems)*
 
 SimpleAI provides you with a class that you will instantiate to represent your csp problems, and a few csp algorithms that you can use to find solutions for the csp problems.
 

@@ -1,7 +1,7 @@
 Search algorithms
 =================
 
-AIMA Book chapters recommended: 2 (Intelligent agents), 3 (Solving problems by searching)
+*AIMA Book chapters recommended: 2 (Intelligent agents), 3 (Solving problems by searching)*
 
 To solve a search problem using SimpleAI, you will first need to program the specifics of your particular search problem. To do this, we provide you with a Problem class that you will inherit and then populate with the problem specifics.
 
