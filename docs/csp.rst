@@ -77,3 +77,13 @@ All the implemented algorithms have their docstring defined. In any python conso
     help(backtrack)
 
 The implemented algorithms are: ``backtrack``, ``min_conflicts``.
+
+Using heuristics
+----------------
+
+TODO
+
+Using constraint propagation (inference)
+----------------------------------------
+
+TODO
