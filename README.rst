@@ -3,11 +3,15 @@ Simple AI
 
 (Project home: http://github.com/fisadev/simpleai)
 
-This packages is based and inspired in aima-python:
-https://code.google.com/p/aima-python/
+This lib implements many of the artificial intelligence algorithms described on the book "Artificial Ingelligence, a Modern Approach", from Stuart Russel and Peter Norvig. We strongly recommend you to read the book, or at least the introductory chapters and the ones related to the components you want to use, because we won't explain the algorithms here.
 
-We implement most of the searches in aima-python plus some extra options. Besides, we make
-some improvements in terms of code readability, installation, testing, and others.
+This implementation takes some of the ideas from the Norvig's implementation (the `aima-python <https://code.google.com/p/aima-python/>` lib), but it's made with a more "pythonic" approach, and more enphasis on creating a stable, modern, and mantenible version. We are testing the majority of the lib, it's available via pip install, has a standar repo and lib architecture, well documented, respects the python pep8 guidelines, provides only working code (no placeholders for future things), etc. Even the internal code is written with readability in mind, not only the external API.
+
+At this moment, the implementation includes:
+
+* Search algorithms (not informed and informed)
+* Local Search algorithms
+* Constraint Satisfaction Problems algorithms
 
 Installation
 ============
@@ -58,6 +62,13 @@ This problem tries to create the string "HELLO WORLD" using the A* algorithm:
 
     print result.state
     print result.path()
+
+
+More detailed documentation
+===========================
+
+You can read the docs online at INSERT_LINK_HERE. Or for offline access, you can clone the project code repository and read them from the *docs* folder.
+
     
 Authors
 =======
