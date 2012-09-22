@@ -16,7 +16,7 @@ To use local search you will have to implement a problem class just as the one y
 
 * you **must** implement a new method called **value**: This method receives a state, and returns a valuation ("score") of that value. Better states must have higher scores.
 
-Example:
+Example:::
 
     # class Problem...
 
@@ -29,7 +29,7 @@ For algorithms that require generation of random initial states (like hill climb
 
 * **generate_random_state**: this method receives nothing, and must return a randomly generated state.
 
-Example:
+Example:::
 
     import random
 
@@ -51,7 +51,7 @@ For the genetic search algorithm, your problem will be quite different from the 
 
 * **crossover**: this method receives two (complete) states, and must return a new state as a result of "crossing" both parent states (the resulting state must be complete too).
 
-Example:
+Example:::
 
     import random
 
@@ -65,7 +65,7 @@ Example:
 
 * **mutate**: this method receives a (complete) state, and must return a new (also complete) state as result of generating a random mutation on the original state.
 
-Example:
+Example:::
 
     import random
 
