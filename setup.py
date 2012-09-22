@@ -11,7 +11,7 @@ setup(
     author = u'Juan Pedro Fisanotti',
     author_email = 'fisadev@gmail.com',
     url='http://github.com/fisadev/simpleai',
-    packages=['simpleai', 'simpleai.tests'],
+    packages=['simpleai', ],
     license='LICENSE.txt',
     classifiers = [
         'Intended Audience :: Developers',
