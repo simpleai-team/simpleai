@@ -7,8 +7,8 @@ The usage of the local search algorithms are **very** similar to the search algo
 
 We will use the same example, detailing only the changes.
 
-Differences with search algorithms:
------------------------------------
+Differences on the problem class:
+---------------------------------
 
 To use local search you will have to implement a problem class just as the one you implemented for search algorithms (you can use the same, of course). The only differences will be this: 
 
@@ -22,4 +22,3 @@ Example:
         # how many correct letters there are?
         return sum(1 if state[i] == GOAL[i] else 0
                    for i in range(min(len(GOAL), len(state))))
-
