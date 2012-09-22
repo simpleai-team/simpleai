@@ -40,3 +40,41 @@ Example:
             # note that with this example, not always we will find a solution
             letters = ' ABCDEFGHIJKLMNOPQRSTUVWXYZ'
             return random.choice(letter)
+
+
+Special case: genetic search
+----------------------------
+
+For the genetic search algorithm, your problem will be quite different from the search and local search problems. In this case it must only define the following methods:
+
+* **generate_random_state**: same as explained before, but notice that in this case, the generated random state must be **complete**, because genetic algorithms require that.
+
+* **crossover**: this method receives two (complete) states, and must return a new state as a result of "crossing" both parent states (the resulting state must be complete too).
+
+Example:
+
+    import random
+
+    # class Problem...
+
+        def crossover(self, state1, state2):
+            # cross both strings, at a random point
+            cut_point = random.randint(0, len(GOAL))
+            child = state1[:cut_point] + state2[cut_point:]
+            return child
+
+* **mutate**: this method receives a (complete) state, and must return a new (also complete) state as result of generating a random mutation on the original state.
+
+Example:
+
+    import random
+
+    # class Problem...
+
+        def mutate(self, state):
+            # cross both strings, at a random point
+            mutation = random.choice(' ABCDEFGHIJKLMNOPQRSTUVWXYZ')
+            mutation_point = random.randint(0, len(GOAL))
+            mutated = ''.join([state[i] if i != mutation_point else mutation
+                               for i in range(len(state))])
+            return mutated
