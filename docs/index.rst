@@ -8,6 +8,7 @@ Welcome to simpleai's documentation!
 
 Contents:
 
+* :doc:`Introduction (this page)<index>`
 * :doc:`search_problems`
 * :doc:`local_search_problems`
 * :doc:`constraint_satisfaction_problems`
