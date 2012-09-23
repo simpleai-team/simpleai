@@ -65,7 +65,7 @@ def _highest_degree_variable_chooser(problem, variables, domains):
 
 def _count_conflicts(problem, assignment, variable=None, value=None):
     '''
-    Count the number of violated constraints on a given assignement.
+    Count the number of violated constraints on a given assignment.
     '''
     return len(_find_conflicts(problem, assignment, variable, value))
 
@@ -148,13 +148,14 @@ def _backtracking(problem, assignment, domains, variable_chooser,
     return None
 
 
-def _min_conflicts_value(problem, assignement, variable):
+def _min_conflicts_value(problem, assignment, variable):
     '''
     Return the value generate the less number of conflicts.
     '''
-    return sorted(problem.domains[variable],
-                  key=lambda v: _count_conflicts(problem, assignement,
-                                                 variable, v))[0]
+    return _least_constraining_values_sorter(problem,
+                                             assignment,
+                                             variable,
+                                             problem.domains)[0]
 
 
 def min_conflicts(problem, initial_assignment=None, iterations_limit=0):
@@ -164,35 +165,35 @@ def min_conflicts(problem, initial_assignment=None, iterations_limit=0):
     initial_assignment the initial assignment, or None to generate a random
     one.
     If iterations_limit is specified, the algorithm will end after that
-    number of iterations. Else, it will continue until if finds an assignement
+    number of iterations. Else, it will continue until if finds an assignment
     that doesn't generate conflicts (a solution).
     '''
-    assignement = {}
+    assignment = {}
     if initial_assignment:
-        assignement.update(initial_assignment)
+        assignment.update(initial_assignment)
     else:
         for variable in problem.variables:
-            value = _min_conflicts_value(problem, assignement, variable)
-            assignement[variable] = value
+            value = _min_conflicts_value(problem, assignment, variable)
+            assignment[variable] = value
 
     iteration = 0
     run = True
     while run:
-        conflicts = _find_conflicts(problem, assignement)
+        conflicts = _find_conflicts(problem, assignment)
 
         conflict_variables = [v for v in problem.variables
                               if any(v in conflict[0] for conflict in conflicts)]
 
         if conflict_variables:
             variable = random.choice(conflict_variables)
-            value = _min_conflicts_value(problem, assignement, variable)
-            assignement[variable] = value
+            value = _min_conflicts_value(problem, assignment, variable)
+            assignment[variable] = value
 
         iteration += 1
 
         if iterations_limit and iteration >= iterations_limit:
             run = False
-        elif not _count_conflicts(problem, assignement):
+        elif not _count_conflicts(problem, assignment):
             run = False
 
-    return assignement
+    return assignment
