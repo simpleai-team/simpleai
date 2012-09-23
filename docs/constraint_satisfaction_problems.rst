@@ -82,7 +82,10 @@ All the implemented algorithms have their docstring defined. In any python conso
 
     help(backtrack)
 
-The implemented algorithms are: ``backtrack``, ``min_conflicts``.
+The implemented algorithms are:
+
+.. automodule:: simpleai.csp
+   :members:
 
 Using heuristics
 ----------------

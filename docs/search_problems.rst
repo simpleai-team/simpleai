@@ -106,7 +106,9 @@ All the implemented algorithms have their docstring defined with the parameters 
 
     help(breadth_first)
 
-The implemented algorithms are: ``breadth_first``, ``depth_first``, ``limited_depth_first``, ``iterative_limited_depth_first``, ``uniform_cost``, ``greedy``, ``astar``.
-
-
 **IMPORTANT**: when using ``graph_search=True`` on this methods, your states must be python inmutable values to be able to have an indexed memory of visited states. So you should use strings, numbers, inmutable tuples (composed by inmutable values), or a custom class that implements the necessary to be inmutable.
+
+The implemented algorithms are:
+
+.. automodule:: simpleai.search
+   :members:

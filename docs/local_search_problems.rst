@@ -97,4 +97,7 @@ This works exactly as for search algorithms, with the only difference that they 
 
 They have help like the search algorithms, and return the same type of result.
 
-The implemented local search algorithms are: ``hill_climbing``, ``hill_climbing_stochastic``, ``hill_climbing_random_restarts``, ``simulated_annealing``, ``beam``, ``beam_best_first``, ``genetic``.
+The implemented local search algorithms are:
+
+.. automodule:: simpleai.local_search
+   :members:
