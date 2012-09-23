@@ -4,7 +4,8 @@ from simpleai.models import CspProblem
 from simpleai.csp import (_find_conflicts, _count_conflicts,
                           _most_constrained_variable_chooser,
                           _highest_degree_variable_chooser,
-                          _least_constraining_values_sorter)
+                          _least_constraining_values_sorter,
+                          _min_conflicts_value)
 
 
 class TestCsp(unittest.TestCase):
@@ -78,3 +79,9 @@ class TestCsp(unittest.TestCase):
         assignment = {'A': 1, 'B': 1}
         values = _least_constraining_values_sorter(self.problem, assignment, 'C', self.domains)
         self.assertEquals(values, [2, 1])
+
+    def test_min_conflicts_value(self):
+        assignment = {'A': 1, 'B': 1}
+        value = _min_conflicts_value(self.problem, assignment, 'C')
+        self.assertEquals(value, 2)
+
