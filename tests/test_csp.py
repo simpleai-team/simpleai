@@ -5,7 +5,8 @@ from simpleai.csp import (_find_conflicts, _count_conflicts,
                           _most_constrained_variable_chooser,
                           _highest_degree_variable_chooser,
                           _least_constraining_values_sorter,
-                          _min_conflicts_value)
+                          _min_conflicts_value, backtrack,
+                          min_conflicts)
 
 
 class TestCsp(unittest.TestCase):
@@ -85,3 +86,10 @@ class TestCsp(unittest.TestCase):
         value = _min_conflicts_value(self.problem, assignment, 'C')
         self.assertEquals(value, 2)
 
+    def test_backtrack(self):
+        result = backtrack(self.problem)
+        self.assertEqual(result, {'A':2, 'B': 3, 'C': 1})
+
+    def test_min_conflicts(self):
+        result = min_conflicts(self.problem)
+        self.assertEqual(result, {'A':2, 'B': 3, 'C': 1})
