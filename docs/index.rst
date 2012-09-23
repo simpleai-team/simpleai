@@ -10,6 +10,6 @@ Contents:
 
 * :doc:`search_problems`
 * :doc:`local_search_problems`
-* :doc:`constraints_satisfaction_problems`
+* :doc:`constraint_satisfaction_problems`
 
 .. include:: ../README.rst
