@@ -81,9 +81,9 @@ The implemented algorithms are: ``backtrack``, ``min_conflicts``.
 Using heuristics
 ----------------
 
-TODO
+TODO (implemented, not documented and tested)
 
 Using constraint propagation (inference)
 ----------------------------------------
 
-TODO
+TODO (not implemented)
