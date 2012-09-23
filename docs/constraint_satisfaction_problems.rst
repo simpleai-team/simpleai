@@ -20,7 +20,9 @@ The constraint functions will receive two parameters to check the constraint: a 
 
 We will illustrate with a simple example that tries to assign numbers to 3 variables (letters), but with a few restrictions.
 
-Example:::
+Example:
+
+.. code-block:: python
 
     from simpleai.models import CspProblem
 
@@ -62,7 +64,9 @@ Searching for solutions
 
 Now, with your csp problem instantiated, you can call the csp search algorithms. They are located on the ``simpleai.csp`` package.
 
-For example, if you want to use backtracking search, you would do:::
+For example, if you want to use backtracking search, you would do:
+
+.. code-block:: python
 
     from simpleai.csp import backtrack
 
@@ -72,7 +76,9 @@ For example, if you want to use backtracking search, you would do:::
 
 And what will you receive on ``result``? You will receive a dictionary with the assigned values to the variables if a solution was found, or None if couldn't find a solution.
 
-All the implemented algorithms have their docstring defined. In any python console you can just import them and ask for their help:::
+All the implemented algorithms have their docstring defined. In any python console you can just import them and ask for their help:
+
+.. code-block:: python
 
     help(backtrack)
 

@@ -16,7 +16,9 @@ At this moment, the implementation includes:
 Installation
 ============
 
-Just get it::
+Just get it:
+
+.. code-block:: none
 
     pip install simpleai
 
@@ -28,7 +30,9 @@ Simple AI allows you to define problems and look for the solution with
 different strategies. Another samples are in the ``samples`` directory, but
 here is an easy one.
 
-This problem tries to create the string "HELLO WORLD" using the A* algorithm::
+This problem tries to create the string "HELLO WORLD" using the A* algorithm:
+
+.. code-block:: python
 
 
     from simpleai.models import Problem
