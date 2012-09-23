@@ -90,7 +90,19 @@ The implemented algorithms are:
 Using heuristics
 ----------------
 
-TODO (implemented, not documented and tested)
+The backtrack algorithm allows the use of generic heuristics for variable and value selections. In the help of the function are listed the available heuristics for each one, and to use them you must just import them from the same ``simpleai.csp`` package.
+
+Example:
+
+.. code-block:: python
+
+    from simpleai.csp import backtrack, MOST_CONSTRAINED_VARIABLE, LEAST_CONSTRAINING_VALUE
+
+    # my_problem = ... (steps from the previous section)
+
+    result = backtrack(problem, 
+                       variable_heuristic=MOST_CONSTRAINED_VARIABLE, 
+                       value_heuristic=LEAST_CONSTRAINING_VALUE)
 
 Using constraint propagation (inference)
 ----------------------------------------
