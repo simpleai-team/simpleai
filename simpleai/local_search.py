@@ -208,7 +208,7 @@ def genetic(problem, population_size=100, mutation_chance=0.1,
     return _local_search(problem,
                          _create_genetic_expander(problem, mutation_chance),
                          iterations_limit=iterations_limit,
-                         fringe_size=1,
+                         fringe_size=population_size,
                          random_initial_states=True)
 
 
