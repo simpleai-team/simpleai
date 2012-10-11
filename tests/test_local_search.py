@@ -61,7 +61,7 @@ class TestGeneticSearch(unittest.TestCase):
 
     def test_calls_mutation(self):
         node = genetic(self.problem, iterations_limit=1, mutation_chance=1, population_size=5)
-        self.assertEqual(node.state, None)
+        self.assertEqual(node.state, 20)
 
     def test_count_generations(self):
         node = genetic(self.problem, iterations_limit=10, mutation_chance=0, population_size=5)

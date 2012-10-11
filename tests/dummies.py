@@ -45,7 +45,7 @@ class DummyGeneticProblem(object):
         return state1 + 1
 
     def mutate(self, state):
-        return None  # Mutants are like that
+        return 20  # Mutants are like that
 
     def generate_random_state(self):
         return 4  # Please see http://xkcd.com/221/
