@@ -69,7 +69,8 @@ def uniform_cost(problem, graph_search=False):
     return _search(problem,
                    BoundedPriorityQueue(),
                    graph_search=graph_search,
-                   node_factory=SearchNodeCostOrdered)
+                   node_factory=SearchNodeCostOrdered,
+                   graph_replace_when_better=True)
 
 
 def greedy(problem, graph_search=False):
@@ -83,7 +84,8 @@ def greedy(problem, graph_search=False):
     return _search(problem,
                    BoundedPriorityQueue(),
                    graph_search=graph_search,
-                   node_factory=SearchNodeHeuristicOrdered)
+                   node_factory=SearchNodeHeuristicOrdered,
+                   graph_replace_when_better=True)
 
 
 def astar(problem, graph_search=False):
@@ -97,15 +99,16 @@ def astar(problem, graph_search=False):
     return _search(problem,
                    BoundedPriorityQueue(),
                    graph_search=graph_search,
-                   node_factory=SearchNodeStarOrdered)
+                   node_factory=SearchNodeStarOrdered,
+                   graph_replace_when_better=True)
 
 
 def _search(problem, fringe, graph_search=False, depth_limit=None,
-            node_factory=SearchNode):
+            node_factory=SearchNode, graph_replace_when_better=False):
     '''
     Basic search algorithm, base of all the other search algorithms.
     '''
-    memory = set()
+    memory = {}
     fringe.append(node_factory(state=problem.initial_state,
                                problem=problem))
 
@@ -118,8 +121,14 @@ def _search(problem, fringe, graph_search=False, depth_limit=None,
             for n in node.expand():
                 if graph_search:
                     if n.state not in memory:
-                        memory.add(n.state)
+                        memory[n.state] = n
                         childs.append(n)
+                    elif graph_replace_when_better:
+                        other = memory[n.state]
+                        if n < other:
+                            childs.append(n)
+                            if other in fringe:
+                                fringe.remove(other)
                 else:
                     childs.append(n)
 
