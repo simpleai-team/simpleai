@@ -80,4 +80,4 @@ class TestGeneticSearch(unittest.TestCase):
         self.problem.generate_random_state = g
         self.problem.value = fitness
         node = genetic(self.problem, iterations_limit=1, mutation_chance=0, population_size=5)
-        self.assertEqual(node.state, 1)
+        self.assertEqual(node.state, 2)
