@@ -126,6 +126,9 @@ class Attribute(object):
     def __call__(self, example):
         return self.function(example)
 
+    def __str__(self):
+        return self.name
+
 
 class VectorIndexAttribute(Attribute):
     def __init__(self, i, name=None, description=None):
