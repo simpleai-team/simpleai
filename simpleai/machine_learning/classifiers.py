@@ -31,6 +31,35 @@ def walk_to_leaf(node, example):
     return node
 
 
+def iter_tree(root):
+    q = [(None, root, 0)]
+    while q:
+        value, node, depth = q.pop()
+        yield value, node, depth
+        for value, child in node.branches.iteritems():
+            q.append((value, child, depth + 1))
+
+
+def tree_to_str(root):
+    xs = []
+    for value, node, depth in iter_tree(root):
+        template = "{indent}"
+        if node is not root:
+            template += "case={value}\t"
+        if node.attribute is None:
+            template += "result={result} -- P={prob:.2}"
+        else:
+            template += "split by {split}:\t" +\
+                        "(partial result={result} -- P={prob:.2})"
+        line = template.format(indent="    " * depth,
+                               value=value,
+                               result=node.result[0],
+                               prob=node.result[1],
+                               split=str(node.attribute))
+        xs.append(line)
+    return "\n".join(xs)
+
+
 class DecisionTreeNode(object):
 
     def __init__(self, attribute=None):
@@ -65,19 +94,6 @@ class DecisionTreeNode(object):
         self.branches[value] = branch
         branch.parent = self
         return branch
-
-    def display(self, indent=0):
-        if hasattr(self.attribute, "name"):
-            name = self.attribute.name
-        elif self.attribute is None:
-            name = "Result = {}".format(self.result[0])
-        else:
-            name = "?"
-
-        print name
-        for val, subtree in self.branches.items():
-            print " " * 4 * indent, name, "==", val, "==>",
-            subtree.display(indent + 1)
 
 
 class DecisionTreeLearner(Classifier):
