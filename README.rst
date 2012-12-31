@@ -79,6 +79,7 @@ Authors
 * Juan Pedro Fisanotti <fisadev@gmail.com>
 * Rafael Carrascosa <rcarrascosa@machinalis.com>
 * Santiago Romero <sromero@machinalis.com>
+* Gonzalo García Berrotarán <ggarcia@Machinalis.com>
 
 Special acknowledgements to `Machinalis <http://www.machinalis.com/>`_ for the
 time provided to work on this project.
