@@ -1,7 +1,8 @@
 # coding=utf-8
-from utils import FifoList, BoundedPriorityQueue
-from models import (SearchNode, SearchNodeHeuristicOrdered,
-                    SearchNodeStarOrdered, SearchNodeCostOrdered)
+from simpleai.search.utils import FifoList, BoundedPriorityQueue
+from simpleai.search.models import (SearchNode, SearchNodeHeuristicOrdered,
+                                    SearchNodeStarOrdered,
+                                    SearchNodeCostOrdered)
 
 
 def breadth_first(problem, graph_search=False):

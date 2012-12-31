@@ -7,8 +7,7 @@ parser.add_argument("dotfile", action="store")
 cfg = parser.parse_args()
 
 
-from simpleai.search import breadth_first, astar
-from simpleai.local_search import beam, simulated_annealing
+from simpleai.search import breadth_first, astar, beam, simulated_annealing
 
 
 print "Running algorithms and writting report.html..."

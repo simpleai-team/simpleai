@@ -1,5 +1,4 @@
-from simpleai.models import CspProblem
-from simpleai.csp import backtrack, min_conflicts, MOST_CONSTRAINED_VARIABLE, HIGHEST_DEGREE_VARIABLE, LEAST_CONSTRAINING_VALUE
+from simpleai.search import CspProblem, backtrack, min_conflicts, MOST_CONSTRAINED_VARIABLE, HIGHEST_DEGREE_VARIABLE, LEAST_CONSTRAINING_VALUE
 
 variables = ('WA', 'NT', 'SA', 'Q', 'NSW', 'V', 'T')
 

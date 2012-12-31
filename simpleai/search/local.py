@@ -1,6 +1,6 @@
 # coding=utf-8
-from utils import BoundedPriorityQueue, InverseTransformSampler
-from models import SearchNodeValueOrdered
+from simpleai.search.utils import BoundedPriorityQueue, InverseTransformSampler
+from simpleai.search.models import SearchNodeValueOrdered
 import math
 import random
 

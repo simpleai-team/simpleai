@@ -1,6 +1,5 @@
 # coding=utf-8
-from simpleai.models import Problem
-from simpleai.search import astar
+from simpleai.search import Problem, astar
 import copy
 
 

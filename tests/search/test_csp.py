@@ -1,12 +1,12 @@
 # coding=utf-8
 import unittest
-from simpleai.models import CspProblem
-from simpleai.csp import (_find_conflicts, _count_conflicts,
-                          _most_constrained_variable_chooser,
-                          _highest_degree_variable_chooser,
-                          _least_constraining_values_sorter,
-                          _min_conflicts_value, backtrack,
-                          min_conflicts)
+from simpleai.search.models import CspProblem
+from simpleai.search.csp import (_find_conflicts, _count_conflicts,
+                                 _most_constrained_variable_chooser,
+                                 _highest_degree_variable_chooser,
+                                 _least_constraining_values_sorter,
+                                 _min_conflicts_value, backtrack,
+                                 min_conflicts)
 
 
 class TestCsp(unittest.TestCase):
