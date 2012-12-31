@@ -24,7 +24,7 @@ Example:
 
 .. code-block:: python
 
-    from simpleai.models import CspProblem
+    from simpleai.search import CspProblem
 
     variables = ('A', 'B', 'C')
 
@@ -62,13 +62,13 @@ Example:
 Searching for solutions
 -----------------------
 
-Now, with your csp problem instantiated, you can call the csp search algorithms. They are located on the ``simpleai.csp`` package.
+Now, with your csp problem instantiated, you can call the csp search algorithms. They are located on the ``simpleai.search`` package.
 
 For example, if you want to use backtracking search, you would do:
 
 .. code-block:: python
 
-    from simpleai.csp import backtrack
+    from simpleai.search import backtrack
 
     # my_problem = ... (steps from the previous section)
 
@@ -84,19 +84,19 @@ All the implemented algorithms have their docstring defined. In any python conso
 
 The implemented algorithms are:
 
-.. automodule:: simpleai.csp
+.. automodule:: simpleai.search.csp
    :members:
 
 Using heuristics
 ----------------
 
-The backtrack algorithm allows the use of generic heuristics for variable and value selections. In the help of the function are listed the available heuristics for each one, and to use them you must just import them from the same ``simpleai.csp`` package.
+The backtrack algorithm allows the use of generic heuristics for variable and value selections. In the help of the function are listed the available heuristics for each one, and to use them you must just import them from the same ``simpleai.search`` package.
 
 Example:
 
 .. code-block:: python
 
-    from simpleai.csp import backtrack, MOST_CONSTRAINED_VARIABLE, LEAST_CONSTRAINING_VALUE
+    from simpleai.search import backtrack, MOST_CONSTRAINED_VARIABLE, LEAST_CONSTRAINING_VALUE
 
     # my_problem = ... (steps from the previous section)
 

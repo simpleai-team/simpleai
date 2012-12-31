@@ -93,11 +93,11 @@ Example:
 Searching for solutions
 -----------------------
 
-This works exactly as for search algorithms, with the only difference that they are located on the ``simpleai.local_search`` package.
+This works exactly as for search algorithms.
 
 They have help like the search algorithms, and return the same type of result.
 
 The implemented local search algorithms are:
 
-.. automodule:: simpleai.local_search
+.. automodule:: simpleai.search.local
    :members:

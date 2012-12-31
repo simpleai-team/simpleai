@@ -26,11 +26,11 @@ Example:
 
 .. code-block:: python
 
-    from simpleai.models import Problem
+    from simpleai.search import SearchProblem
 
     GOAL = 'HELLO WORLD'
 
-    class HelloProblem(Problem):
+    class HelloProblem(SearchProblem):
         def actions(self, state):
             if len(state) < len(GOAL):
                 return [c for c in ' ABCDEFGHIJKLMNOPQRSTUVWXYZ']
@@ -110,5 +110,5 @@ All the implemented algorithms have their docstring defined with the parameters 
 
 The implemented algorithms are:
 
-.. automodule:: simpleai.search
+.. automodule:: simpleai.search.traditional
    :members:
