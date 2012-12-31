@@ -1,7 +1,7 @@
 # coding=utf-8
 
 
-class Problem(object):
+class SearchProblem(object):
     '''Abstract base class to represent and manipulate the search space of a
        problem.
        In this class, the search space is meant to be represented implicitly as

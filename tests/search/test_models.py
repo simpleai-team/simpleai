@@ -1,9 +1,10 @@
 # coding=utf-8
 import unittest
-from tests.dummies import DummyProblem
-from simpleai.models import (SearchNode, SearchNodeCostOrdered,
-                       SearchNodeValueOrdered, SearchNodeHeuristicOrdered,
-                       SearchNodeStarOrdered)
+from tests.search.dummies import DummyProblem
+from simpleai.search.models import (SearchNode, SearchNodeCostOrdered,
+                                    SearchNodeValueOrdered,
+                                    SearchNodeHeuristicOrdered,
+                                    SearchNodeStarOrdered)
 
 
 class TestSearchNode(unittest.TestCase):

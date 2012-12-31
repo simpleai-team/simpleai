@@ -1,7 +1,8 @@
 # coding=utf-8
-from utils import FifoList, BoundedPriorityQueue
-from models import (SearchNode, SearchNodeHeuristicOrdered,
-                    SearchNodeStarOrdered, SearchNodeCostOrdered)
+from simpleai.search.utils import FifoList, BoundedPriorityQueue
+from simpleai.search.models import (SearchNode, SearchNodeHeuristicOrdered,
+                                    SearchNodeStarOrdered,
+                                    SearchNodeCostOrdered)
 
 
 def breadth_first(problem, graph_search=False):
@@ -9,7 +10,8 @@ def breadth_first(problem, graph_search=False):
     Breadth first search.
 
     If graph_search=True, will avoid exploring repeated states.
-    Requires: Problem.actions, Problem.result, Problen.is_goal.
+    Requires: SearchProblem.actions, SearchProblem.result, and
+    SearchProblem.is_goal.
     '''
     return _search(problem,
                    FifoList(),
@@ -21,7 +23,8 @@ def depth_first(problem, graph_search=False):
     Depth first search.
 
     If graph_search=True, will avoid exploring repeated states.
-    Requires: Problem.actions, Problem.result, Problen.is_goal.
+    Requires: SearchProblem.actions, SearchProblem.result, and
+    SearchProblem.is_goal.
     '''
     return _search(problem,
                    [],
@@ -34,7 +37,8 @@ def limited_depth_first(problem, depth_limit, graph_search=False):
 
     Depth_limit is the maximum depth allowed, being depth 0 the initial state.
     If graph_search=True, will avoid exploring repeated states.
-    Requires: Problem.actions, Problem.result, Problen.is_goal.
+    Requires: SearchProblem.actions, SearchProblem.result, and
+    SearchProblem.is_goal.
     '''
     return _search(problem,
                    [],
@@ -47,7 +51,8 @@ def iterative_limited_depth_first(problem, graph_search=False):
     Iterative limited depth first search.
 
     If graph_search=True, will avoid exploring repeated states.
-    Requires: Problem.actions, Problem.result, Problen.is_goal.
+    Requires: SearchProblem.actions, SearchProblem.result, and
+    SearchProblem.is_goal.
     '''
     solution = None
     limit = 0
@@ -64,7 +69,8 @@ def uniform_cost(problem, graph_search=False):
     Uniform cost search.
 
     If graph_search=True, will avoid exploring repeated states.
-    Requires: Problem.actions, Problem.result, Problen.is_goal, Problem.cost.
+    Requires: SearchProblem.actions, SearchProblem.result,
+    SearchProblem.is_goal, and SearchProblem.cost.
     '''
     return _search(problem,
                    BoundedPriorityQueue(),
@@ -78,8 +84,8 @@ def greedy(problem, graph_search=False):
     Greedy search.
 
     If graph_search=True, will avoid exploring repeated states.
-    Requires: Problem.actions, Problem.result, Problen.is_goal, Problem.cost,
-    and Problem.heuristic.
+    Requires: SearchProblem.actions, SearchProblem.result,
+    SearchProblem.is_goal, SearchProblem.cost, and SearchProblem.heuristic.
     '''
     return _search(problem,
                    BoundedPriorityQueue(),
@@ -93,8 +99,8 @@ def astar(problem, graph_search=False):
     A* search.
 
     If graph_search=True, will avoid exploring repeated states.
-    Requires: Problem.actions, Problem.result, Problen.is_goal, Problem.cost,
-    and Problem.heuristic.
+    Requires: SearchProblem.actions, SearchProblem.result,
+    SearchProblem.is_goal, SearchProblem.cost, and SearchProblem.heuristic.
     '''
     return _search(problem,
                    BoundedPriorityQueue(),

@@ -1,7 +1,7 @@
 # coding=utf-8
 import unittest
-from tests.dummies import DummyNode
-from simpleai.utils import FifoList, BoundedPriorityQueue
+from tests.search.dummies import DummyNode
+from simpleai.search.utils import FifoList, BoundedPriorityQueue
 
 
 class TestFifoList(unittest.TestCase):

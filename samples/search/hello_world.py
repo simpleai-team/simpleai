@@ -1,10 +1,9 @@
 # coding=utf-8
-from simpleai.models import Problem
-from simpleai.search import astar
+from simpleai.search import SearchProblem, astar
 
 GOAL = 'HELLO WORLD'
 
-class HelloProblem(Problem):
+class HelloProblem(SearchProblem):
     def actions(self, state):
         if len(state) < len(GOAL):
             return [c for c in ' ABCDEFGHIJKLMNOPQRSTUVWXYZ']

@@ -1,11 +1,11 @@
 # coding=utf-8
 import unittest
-from tests.dummies import DummyProblem, GOAL, DummyGeneticProblem
-from simpleai.local_search import (beam, hill_climbing,
+from tests.search.dummies import DummyProblem, GOAL, DummyGeneticProblem
+from simpleai.search.local import (beam, hill_climbing,
                                    hill_climbing_stochastic,
                                    simulated_annealing,
                                    hill_climbing_random_restarts, genetic)
-from simpleai.models import SearchNode
+from simpleai.search.models import SearchNode
 
 
 class TestLocalSearch(unittest.TestCase):

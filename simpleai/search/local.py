@@ -1,6 +1,6 @@
 # coding=utf-8
-from utils import BoundedPriorityQueue, InverseTransformSampler
-from models import SearchNodeValueOrdered
+from simpleai.search.utils import BoundedPriorityQueue, InverseTransformSampler
+from simpleai.search.models import SearchNodeValueOrdered
 import math
 import random
 
@@ -21,7 +21,8 @@ def beam(problem, beam_size=100, iterations_limit=0):
     If iterations_limit is specified, the algorithm will end after that
     number of iterations. Else, it will continue until it can't find a
     better node than the current one.
-    Requires: Problem.actions, Problem.result, Problem.value.
+    Requires: SearchProblem.actions, SearchProblem.result, and
+    SearchProblem.value.
     '''
     return _local_search(problem,
                          _all_expander,
@@ -44,7 +45,8 @@ def beam_best_first(problem, beam_size=100, iterations_limit=0):
     If iterations_limit is specified, the algorithm will end after that
     number of iterations. Else, it will continue until it can't find a
     better node than the current one.
-    Requires: Problem.actions, Problem.result, Problem.value.
+    Requires: SearchProblem.actions, SearchProblem.result, and
+    SearchProblem.value.
     '''
     return _local_search(problem,
                          _first_expander,
@@ -59,7 +61,8 @@ def hill_climbing(problem, iterations_limit=0):
     If iterations_limit is specified, the algorithm will end after that
     number of iterations. Else, it will continue until it can't find a
     better node than the current one.
-    Requires: Problem.actions, Problem.result, Problem.value.
+    Requires: SearchProblem.actions, SearchProblem.result, and
+    SearchProblem.value.
     '''
     return _local_search(problem,
                          _first_expander,
@@ -87,7 +90,8 @@ def hill_climbing_stochastic(problem, iterations_limit=0):
     If iterations_limit is specified, the algorithm will end after that
     number of iterations. Else, it will continue until it can't find a
     better node than the current one.
-    Requires: Problem.actions, Problem.result, Problem.value.
+    Requires: SearchProblem.actions, SearchProblem.result, and
+    SearchProblem.value.
     '''
     return _local_search(problem,
                          _random_best_expander,
@@ -103,8 +107,8 @@ def hill_climbing_random_restarts(problem, restarts_limit, iterations_limit=0):
     If iterations_limit is specified, each hill_climbing will end after that
     number of iterations. Else, it will continue until it can't find a
     better node than the current one.
-    Requires: Problem.actions, Problem.result, Problem.value, and
-    Problem.generate_random_state.
+    Requires: SearchProblem.actions, SearchProblem.result, SearchProblem.value,
+    and SearchProblem.generate_random_state.
     '''
     restarts = 0
     best = None
@@ -158,7 +162,8 @@ def simulated_annealing(problem, schedule=_exp_schedule, iterations_limit=0):
     If iterations_limit is specified, the algorithm will end after that
     number of iterations. Else, it will continue until it can't find a
     better node than the current one.
-    Requires: Problem.actions, Problem.result, Problem.value.
+    Requires: SearchProblem.actions, SearchProblem.result, and
+    SearchProblem.value.
     '''
     return _local_search(problem,
                          _create_simulated_annealing_expander(schedule),
@@ -202,8 +207,8 @@ def genetic(problem, population_size=100, mutation_chance=0.1,
     If iterations_limit is specified, the algorithm will end after that
     number of iterations. Else, it will continue until it can't find a
     better node than the current one.
-    Requires: Problem.generate_random_state, Problem.crossover, Problem.mutate
-    and Problem.value.
+    Requires: SearchProblem.generate_random_state, SearchProblem.crossover,
+    SearchProblem.mutate and SearchProblem.value.
     '''
     return _local_search(problem,
                          _create_genetic_expander(problem, mutation_chance),

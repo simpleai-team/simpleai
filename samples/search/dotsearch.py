@@ -1,14 +1,14 @@
 from pygraphviz import AGraph
 import base64
 import tempfile
-from simpleai.models import Problem
+from simpleai.search import SearchProblem
 
 
 class BadInputGraph(Exception):
     pass
 
 
-class DotGraphSearchProblem(Problem):
+class DotGraphSearchProblem(SearchProblem):
     """
     Playground for stuff in the library... eats a .dot graph and allows you
     to try it with the search methods.

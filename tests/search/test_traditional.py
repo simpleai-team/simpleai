@@ -1,9 +1,10 @@
 # coding=utf-8
 import unittest
-from tests.dummies import DummyProblem, GOAL
-from simpleai.search import (breadth_first, depth_first, limited_depth_first,
-                             iterative_limited_depth_first, uniform_cost,
-                             greedy, astar)
+from tests.search.dummies import DummyProblem, GOAL
+from simpleai.search.traditional import (breadth_first, depth_first,
+                                         limited_depth_first,
+                                         iterative_limited_depth_first,
+                                         uniform_cost, greedy, astar)
 
 
 class TestSearch(unittest.TestCase):
