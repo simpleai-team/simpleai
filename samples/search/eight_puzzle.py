@@ -1,9 +1,9 @@
 # coding=utf-8
-from simpleai.search import Problem, astar
+from simpleai.search import SearchProblem, astar
 import copy
 
 
-class EightPuzzleProblem(Problem):
+class EightPuzzleProblem(SearchProblem):
     ''' 8 puzzle problem, a smaller version of the fifteen puzzle:
         http://en.wikipedia.org/wiki/Fifteen_puzzle
         States are defined as a list of lists of integers, being 0 the

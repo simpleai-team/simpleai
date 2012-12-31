@@ -1,8 +1,8 @@
 # coding=utf-8
-from simpleai.search import Problem, breadth_first, depth_first, limited_depth_first, iterative_limited_depth_first, uniform_cost, greedy, astar, beam, hill_climbing, hill_climbing_stochastic, simulated_annealing
+from simpleai.search import SearchProblem, breadth_first, depth_first, limited_depth_first, iterative_limited_depth_first, uniform_cost, greedy, astar, beam, hill_climbing, hill_climbing_stochastic, simulated_annealing
 
 
-class MissionersProblem(Problem):
+class MissionersProblem(SearchProblem):
     '''Missioners and cannibals problem.'''
 
     def __init__(self):
