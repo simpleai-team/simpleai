@@ -33,14 +33,11 @@ here is an easy one.
 This problem tries to create the string "HELLO WORLD" using the A* algorithm:
 
 .. code-block:: python
-
-
-    from simpleai.models import Problem
-    from simpleai.search import astar
+    from simpleai.search import SearchProblem, astar
 
     GOAL = 'HELLO WORLD'
 
-    class HelloProblem(Problem):
+    class HelloProblem(SearchProblem):
         def actions(self, state):
             if len(state) < len(GOAL):
                 return [c for c in ' ABCDEFGHIJKLMNOPQRSTUVWXYZ']
