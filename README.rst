@@ -33,6 +33,8 @@ here is an easy one.
 This problem tries to create the string "HELLO WORLD" using the A* algorithm:
 
 .. code-block:: python
+
+
     from simpleai.search import SearchProblem, astar
 
     GOAL = 'HELLO WORLD'
