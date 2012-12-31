@@ -13,6 +13,11 @@ At this moment, the implementation includes:
 * Local Search algorithms
 * Constraint Satisfaction Problems algorithms
 
+And we are working on:
+
+* Machine Learning (almost done, still no documentation)
+
+
 Installation
 ============
 
