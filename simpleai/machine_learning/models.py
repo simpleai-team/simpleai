@@ -62,21 +62,14 @@ class Classifier(object):
 
 
 class ClassificationProblem(object):
-    @property
-    def attributes(self):
-        attrs = getattr(self, "_attributes", None)
-        if attrs is not None:
-            return attrs
+    def __init__(self):
         attrs = []
         for name in dir(self):
-            if name == "attributes":
-                continue
             method = getattr(self, name)
             if getattr(method, "is_attribute", False):
                 attr = Attribute(method, method.name)
                 attrs.append(attr)
-        self._attributes = attrs
-        return attrs
+        self.attributes = attrs
 
     def target(self, example):
         raise NotImplementedError()
@@ -88,13 +81,13 @@ class VectorDataClassificationProblem(ClassificationProblem):
         """
         Dataset should be an iterable, *not* an iterator
         """
+        super(VectorDataClassificationProblem, self).__init__()
         try:
             example = next(iter(dataset))
         except StopIteration:
             raise ValueError("Dataset is empty")
         self.i = target_index
         N = len(example)
-        attributes = list(self.attributes)
         if self.i < 0:
             self.i = N + self.i
         if self.i < 0 or N <= self.i:
@@ -103,8 +96,7 @@ class VectorDataClassificationProblem(ClassificationProblem):
             if i == self.i:
                 continue
             attribute = VectorIndexAttribute(i, "data at index {}".format(i))
-            attributes.append(attribute)
-        self._attributes = attributes
+            self.attributes.append(attribute)
 
     def target(self, example):
         return example[self.i]
