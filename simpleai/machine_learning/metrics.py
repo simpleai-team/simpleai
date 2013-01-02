@@ -55,21 +55,29 @@ class OnlineInformationGain(object):
         return H1 - H2
 
 
-class OnlineLogProbability(defaultdict):
-    def __init__(self, _=None):  # `_` is for pickle-ability
-        super(OnlineLogProbability, self).__init__(int)
+class OnlineLogProbability(object):
+    def __init__(self):
+        self.d = defaultdict(int)
+        self._logtotal = None
 
     def add(self, x):
-        d = super(OnlineLogProbability, self)
-        v = d.__getitem__(x)
-        d.__setitem__(x, v + 1)
+        if self._logtotal is not None:
+            raise ValueError("OnlineLogProbability is frozen since first read")
+        self.d[x] += 1
 
     def __getitem__(self, x):
         if x not in self:
             raise KeyError(x)
-        frequencies = super(OnlineLogProbability, self)
-        logtotal = getattr(self, "_logtotal", None)
-        if logtotal is None:
-            logtotal = numpy.log(sum(frequencies.itervalues()))
-            self._logtotal = logtotal
-        return numpy.log(frequencies.get(x)) - logtotal
+        if self._logtotal is None:
+            self._logtotal = numpy.log(sum(self.d.itervalues()))
+        return numpy.log(self.d[x]) - self._logtotal
+
+    def __contains__(self, x):
+        return x in self.d
+
+    def __iter__(self):
+        return iter(self.d)
+
+    def iteritems(self):
+        for x in self.d:
+            yield x, self[x]

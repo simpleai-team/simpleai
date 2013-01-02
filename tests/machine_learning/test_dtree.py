@@ -62,7 +62,7 @@ class TestClassifier(object):
             print self.corpus
 
     def test_tolerates_empty_attributes(self):
-        self.problem._attributes = []
+        self.problem.attributes = []
         self.this = self.classifier(self.corpus, self.problem)
         prec = evaluation.precision(self.this, self.target, self.test_set)
 
@@ -74,7 +74,7 @@ class TestClassifier(object):
         """
         If target in attributes precision is 1.0.
         """
-        self.problem._attributes = [self.target]
+        self.problem.attributes = [self.target]
         self.this = self.classifier(self.corpus, self.problem)
         prec = evaluation.precision(self.this, self.target, self.test_set)
         self.assertEqual(prec, 1.0)
