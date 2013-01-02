@@ -3,16 +3,31 @@
 """
 Example for language classification from text using the es-en europarl
 corpus[0].
+This script should be able to tell if some text is english or spanish based
+solely in counting the letters that appear.
+
+It's *highly* recomended to make shorter versions of the corpus to experiment,
+like this:
+    head -n 100000 europarl-v7.es-en.en > short.en
+    head -n 100000 europarl-v7.es-en.es > short.es
+
+and then change the input files variable to point them... it'll be faster.
 
 
 [0] Download link: http://www.statmt.org/europarl/v7/es-en.tgz
     See http://www.statmt.org/europarl/ for more information.
 """
 
+
+# CHANGE INPUT FILES HERE:
+input_files = [("english", "europarl-v7.es-en.en"),
+               ("spanish", "europarl-v7.es-en.es")]
+
+
 import random
 from simpleai.machine_learning import DecisionTreeLearner_LargeData, \
                                       ClassificationProblem, Attribute, \
-                                      precision
+                                      precision, NaiveBayes
 from simpleai.machine_learning.classifiers import tree_to_str
 
 
@@ -59,8 +74,6 @@ class OnlineCorpusReader(object):
                 if i % 10000 == 0:
                     print "\tReaded {} examples".format(i)
 
-input_files = [("english", "europarl-v7.es-en.en"),
-               ("spanish", "europarl-v7.es-en.es")]
 
 print "Counting examples"
 # line count
@@ -78,11 +91,19 @@ print "Keeping {} examples for testing".format(M)
 problem = LanguageClassificationProblem()
 train = OnlineCorpusReader(input_files, lambda i: i not in testindexes)
 test = OnlineCorpusReader(input_files, lambda i: i in testindexes)
-print "Training..."
-classifier = DecisionTreeLearner_LargeData(train, problem)
+
+
+print "Training Naive Bayes..."
+classifier = NaiveBayes(train, problem)
+print "Testing..."
+p = precision(classifier, problem.target, test)
+print "Precision Naive Bayes = {}".format(p)
+
+
+print "Training Decision Tree (large data)..."
+classifier = DecisionTreeLearner_LargeData(train, problem, minsample=500)
 print "Final tree:"
 print tree_to_str(classifier.root)
 print "Testing..."
 p = precision(classifier, problem.target, test)
-print "Precision = {}".format(p)
-classifier.save("language_classifier.pickle")
+print "Precision Decision Tree = {}".format(p)
