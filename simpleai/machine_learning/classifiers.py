@@ -265,7 +265,24 @@ class DecisionTreeLearner_LargeData(DecisionTreeLearner_Queued):
          leaves) is expanded simultaneously.
 
          This algorithm is equivalent to ID3.
+
+    Is very important to note that in order to have a small memory footprint
+    the `minsample` argument has to be set to a reasonable size, otherwhise
+    there will be one tree leaf for every example in the training set and this
+    totally defeats the pourpose of having a large data version of the
+    algorithm.
     """
+    def __init__(self, dataset, problem, minsample=1):
+        """
+        Is very important to note that in order to have a small memory
+        footprint the `minsample` argument has to be set to a reasonable size,
+        otherwhise there will be one tree leaf for every example in the
+        training set and this totally defeats the pourpose of having a large
+        data version of the algorithm.
+        """
+        super(DecisionTreeLearner_Queued, self).__init__(dataset, problem)
+        self.minsample = minsample
+        self.root = self.learn()
 
     def learn(self):
         if not self.attributes:
@@ -288,7 +305,8 @@ class DecisionTreeLearner_LargeData(DecisionTreeLearner_Queued):
             for leaf, gains in old_leaves.iteritems():
                 winner = max(gains, key=lambda gain: gain.get_gain())
                 counts = winner.get_target_class_counts()
-                branches = winner.get_branches()
+                branches = [(v, c) for v, c in winner.get_branches()
+                            if c.total > self.minsample]
 
                 # Base case exception
                 if leaf is root:
@@ -296,8 +314,9 @@ class DecisionTreeLearner_LargeData(DecisionTreeLearner_Queued):
 
                 if len(counts) == 1:
                     continue  # No split when there's a single target class
-                if len(branches) == 1:
+                if len(branches) <= 1:
                     continue  # No split when there's a single child branch
+                              # Or all branches are too small
 
                 # Finally, go ahead and split
                 leaf.attribute = winner.attribute
@@ -350,8 +369,11 @@ class NaiveBayes(Classifier):
             Z = numpy.logaddexp.reduce([p for p, class_ in hypotheses])
             logprob = logprob - Z
         else:  # Something not at all seen in training, return best a priori
-            logprob, best = max((p, class_) for class_, p in self.C.items())
-        return best, numpy.exp(logprob)
+            logprob, best = max((p, class_) for class_, p
+                                            in self.C.iteritems())
+        p = numpy.exp(logprob)
+        assert 0.0 <= p and p <= 1.0
+        return best, p
 
 
 class KNearestNeighbors(Classifier):
