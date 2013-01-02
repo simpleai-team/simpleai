@@ -9,6 +9,8 @@ def precision(classifier, target, testset):
         if classifier.classify(example)[0] == target(example):
             hit += 1
         total += 1
+    if total == 0:
+        raise ValueError("Empty testset!")
     return hit / float(total)
 
 
