@@ -9,3 +9,4 @@ from simpleai.machine_learning.classifiers import DecisionTreeLearner, \
                                                DecisionTreeLearner_LargeData, \
                                                   NaiveBayes, \
                                                   KNearestNeighbors
+from simpleai.machine_learning.evaluation import precision, kfold
