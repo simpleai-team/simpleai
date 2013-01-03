@@ -198,7 +198,7 @@ class DecisionTreeLearner_Queued(Classifier):
         """
         if not self.attributes:
             return self._single_node_tree()
-        root = DecisionTreeNode(self.target)
+        root = DecisionTreeNode()
         q = [(root, self.dataset)]
         while q:
             node, examples = q.pop()
@@ -250,7 +250,7 @@ class DecisionTreeLearner_Queued(Classifier):
         c = Counter(self.target)
         for example in self.dataset:
             c.add(example)
-        node = DecisionTreeNode(self.target)
+        node = DecisionTreeNode()
         node.set_results_from_counts(c)
         return node
 
@@ -298,7 +298,7 @@ class DecisionTreeLearner_LargeData(DecisionTreeLearner_Queued):
     def learn(self):
         if not self.attributes:
             return self._single_node_tree()
-        root = DecisionTreeNode(self.target)
+        root = DecisionTreeNode()
         leaves = {root: self.new_set_of_gain_counters()}
         while leaves:
             leaf = None
