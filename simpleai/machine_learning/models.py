@@ -11,6 +11,8 @@ class Classifier(object):
     """
     Base of all classifiers.
     This specifies the classifier API.
+
+    Each classifier holds at least a dataset and a ClassificationProblem.
     """
 
     def __init__(self, dataset, problem):
@@ -62,6 +64,15 @@ class Classifier(object):
 
 
 class ClassificationProblem(object):
+    """
+    Represents a problem to be solved with a classifier.
+    It holds the attributes to be tested and the defines
+    the target of an example.
+
+    You can define attributes by adding them to the `attributes`
+    list or by defining a method and decorating it with `is_attribute`.
+    """
+
     def __init__(self):
         attrs = []
         for name in dir(self):
@@ -76,6 +87,10 @@ class ClassificationProblem(object):
 
 
 class VectorDataClassificationProblem(ClassificationProblem):
+    """
+    A ClassificationProblem that defines attribute for a dataset
+    that is a set of vectors.
+    """
 
     def __init__(self, dataset, target_index):
         """
@@ -119,20 +134,28 @@ class Attribute(object):
         return self.function(example)
 
     def __str__(self):
+        if self.name is None:
+            return "<undefined name>"
         return self.name
 
 
 class VectorIndexAttribute(Attribute):
+    """
+    Attribute that returns the i-th element from a vector.
+    """
+
     def __init__(self, i, name=None, description=None):
+        super(VectorIndexAttribute, self).__init__(self, name, description)
         self.i = i
-        self.name = name
-        self.description = description
 
     def __call__(self, vector):
         return vector[self.i]
 
 
 def is_attribute(method, name=None):
+    """
+    Decorator for methods that are attributes.
+    """
     if name is None:
         name = method.__name__
     method.is_attribute = True

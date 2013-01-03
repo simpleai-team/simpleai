@@ -1,8 +1,21 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+"""
+Tools for evaluate the classification algorithms
+"""
+
 
 def precision(classifier, target, testset):
+    """
+    Runs the classifier for each example in `testset`
+    and verifies that the classification is correct
+    using the `target`.
+
+    Returns a number between 0.0 and 1.0 with the
+    precision of classification for this test set.
+    """
+
     hit = 0
     total = 0
     for example in testset:
