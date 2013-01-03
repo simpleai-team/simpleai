@@ -2,9 +2,12 @@
 # coding: utf-8
 
 """
-Api for statistical classifiers.
-Decision trees: See http://en.wikipedia.org/wiki/Decision_tree_learning
-Naive Bayes classifier.
+API for statistical classifiers.
+
+Classifiers implemented:
+ * Decision trees: See http://en.wikipedia.org/wiki/Decision_tree_learning
+ * Naive Bayes:    See http://en.wikipedia.org/wiki/Naive_Bayes_classifier
+ * K-Nearest Neighbor: See http://en.wikipedia.org/wiki/K-nearest_neighbor
 """
 
 import numpy
@@ -41,6 +44,11 @@ def iter_tree(root):
 
 
 def tree_to_str(root):
+    """
+    Returns a string representation of a decision tree with
+    root node `root`.
+    """
+
     xs = []
     for value, node, depth in iter_tree(root):
         template = "{indent}"
@@ -61,6 +69,9 @@ def tree_to_str(root):
 
 
 class DecisionTreeNode(object):
+    """
+    A node of a decision tree.
+    """
 
     def __init__(self, attribute=None):
         self.branches = {}
@@ -381,6 +392,9 @@ class KNearestNeighbors(Classifier):
     Classifies objects based on closest training example.
     Uses the k-nearest examples from the training and
     gets the most common classification among these.
+
+    To use this classifier the problem must define a `distance`
+    method to messure the distance between two examples.
     """
 
     def __init__(self, dataset, problem, k=1):
