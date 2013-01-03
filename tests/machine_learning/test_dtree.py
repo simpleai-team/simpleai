@@ -64,7 +64,7 @@ class TestClassifier(object):
     def test_tolerates_empty_attributes(self):
         self.problem.attributes = []
         self.this = self.classifier(self.corpus, self.problem)
-        prec = evaluation.precision(self.this, self.target, self.test_set)
+        evaluation.precision(self.this, self.target, self.test_set)
 
     def test_handles_empty_dataset(self):
         self.assertRaises(ValueError, self.classifier,
