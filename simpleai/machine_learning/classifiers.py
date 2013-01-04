@@ -2,8 +2,6 @@
 # coding: utf-8
 
 """
-API for statistical classifiers.
-
 Classifiers implemented:
  * Decision tree:      See http://en.wikipedia.org/wiki/Decision_tree_learning
  * Naive Bayes:        See http://en.wikipedia.org/wiki/Naive_Bayes_classifier
@@ -160,7 +158,7 @@ class DecisionTreeLearner(Classifier):
         AIMA implies that importance should be information gain.
         Since AIMA only defines it for binary features this implementation
         was based on the wikipedia article:
-            http://en.wikipedia.org/wiki/Information_gain_in_decision_trees
+        http://en.wikipedia.org/wiki/Information_gain_in_decision_trees
         """
         gain_counter = OnlineInformationGain(attribute, self.target)
         for example in examples:
@@ -168,9 +166,6 @@ class DecisionTreeLearner(Classifier):
         return gain_counter.get_gain()
 
     def classify(self, example):
-        """
-        Returns a classification for `example`.
-        """
         node = walk_to_leaf(self.root, example)
         return node.result
 
@@ -193,16 +188,13 @@ class DecisionTreeLearner_Queued(Classifier):
         self.root = self.learn()
 
     def learn(self):
-        """
-        Trains the learner.
-        """
         if not self.attributes:
             return self._single_node_tree()
         root = DecisionTreeNode()
         q = [(root, self.dataset)]
         while q:
             node, examples = q.pop()
-            A = self.max_gain_split(examples)
+            A = self._max_gain_split(examples)
             counts = A.get_target_class_counts()
             branches = A.get_branches()
 
@@ -224,12 +216,12 @@ class DecisionTreeLearner_Queued(Classifier):
                 q.append((branch, bdataset))
         return root
 
-    def max_gain_split(self, examples):
+    def _max_gain_split(self, examples):
         """
         Returns an OnlineInformationGain of the attribute with
         max gain based on `examples`.
         """
-        gains = self.new_set_of_gain_counters()
+        gains = self._new_set_of_gain_counters()
         for example in examples:
             for gain in gains:
                 gain.add(example)
@@ -238,7 +230,7 @@ class DecisionTreeLearner_Queued(Classifier):
             raise ValueError("Dataset is empty")
         return winner
 
-    def new_set_of_gain_counters(self):
+    def _new_set_of_gain_counters(self):
         """
         Creates a new set of OnlineInformationGain objects
         for each attribute.
@@ -255,9 +247,6 @@ class DecisionTreeLearner_Queued(Classifier):
         return node
 
     def classify(self, example):
-        """
-        Returns a classification for `example`.
-        """
         node = walk_to_leaf(self.root, example)
         return node.result
 
@@ -266,6 +255,7 @@ class DecisionTreeLearner_LargeData(DecisionTreeLearner_Queued):
     """
     This implementations is specifically designed to handle large dataset that
     don't fit into memory and has more improvements over the queued one:
+
         -Data is processed one-at-a-time, so the training data doesn't need to
          fit in memory.
         -The amount of times the train data is read is aproximately log(N) full
@@ -299,7 +289,7 @@ class DecisionTreeLearner_LargeData(DecisionTreeLearner_Queued):
         if not self.attributes:
             return self._single_node_tree()
         root = DecisionTreeNode()
-        leaves = {root: self.new_set_of_gain_counters()}
+        leaves = {root: self._new_set_of_gain_counters()}
         while leaves:
             leaf = None
             for example in self.dataset:
@@ -334,11 +324,15 @@ class DecisionTreeLearner_LargeData(DecisionTreeLearner_Queued):
                 for value, counts in branches:
                     branch = leaf.add_branch(value)
                     branch.set_results_from_counts(counts)
-                    leaves[branch] = self.new_set_of_gain_counters()
+                    leaves[branch] = self._new_set_of_gain_counters()
         return root
 
 
 class NaiveBayes(Classifier):
+    """
+    Implements a classifier that uses the Bayes' theorem.
+    """
+
     def __init__(self, dataset, problem):
         super(NaiveBayes, self).__init__(dataset, problem)
 

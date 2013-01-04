@@ -25,10 +25,16 @@ class Classifier(object):
 
     @property
     def attributes(self):
+        """
+        The attributes of the problem.
+        """
         return self.problem.attributes
 
     @property
     def target(self):
+        """
+        The problem's target.
+        """
         return self.problem.target
 
     def classify(self, example):

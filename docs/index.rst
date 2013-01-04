@@ -14,6 +14,6 @@ Contents:
     * :doc:`local_search_problems`
     * :doc:`constraint_satisfaction_problems`
 * Machine Learning:
-    * comming soon...
+    * :doc:`classification`
 
 .. include:: ../README.rst
