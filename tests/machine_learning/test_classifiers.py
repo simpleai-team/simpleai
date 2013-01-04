@@ -127,6 +127,14 @@ class TestClassifier(object):
 class TestDtree_Pseudo(TestClassifier):
     classifier = DecisionTreeLearner
 
+    def test_no_target_split(self):
+        nodes = [self.this.root]
+
+        while nodes:
+            node = nodes.pop()
+            self.assertNotEqual(self.target, node.attribute)
+            nodes.extend(node.branches.values())
+
 
 class TestDtree_LargeData(TestDtree_Pseudo):
     classifier = DecisionTreeLearner_LargeData
@@ -137,7 +145,6 @@ class TestDtree_LargeData(TestDtree_Pseudo):
         """
 
         pseudo = DecisionTreeLearner(self.corpus, self.problem)
-
         for test in self.test_set:
             self.assertEqual(pseudo.classify(test), self.this.classify(test))
 
