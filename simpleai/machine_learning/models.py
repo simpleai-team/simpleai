@@ -27,6 +27,7 @@ class Classifier(object):
     def attributes(self):
         """
         The attributes of the problem.
+        A list of callable objects.
         """
         return self.problem.attributes
 
@@ -34,6 +35,8 @@ class Classifier(object):
     def target(self):
         """
         The problem's target.
+        A callable that takes an observation and returns the correct
+        classification for it.
         """
         return self.problem.target
 
