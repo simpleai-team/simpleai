@@ -5,8 +5,8 @@
 API for statistical classifiers.
 
 Classifiers implemented:
- * Decision trees: See http://en.wikipedia.org/wiki/Decision_tree_learning
- * Naive Bayes:    See http://en.wikipedia.org/wiki/Naive_Bayes_classifier
+ * Decision tree:      See http://en.wikipedia.org/wiki/Decision_tree_learning
+ * Naive Bayes:        See http://en.wikipedia.org/wiki/Naive_Bayes_classifier
  * K-Nearest Neighbor: See http://en.wikipedia.org/wiki/K-nearest_neighbor
 """
 
