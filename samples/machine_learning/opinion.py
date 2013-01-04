@@ -108,7 +108,6 @@ def main():
 
     problem = OpinionProblem(corpus)
     classifier = NaiveBayes(corpus, problem)
-    classifier.save("opinion.pickle")
     print "Classifier created"
 
     p = precision(classifier, problem.target, test)
