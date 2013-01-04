@@ -22,6 +22,13 @@ class Classifier(object):
     def __init__(self, dataset, problem):
         self.dataset = dataset
         self.problem = problem
+        self.learn()
+
+    def learn(self):
+        """
+        Does the training. Returns nothing.
+        """
+        raise NotImplementedError()
 
     @property
     def attributes(self):

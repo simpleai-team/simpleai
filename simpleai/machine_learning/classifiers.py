@@ -120,7 +120,8 @@ class DecisionTreeLearner(Classifier):
     """
 
     def __init__(self, dataset, problem):
-        super(DecisionTreeLearner, self).__init__(dataset, problem)
+        self.dataset = dataset
+        self.problem = problem
         self.root = self.learn(dataset, set(self.attributes), dataset)
 
     def learn(self, examples, attributes, parent_examples):
@@ -183,15 +184,12 @@ class DecisionTreeLearner_Queued(Classifier):
          This algorithm is equivalent to ID3.
     """
 
-    def __init__(self, dataset, problem):
-        super(DecisionTreeLearner_Queued, self).__init__(dataset, problem)
-        self.root = self.learn()
-
     def learn(self):
         if not self.attributes:
-            return self._single_node_tree()
-        root = DecisionTreeNode()
-        q = [(root, self.dataset)]
+            self.root = self._single_node_tree()
+            return
+        self.root = DecisionTreeNode()
+        q = [(self.root, self.dataset)]
         while q:
             node, examples = q.pop()
             A = self._max_gain_split(examples)
@@ -199,7 +197,7 @@ class DecisionTreeLearner_Queued(Classifier):
             branches = A.get_branches()
 
             # Base case exception
-            if node is root:
+            if node is self.root:
                 node.set_results_from_counts(counts)
 
             if len(counts) == 1:
@@ -214,7 +212,6 @@ class DecisionTreeLearner_Queued(Classifier):
                 branch.set_results_from_counts(counts)
                 bdataset = [e for e in examples if node.attribute(e) == value]
                 q.append((branch, bdataset))
-        return root
 
     def _max_gain_split(self, examples):
         """
@@ -274,26 +271,19 @@ class DecisionTreeLearner_LargeData(DecisionTreeLearner_Queued):
     algorithm.
     """
     def __init__(self, dataset, problem, minsample=1):
-        """
-        Is very important to note that in order to have a small memory
-        footprint the `minsample` argument has to be set to a reasonable size,
-        otherwhise there will be one tree leaf for every example in the
-        training set and this totally defeats the pourpose of having a large
-        data version of the algorithm.
-        """
-        super(DecisionTreeLearner_Queued, self).__init__(dataset, problem)
         self.minsample = minsample
-        self.root = self.learn()
+        super(DecisionTreeLearner_Queued, self).__init__(dataset, problem)
 
     def learn(self):
         if not self.attributes:
-            return self._single_node_tree()
-        root = DecisionTreeNode()
-        leaves = {root: self._new_set_of_gain_counters()}
+            self.root = self._single_node_tree()
+            return
+        self.root = DecisionTreeNode()
+        leaves = {self.root: self._new_set_of_gain_counters()}
         while leaves:
             leaf = None
             for example in self.dataset:
-                leaf = walk_to_leaf(root, example)
+                leaf = walk_to_leaf(self.root, example)
                 if leaf not in leaves:
                     continue  # Don't split leaves that where ignored
                 for gain_counter in leaves[leaf]:
@@ -310,7 +300,7 @@ class DecisionTreeLearner_LargeData(DecisionTreeLearner_Queued):
                             if c.total > self.minsample]
 
                 # Base case exception
-                if leaf is root:
+                if leaf is self.root:
                     leaf.set_results_from_counts(counts)
 
                 if len(counts) == 1:
@@ -325,7 +315,6 @@ class DecisionTreeLearner_LargeData(DecisionTreeLearner_Queued):
                     branch = leaf.add_branch(value)
                     branch.set_results_from_counts(counts)
                     leaves[branch] = self._new_set_of_gain_counters()
-        return root
 
 
 class NaiveBayes(Classifier):
@@ -333,9 +322,7 @@ class NaiveBayes(Classifier):
     Implements a classifier that uses the Bayes' theorem.
     """
 
-    def __init__(self, dataset, problem):
-        super(NaiveBayes, self).__init__(dataset, problem)
-
+    def learn(self):
         # Frequency count of target classes
         self.C = OnlineLogProbability()
         # Frequency count of P(Fi|C):
@@ -343,7 +330,7 @@ class NaiveBayes(Classifier):
                       defaultdict(lambda:  # For each attribute,
                           OnlineLogProbability()))  # For each value, count it
 
-        for example in dataset:
+        for example in self.dataset:
             class_ = self.target(example)
             self.C.add(class_)
             for attribute in self.attributes:
@@ -392,20 +379,18 @@ class KNearestNeighbors(Classifier):
     """
 
     def __init__(self, dataset, problem, k=1):
+        self.k = k
         super(KNearestNeighbors, self).__init__(dataset, problem)
 
-        if not dataset:
+    def learn(self):
+        if not self.dataset:
             raise ValueError("Empty dataset")
         try:
-            problem.distance(dataset[0], dataset[0])
+            self.problem.distance(self.dataset[0], self.dataset[0])
         except NotImplementedError:
             message = "Classification problem not suitable for KNN. " \
                       "A problem with a distance defined is needed."
             raise ValueError(message)
-
-        self.dataset = dataset
-        self.problem = problem
-        self.k = k
 
     def classify(self, example):
         distances = [(self.problem.distance(e, example), e)
