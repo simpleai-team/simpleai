@@ -7,6 +7,13 @@ from collections import defaultdict
 
 
 class Counter(defaultdict):
+    """
+    Counter of examples. Counts the total of examples added
+    and also the times that the target of that example appears.
+
+    To add an example use the `add` method and to check the
+    values use it like a dictionary.
+    """
 
     def __init__(self, target):
         super(Counter, self).__init__(int)
@@ -29,7 +36,6 @@ class OnlineEntropy(Counter):
 
 
 class OnlineInformationGain(object):
-
     def __init__(self, attribute, target):
         self.attribute = attribute
         self.H = OnlineEntropy(target)
@@ -77,6 +83,9 @@ class OnlineLogProbability(object):
 
     def __iter__(self):
         return iter(self.d)
+
+    def __len__(self):
+        return len(self.d)
 
     def iteritems(self):
         for x in self.d:

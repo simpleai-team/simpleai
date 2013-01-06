@@ -2,9 +2,10 @@
 # coding: utf-8
 
 """
-Api for statistical classifiers.
-Decision trees: See http://en.wikipedia.org/wiki/Decision_tree_learning
-Naive Bayes classifier.
+Classifiers implemented:
+ * Decision tree:      See http://en.wikipedia.org/wiki/Decision_tree_learning
+ * Naive Bayes:        See http://en.wikipedia.org/wiki/Naive_Bayes_classifier
+ * K-Nearest Neighbor: See http://en.wikipedia.org/wiki/K-nearest_neighbor
 """
 
 import numpy
@@ -41,6 +42,11 @@ def iter_tree(root):
 
 
 def tree_to_str(root):
+    """
+    Returns a string representation of a decision tree with
+    root node `root`.
+    """
+
     xs = []
     for value, node, depth in iter_tree(root):
         template = "{indent}"
@@ -61,6 +67,9 @@ def tree_to_str(root):
 
 
 class DecisionTreeNode(object):
+    """
+    A node of a decision tree.
+    """
 
     def __init__(self, attribute=None):
         self.branches = {}
@@ -111,7 +120,8 @@ class DecisionTreeLearner(Classifier):
     """
 
     def __init__(self, dataset, problem):
-        super(DecisionTreeLearner, self).__init__(dataset, problem)
+        self.dataset = dataset
+        self.problem = problem
         self.root = self.learn(dataset, set(self.attributes), dataset)
 
     def learn(self, examples, attributes, parent_examples):
@@ -149,7 +159,7 @@ class DecisionTreeLearner(Classifier):
         AIMA implies that importance should be information gain.
         Since AIMA only defines it for binary features this implementation
         was based on the wikipedia article:
-            http://en.wikipedia.org/wiki/Information_gain_in_decision_trees
+        http://en.wikipedia.org/wiki/Information_gain_in_decision_trees
         """
         gain_counter = OnlineInformationGain(attribute, self.target)
         for example in examples:
@@ -157,9 +167,6 @@ class DecisionTreeLearner(Classifier):
         return gain_counter.get_gain()
 
     def classify(self, example):
-        """
-        Returns a classification for `example`.
-        """
         node = walk_to_leaf(self.root, example)
         return node.result
 
@@ -177,26 +184,20 @@ class DecisionTreeLearner_Queued(Classifier):
          This algorithm is equivalent to ID3.
     """
 
-    def __init__(self, dataset, problem):
-        super(DecisionTreeLearner_Queued, self).__init__(dataset, problem)
-        self.root = self.learn()
-
     def learn(self):
-        """
-        Trains the learner.
-        """
         if not self.attributes:
-            return self._single_node_tree()
-        root = DecisionTreeNode(self.target)
-        q = [(root, self.dataset)]
+            self.root = self._single_node_tree()
+            return
+        self.root = DecisionTreeNode()
+        q = [(self.root, self.dataset)]
         while q:
             node, examples = q.pop()
-            A = self.max_gain_split(examples)
+            A = self._max_gain_split(examples)
             counts = A.get_target_class_counts()
             branches = A.get_branches()
 
             # Base case exception
-            if node is root:
+            if node is self.root:
                 node.set_results_from_counts(counts)
 
             if len(counts) == 1:
@@ -211,14 +212,13 @@ class DecisionTreeLearner_Queued(Classifier):
                 branch.set_results_from_counts(counts)
                 bdataset = [e for e in examples if node.attribute(e) == value]
                 q.append((branch, bdataset))
-        return root
 
-    def max_gain_split(self, examples):
+    def _max_gain_split(self, examples):
         """
         Returns an OnlineInformationGain of the attribute with
         max gain based on `examples`.
         """
-        gains = self.new_set_of_gain_counters()
+        gains = self._new_set_of_gain_counters()
         for example in examples:
             for gain in gains:
                 gain.add(example)
@@ -227,7 +227,7 @@ class DecisionTreeLearner_Queued(Classifier):
             raise ValueError("Dataset is empty")
         return winner
 
-    def new_set_of_gain_counters(self):
+    def _new_set_of_gain_counters(self):
         """
         Creates a new set of OnlineInformationGain objects
         for each attribute.
@@ -239,14 +239,11 @@ class DecisionTreeLearner_Queued(Classifier):
         c = Counter(self.target)
         for example in self.dataset:
             c.add(example)
-        node = DecisionTreeNode(self.target)
+        node = DecisionTreeNode()
         node.set_results_from_counts(c)
         return node
 
     def classify(self, example):
-        """
-        Returns a classification for `example`.
-        """
         node = walk_to_leaf(self.root, example)
         return node.result
 
@@ -255,6 +252,7 @@ class DecisionTreeLearner_LargeData(DecisionTreeLearner_Queued):
     """
     This implementations is specifically designed to handle large dataset that
     don't fit into memory and has more improvements over the queued one:
+
         -Data is processed one-at-a-time, so the training data doesn't need to
          fit in memory.
         -The amount of times the train data is read is aproximately log(N) full
@@ -273,26 +271,19 @@ class DecisionTreeLearner_LargeData(DecisionTreeLearner_Queued):
     algorithm.
     """
     def __init__(self, dataset, problem, minsample=1):
-        """
-        Is very important to note that in order to have a small memory
-        footprint the `minsample` argument has to be set to a reasonable size,
-        otherwhise there will be one tree leaf for every example in the
-        training set and this totally defeats the pourpose of having a large
-        data version of the algorithm.
-        """
-        super(DecisionTreeLearner_Queued, self).__init__(dataset, problem)
         self.minsample = minsample
-        self.root = self.learn()
+        super(DecisionTreeLearner_Queued, self).__init__(dataset, problem)
 
     def learn(self):
         if not self.attributes:
-            return self._single_node_tree()
-        root = DecisionTreeNode(self.target)
-        leaves = {root: self.new_set_of_gain_counters()}
+            self.root = self._single_node_tree()
+            return
+        self.root = DecisionTreeNode()
+        leaves = {self.root: self._new_set_of_gain_counters()}
         while leaves:
             leaf = None
             for example in self.dataset:
-                leaf = walk_to_leaf(root, example)
+                leaf = walk_to_leaf(self.root, example)
                 if leaf not in leaves:
                     continue  # Don't split leaves that where ignored
                 for gain_counter in leaves[leaf]:
@@ -309,7 +300,7 @@ class DecisionTreeLearner_LargeData(DecisionTreeLearner_Queued):
                             if c.total > self.minsample]
 
                 # Base case exception
-                if leaf is root:
+                if leaf is self.root:
                     leaf.set_results_from_counts(counts)
 
                 if len(counts) == 1:
@@ -323,14 +314,15 @@ class DecisionTreeLearner_LargeData(DecisionTreeLearner_Queued):
                 for value, counts in branches:
                     branch = leaf.add_branch(value)
                     branch.set_results_from_counts(counts)
-                    leaves[branch] = self.new_set_of_gain_counters()
-        return root
+                    leaves[branch] = self._new_set_of_gain_counters()
 
 
 class NaiveBayes(Classifier):
-    def __init__(self, dataset, problem):
-        super(NaiveBayes, self).__init__(dataset, problem)
+    """
+    Implements a classifier that uses the Bayes' theorem.
+    """
 
+    def learn(self):
         # Frequency count of target classes
         self.C = OnlineLogProbability()
         # Frequency count of P(Fi|C):
@@ -338,7 +330,7 @@ class NaiveBayes(Classifier):
                       defaultdict(lambda:  # For each attribute,
                           OnlineLogProbability()))  # For each value, count it
 
-        for example in dataset:
+        for example in self.dataset:
             class_ = self.target(example)
             self.C.add(class_)
             for attribute in self.attributes:
@@ -381,23 +373,24 @@ class KNearestNeighbors(Classifier):
     Classifies objects based on closest training example.
     Uses the k-nearest examples from the training and
     gets the most common classification among these.
+
+    To use this classifier the problem must define a `distance`
+    method to messure the distance between two examples.
     """
 
     def __init__(self, dataset, problem, k=1):
+        self.k = k
         super(KNearestNeighbors, self).__init__(dataset, problem)
 
-        if not dataset:
+    def learn(self):
+        if not self.dataset:
             raise ValueError("Empty dataset")
         try:
-            problem.distance(dataset[0], dataset[0])
+            self.problem.distance(self.dataset[0], self.dataset[0])
         except NotImplementedError:
             message = "Classification problem not suitable for KNN. " \
                       "A problem with a distance defined is needed."
             raise ValueError(message)
-
-        self.dataset = dataset
-        self.problem = problem
-        self.k = k
 
     def classify(self, example):
         distances = [(self.problem.distance(e, example), e)
