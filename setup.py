@@ -5,12 +5,12 @@ from distutils.core import setup
 
 setup(
     name='simpleai',
-    version='0.4',
+    version='0.5',
     description=u'An implementation of AI algorithms based on aima-python',
     long_description=open('README.rst').read(),
     author = u'Juan Pedro Fisanotti',
     author_email = 'fisadev@gmail.com',
-    url='http://github.com/fisadev/simpleai',
+    url='http://github.com/simpleai-team/simpleai',
     packages=['simpleai', ],
     license='LICENSE.txt',
     classifiers = [

@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+"""
+Basic API for modeling a classification problem.
+"""
+
 try:
     import cPickle as pickle
 except ImportError:
@@ -11,18 +15,36 @@ class Classifier(object):
     """
     Base of all classifiers.
     This specifies the classifier API.
+
+    Each classifier holds at least a dataset and a ClassificationProblem.
     """
 
     def __init__(self, dataset, problem):
         self.dataset = dataset
         self.problem = problem
+        self.learn()
+
+    def learn(self):
+        """
+        Does the training. Returns nothing.
+        """
+        raise NotImplementedError()
 
     @property
     def attributes(self):
+        """
+        The attributes of the problem.
+        A list of callable objects.
+        """
         return self.problem.attributes
 
     @property
     def target(self):
+        """
+        The problem's target.
+        A callable that takes an observation and returns the correct
+        classification for it.
+        """
         return self.problem.target
 
     def classify(self, example):
@@ -52,6 +74,9 @@ class Classifier(object):
 
     @classmethod
     def load(cls, filepath):
+        """
+        Loads a pickled version of the classifier saved in `filepath`
+        """
         with open(filepath) as filehandler:
             classifier = pickle.load(filehandler)
 
@@ -62,56 +87,86 @@ class Classifier(object):
 
 
 class ClassificationProblem(object):
-    @property
-    def attributes(self):
-        attrs = getattr(self, "_attributes", None)
-        if attrs is not None:
-            return attrs
+    """
+    Abstract representation of a classification problem.
+    It holds the attributes to be tested and defines them
+    "target" of an example.
+
+    You can define attributes by adding them to the `attributes`
+    list or by defining a method and decorating it with `is_attribute`.
+
+    The target method returns the real classification of an example from
+    the dataset.
+    """
+
+    def __init__(self):
         attrs = []
         for name in dir(self):
-            if name == "attributes":
-                continue
             method = getattr(self, name)
-            if getattr(method, "is_attribute", False):
+            if hasattr(method, "is_attribute"):
                 attr = Attribute(method, method.name)
                 attrs.append(attr)
-        self._attributes = attrs
-        return attrs
+        self.attributes = attrs
 
     def target(self, example):
+        """
+        Given an example it returns the classification for that
+        example.
+        """
         raise NotImplementedError()
 
 
 class VectorDataClassificationProblem(ClassificationProblem):
+    """
+    A classification problem that defines attribute for a dataset
+    that is a set of vectors. An attribute for each index of the
+    vector is created.
+    """
 
     def __init__(self, dataset, target_index):
         """
-        Dataset should be an iterable, *not* an iterator
+        `dataset` should be an iterable, *not* an iterator.
+        `target_index` is the index in the vector where the classification
+        of an example is defined.
         """
+        super(VectorDataClassificationProblem, self).__init__()
         try:
             example = next(iter(dataset))
         except StopIteration:
             raise ValueError("Dataset is empty")
-        self.i = target_index
+
+        self.target_index = target_index
+
         N = len(example)
-        attributes = list(self.attributes)
-        if self.i < 0:
-            self.i = N + self.i
-        if self.i < 0 or N <= self.i:
+        if self.target_index < 0:  # Negative number allowed, counts in reverse
+            self.target_index = N + self.target_index
+        if self.target_index < 0 or N <= self.target_index:
             raise ValueError("Target index is out of range")
         for i in xrange(N):
-            if i == self.i:
+            if i == self.target_index:
                 continue
             attribute = VectorIndexAttribute(i, "data at index {}".format(i))
-            attributes.append(attribute)
-        self._attributes = attributes
+            self.attributes.append(attribute)
 
     def target(self, example):
-        return example[self.i]
+        """
+        Uses the target defined in the creation of the vector problem
+        to return the target of `example`.
+        """
+        return example[self.target_index]
 
 
 class Attribute(object):
+    """
+    Abstract base of an attribute, a feature to be tested on the
+    examples.
+    """
+
     def __init__(self, function=None, name=None, description=None):
+        """
+        Creates an attribute with `function`.
+        Adds a name and a description if it's specified.
+        """
         self.name = name
         self.function = function
         self.description = description
@@ -126,18 +181,33 @@ class Attribute(object):
     def __call__(self, example):
         return self.function(example)
 
+    def __str__(self):
+        if self.name is None:
+            return "<undefined name>"
+        return self.name
+
 
 class VectorIndexAttribute(Attribute):
-    def __init__(self, i, name=None, description=None):
-        self.i = i
-        self.name = name
-        self.description = description
+    """
+    Attribute that returns the n-th element from a vector.
+    """
+
+    def __init__(self, n, name=None, description=None):
+        super(VectorIndexAttribute, self).__init__(self, name, description)
+        self.n = n
+
+    def reason(self, vector):
+        message = "{} is the {}-th element of the vector"
+        return message.format(vector[self.n], self.n)
 
     def __call__(self, vector):
-        return vector[self.i]
+        return vector[self.n]
 
 
 def is_attribute(method, name=None):
+    """
+    Decorator for methods that are attributes.
+    """
     if name is None:
         name = method.__name__
     method.is_attribute = True

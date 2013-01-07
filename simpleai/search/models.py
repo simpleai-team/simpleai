@@ -76,6 +76,13 @@ class SearchProblem(object):
         """
         raise NotImplementedError
 
+    def state_representation(self, state):
+        """
+        Returns a string representation of a state.
+        By default it returns repr(state).
+        """
+        return repr(state)
+
 
 class SearchNode(object):
     '''Node of a search process.'''
@@ -120,6 +127,9 @@ class SearchNode(object):
 
     def __eq__(self, other):
         return isinstance(other, SearchNode) and self.state == other.state
+
+    def __repr__(self):
+        return 'Node <%s>' % self.problem.state_representation(self.state)
 
 
 class SearchNodeCostOrdered(SearchNode):
