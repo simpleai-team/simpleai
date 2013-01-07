@@ -7,7 +7,8 @@ Tests for metrics module in machine learning.
 
 import unittest
 from simpleai.machine_learning.metrics import Counter, OnlineEntropy, \
-                                              OnlineLogProbability
+                                              OnlineLogProbability, \
+                                              OnlineInformationGain
 
 
 class TestCounter(unittest.TestCase):
@@ -44,6 +45,31 @@ class TestOnlineEntropy(unittest.TestCase):
         for i in xrange(150):
             entropy.add(i)
         self.assertGreaterEqual(entropy.get_entropy(), 0.0)
+
+
+class TestOnlineInformationGain(unittest.TestCase):
+    def test_starts_in_zero(self):
+        gain = OnlineInformationGain(lambda x: None, lambda x: None)
+        self.assertEqual(gain.get_gain(), 0)
+        self.assertEqual(gain.get_target_class_counts().items(), [])
+        self.assertEqual(gain.get_branches(), [])
+
+    def test_no_gain(self):
+        f = lambda x: None
+        gain = OnlineInformationGain(f, f)
+        for i in xrange(30):
+            gain.add(i)
+        self.assertEqual(gain.get_gain(), 0)
+
+    def test_full_gain(self):
+        target = lambda x: x % 7
+        gain = OnlineInformationGain(target, target)
+        entropy = OnlineEntropy(target)
+        for i in xrange(50):
+            gain.add(i)
+            entropy.add(i)
+        self.assertEqual(gain.get_gain(), entropy.get_entropy())
+        self.assertGreaterEqual(gain.get_gain(), 0)
 
 
 if __name__ == "__main__":
