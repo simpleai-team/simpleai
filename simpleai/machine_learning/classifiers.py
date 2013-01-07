@@ -383,10 +383,13 @@ class KNearestNeighbors(Classifier):
         super(KNearestNeighbors, self).__init__(dataset, problem)
 
     def learn(self):
-        if not self.dataset:
+        try:
+            next(iter(self.dataset))
+        except StopIteration:
             raise ValueError("Empty dataset")
         try:
-            self.problem.distance(self.dataset[0], self.dataset[0])
+            example = next(iter(self.dataset))
+            self.problem.distance(example, example)
         except NotImplementedError:
             message = "Classification problem not suitable for KNN. " \
                       "A problem with a distance defined is needed."
