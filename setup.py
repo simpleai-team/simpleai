@@ -10,7 +10,7 @@ setup(
     long_description=open('README.rst').read(),
     author = u'Juan Pedro Fisanotti',
     author_email = 'fisadev@gmail.com',
-    url='http://github.com/fisadev/simpleai',
+    url='http://github.com/simpleai-team/simpleai',
     packages=['simpleai', ],
     license='LICENSE.txt',
     classifiers = [

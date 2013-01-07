@@ -1,7 +1,7 @@
 Simple AI
 =========
 
-Project home: http://github.com/fisadev/simpleai
+Project home: http://github.com/simpleai-team/simpleai
 
 This lib implements many of the artificial intelligence algorithms described on the book "Artificial Ingelligence, a Modern Approach", from Stuart Russel and Peter Norvig. We strongly recommend you to read the book, or at least the introductory chapters and the ones related to the components you want to use, because we won't explain the algorithms here.
 
