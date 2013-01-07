@@ -11,7 +11,7 @@ setup(
     author = u'Juan Pedro Fisanotti',
     author_email = 'fisadev@gmail.com',
     url='http://github.com/simpleai-team/simpleai',
-    packages=['simpleai', ],
+    packages=['simpleai', 'simpleai.search', 'simpleai.machine_learning'],
     license='LICENSE.txt',
     classifiers = [
         'Intended Audience :: Developers',
