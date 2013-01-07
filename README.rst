@@ -9,13 +9,14 @@ This implementation takes some of the ideas from the Norvig's implementation (th
 
 At this moment, the implementation includes:
 
-* Search algorithms (not informed and informed)
-* Local Search algorithms
-* Constraint Satisfaction Problems algorithms
+* Search
+    * Traditional search algorithms (not informed and informed)
+    * Local Search algorithms
+    * Constraint Satisfaction Problems algorithms
+* Machine Learning
+    * Statistical Classification 
 
-And we are working on:
-
-* Machine Learning (almost done, still no documentation)
+And we are working on an interactive execution viewer for search algorithms (display the search tree on each iteration).
 
 
 Installation
