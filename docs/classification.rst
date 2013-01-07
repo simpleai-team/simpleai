@@ -129,11 +129,11 @@ without altering the original data in any way (ie, read-only).
 Defining your problem
 ---------------------
 
-The ``ClassificationProblem`` it's where the attributes previously
+The ``ClassificationProblem`` is where the attributes previously
 defined live. In your problem it also has to be defined the ``target``
 attribute.
-The `target` it's the attribute that classifier to guess, ie, it is a method
-that given an example from the dataset, it returns the correct classification
+The `target` is the attribute that classifier has to guess, ie, it's a method
+that given an example from the dataset returns the correct classification
 for it.
 
 Back to the language classification example, the problem definition would be:
