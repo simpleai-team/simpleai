@@ -5,7 +5,7 @@ variables = ('WA', 'NT', 'SA', 'Q', 'NSW', 'V', 'T')
 domains = dict((v, ['red', 'green', 'blue']) for v in variables)
 
 def const_different(variables, values):
-    return values[0] == values[1]  # expect the value of the neighbors to be different
+    return values[0] != values[1]  # expect the value of the neighbors to be different
 
 constraints = [
     (('WA', 'NT'), const_different),
