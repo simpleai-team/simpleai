@@ -43,7 +43,7 @@ Example:
             # generate a random initial string
             # note that with this example, not always we will find a solution
             letters = ' ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-            return random.choice(letter)
+            return random.choice(letters)
 
 
 Special case: genetic search
