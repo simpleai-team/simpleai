@@ -3,7 +3,7 @@ Simple AI
 
 Project home: http://github.com/simpleai-team/simpleai
 
-This lib implements many of the artificial intelligence algorithms described on the book "Artificial Ingelligence, a Modern Approach", from Stuart Russel and Peter Norvig. We strongly recommend you to read the book, or at least the introductory chapters and the ones related to the components you want to use, because we won't explain the algorithms here.
+This lib implements many of the artificial intelligence algorithms described on the book "Artificial Intelligence, a Modern Approach", from Stuart Russel and Peter Norvig. We strongly recommend you to read the book, or at least the introductory chapters and the ones related to the components you want to use, because we won't explain the algorithms here.
 
 This implementation takes some of the ideas from the Norvig's implementation (the `aima-python <https://code.google.com/p/aima-python/>`_ lib), but it's made with a more "pythonic" approach, and more emphasis on creating a stable, modern, and maintainable version. We are testing the majority of the lib, it's available via pip install, has a standard repo and lib architecture, well documented, respects the python pep8 guidelines, provides only working code (no placeholders for future things), etc. Even the internal code is written with readability in mind, not only the external API.
 
