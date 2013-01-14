@@ -78,6 +78,11 @@ More detailed documentation
 
 You can read the docs online `here <http://simpleai.readthedocs.org/en/latest/>`_. Or for offline access, you can clone the project code repository and read them from the ``docs`` folder.
 
+Help and discussion
+===================
+
+Join us at the Simple AI `google group <groups.google.com/group/simpleai>`_.
+
     
 Authors
 =======
