@@ -33,7 +33,7 @@ Example:
     class HelloProblem(SearchProblem):
         def actions(self, state):
             if len(state) < len(GOAL):
-                return [c for c in ' ABCDEFGHIJKLMNOPQRSTUVWXYZ']
+                return list(' ABCDEFGHIJKLMNOPQRSTUVWXYZ')
             else:
                 return []
 
