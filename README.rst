@@ -81,7 +81,7 @@ You can read the docs online `here <http://simpleai.readthedocs.org/en/latest/>`
 Help and discussion
 ===================
 
-Join us at the Simple AI `google group <groups.google.com/group/simpleai>`_.
+Join us at the Simple AI `google group <http://groups.google.com/group/simpleai>`_.
 
     
 Authors
