@@ -45,7 +45,9 @@ class ConsoleViewer(DummyViewer):
 
 
 class WebViewer(DummyViewer):
-    def __init__(self):
+    def __init__(self, host='127.0.0.1', port=8000):
+        self.host = host
+        self.port = port
         self.paused = True
         self.events = []
 
@@ -55,7 +57,7 @@ class WebViewer(DummyViewer):
         route('/')(self.web_status)
         route('/next')(self.web_next)
 
-        t = Thread(target=run)
+        t = Thread(target=run, kwargs=dict(host=self.host, port=self.port))
         t.daemon = True
         t.start()
 
