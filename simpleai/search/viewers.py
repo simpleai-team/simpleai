@@ -1,5 +1,6 @@
 # coding: utf-8
 from threading import Thread
+from time import sleep
 
 
 class DummyViewer(object):
@@ -49,16 +50,10 @@ class WebViewer(DummyViewer):
         self.events = []
 
     def start(self):
-        from bottle import route, run, redirect
+        from bottle import route, run
 
-        @route('/')
-        def status():
-            return '<a href="/next">Next</a> <br />Status:<br />' + '<br />'.join(self.events)
-
-        @route('/next')
-        def next():
-            self.paused = False
-            redirect('/')
+        route('/')(self.web_status)
+        route('/next')(self.web_next)
 
         t = Thread(target=run)
         t.daemon = True
@@ -66,10 +61,21 @@ class WebViewer(DummyViewer):
 
         self.pause()
 
+    def web_status(self):
+        return '<a href="/next">Next</a> <br />Status:<br />' + '<br />'.join(self.events)
+
+    def web_next(self):
+        from bottle import redirect
+
+        self.paused = False
+        while not self.paused:
+            sleep(0.1)
+        redirect('/')
+
     def pause(self):
         self.paused = True
         while self.paused:
-            pass
+            sleep(0.1)
 
     def event(self, *args):
         self.events.append(' '.join(map(str, args)))
