@@ -1,4 +1,5 @@
 # coding: utf-8
+from os import path
 from threading import Thread
 from time import sleep
 
@@ -51,6 +52,9 @@ class WebViewer(DummyViewer):
         self.paused = True
         self.events = []
 
+        web_template_path = path.join(path.dirname(__file__), 'web_viewer.html')
+        self.web_template = open(web_template_path).read()
+
     def start(self):
         from bottle import route, run
 
@@ -64,7 +68,8 @@ class WebViewer(DummyViewer):
         self.pause()
 
     def web_status(self):
-        return '<a href="/next">Next</a> <br />Status:<br />' + '<br />'.join(self.events)
+        from bottle import template
+        return template(self.web_template, events=self.events)
 
     def web_next(self):
         from bottle import redirect
