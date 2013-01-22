@@ -50,6 +50,7 @@ class ConsoleViewer(DummyViewer):
 
 class WebViewer(ConsoleViewer):
     def __init__(self, host='127.0.0.1', port=8000):
+        super(WebViewer, self).__init__(interactive=True)
         self.host = host
         self.port = port
         self.paused = True
