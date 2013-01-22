@@ -1,6 +1,9 @@
 # coding: utf-8
 
 class DummyViewer(object):
+    def start(self):
+        pass
+
     def new_iteration(self, fringe):
         pass
 

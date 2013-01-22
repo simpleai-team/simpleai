@@ -127,6 +127,8 @@ def _search(problem, fringe, graph_search=False, depth_limit=None,
     '''
     if viewer is None:
         viewer = DummyViewer()
+    viewer.start()
+
     memory = {}
     initial_node = node_factory(state=problem.initial_state,
                                 problem=problem)
