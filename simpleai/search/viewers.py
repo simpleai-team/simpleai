@@ -26,26 +26,29 @@ class ConsoleViewer(DummyViewer):
         if self.interactive:
             raw_input('> press Enter ')
 
+    def output(self, *args):
+        print ' '.join(map(str, args))
+
     def new_iteration(self, fringe):
-        print ' **** New iteration ****'
-        print len(fringe), 'elements in fringe:', fringe
+        self.output(' **** New iteration ****')
+        self.output(len(fringe), 'elements in fringe:', fringe)
         self.pause()
 
     def chosen_node(self, node, is_goal):
-        print 'Chosen node:', node
+        self.output('Chosen node:', node)
         if is_goal:
-            print 'Is goal!'
+            self.output('Is goal!')
         else:
-            print 'Not goal'
+            self.output('Not goal')
         self.pause()
 
     def expanded(self, node, successors):
-        print 'Expand:', node
-        print len(successors), 'successors:', successors
+        self.output('Expand:', node)
+        self.output(len(successors), 'successors:', successors)
         self.pause()
 
 
-class WebViewer(DummyViewer):
+class WebViewer(ConsoleViewer):
     def __init__(self, host='127.0.0.1', port=8000):
         self.host = host
         self.port = port
@@ -84,23 +87,5 @@ class WebViewer(DummyViewer):
         while self.paused:
             sleep(0.1)
 
-    def event(self, *args):
+    def output(self, *args):
         self.events.append(' '.join(map(str, args)))
-
-    def new_iteration(self, fringe):
-        self.event(' **** New iteration ****')
-        self.event(len(fringe), 'elements in fringe:', fringe)
-        self.pause()
-
-    def chosen_node(self, node, is_goal):
-        self.event('Chosen node:', node)
-        if is_goal:
-            self.event('Is goal!')
-        else:
-            self.event('Not goal')
-        self.pause()
-
-    def expanded(self, node, successors):
-        self.event('Expand:', node)
-        self.event(len(successors), 'successors:', successors)
-        self.pause()
