@@ -73,7 +73,13 @@ class ConsoleViewer(object):
                      in_successors=False):
             node_id = id(node)
             if node_id not in graph_nodes:
-                new_g_node = Node('%s\n[%s]' % (repr(node), node_id),
+                c = getattr(node, 'cost', '-')
+                h = getattr(node, 'heuristic', '-')
+                label = '%s\nCost: %s\nHeuristic: %s'
+                label = label % (repr(node), c, h)
+
+                new_g_node = Node(node_id,
+                                  label=label,
                                   style='filled',
                                   fillcolor='#ffffff')
 
