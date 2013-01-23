@@ -61,15 +61,18 @@ class ConsoleViewer(object):
         node_label = lambda node: "%s\n(%s)" % (repr(node), id(node))
         g = Dot(graph_type='digraph')
         pending = self.current_fringe[:]
+        done = set()
         while pending:
             node = pending.pop()
-            if node.parent:
-                g.add_edge(Edge(node_label(node.parent),
-                                node_label(node),
-                                label=str(node.action)))
-                pending.append(node.parent)
-            else:
-                g.add_node(Node(node_label(node)))
+            if node not in done:
+                if node.parent:
+                    g.add_edge(Edge(node_label(node.parent),
+                                    node_label(node),
+                                    label=str(node.action)))
+                    pending.append(node.parent)
+                else:
+                    g.add_node(Node(node_label(node)))
+                done.add(node)
 
         g.write_png(png_path)
 
