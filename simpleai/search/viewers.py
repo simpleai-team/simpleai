@@ -18,6 +18,7 @@ class ConsoleViewer(object):
 
         self.chosen_color = '#00cc00'
         self.fringe_color = '#0000dd'
+        self.font_size = 11
 
     def start(self):
         self.last_event = 'start'
@@ -82,7 +83,8 @@ class ConsoleViewer(object):
                 new_g_node = Node(node_id,
                                   label=label,
                                   style='filled',
-                                  fillcolor='#ffffff')
+                                  fillcolor='#ffffff',
+                                  fontsize=self.font_size)
 
                 graph_nodes[node_id] = new_g_node
 
@@ -105,7 +107,8 @@ class ConsoleViewer(object):
 
             edge = Edge(g_parent_node,
                         g_node,
-                        label=node.action_representation())
+                        label=node.action_representation(),
+                        fontsize=self.font_size)
 
             if is_successor:
                 edge.set_color(self.chosen_color)
