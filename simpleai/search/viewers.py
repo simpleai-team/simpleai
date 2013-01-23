@@ -23,6 +23,12 @@ class ConsoleViewer(DummyViewer):
     def __init__(self, interactive=True):
         self.interactive = interactive
 
+        self.current_fringe = []
+        self.last_chosen = None
+        self.last_is_goal = False
+        self.last_expanded = None
+        self.last_successors = []
+
     def start(self):
         self.help()
 
@@ -53,12 +59,17 @@ class ConsoleViewer(DummyViewer):
     def output(self, *args):
         print ' '.join(map(str, args))
 
+    def create_graph(self, png_path):
+        print 'will create graph'
+
     def new_iteration(self, fringe):
+        self.current_fringe = fringe
         self.output(' **** New iteration ****')
         self.output(len(fringe), 'elements in fringe:', fringe)
         self.pause()
 
     def chosen_node(self, node, is_goal):
+        self.last_chosen, self.last_is_goal = node, is_goal
         self.output('Chosen node:', node)
         if is_goal:
             self.output('Is goal!')
@@ -67,6 +78,7 @@ class ConsoleViewer(DummyViewer):
         self.pause()
 
     def expanded(self, node, successors):
+        self.last_expanded, self.last_successors = node, successors
         self.output('Expand:', node)
         self.output(len(successors), 'successors:', successors)
         self.pause()
@@ -79,11 +91,6 @@ class WebViewer(ConsoleViewer):
         self.port = port
         self.paused = True
         self.events = []
-        self.current_fringe = []
-        self.last_chosen = None
-        self.last_is_goal = False
-        self.last_expanded = None
-        self.last_successors = []
 
         web_template_path = path.join(path.dirname(__file__), 'web_viewer.html')
         self.web_template = open(web_template_path).read()
@@ -119,15 +126,3 @@ class WebViewer(ConsoleViewer):
 
     def output(self, *args):
         self.events.append(' '.join(map(str, args)))
-
-    def new_iteration(self, fringe):
-        self.current_fringe = fringe
-        super(WebViewer, self).new_iteration(fringe)
-
-    def chosen_node(self, node, is_goal):
-        self.last_chosen, self.last_is_goal = node, is_goal
-        super(WebViewer, self).chosen_node(node, is_goal)
-
-    def expanded(self, node, successors):
-        self.last_expanded, self.last_successors = node, successors
-        super(WebViewer, self).expanded(node, successors)
