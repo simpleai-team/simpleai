@@ -67,6 +67,7 @@ class ConsoleViewer(object):
         graph = Dot(graph_type='digraph')
 
         graph_nodes = {}
+        graph_edges = {}
         done = set()
 
         def add_node(node, expanded=False, chosen=False, in_fringe=False,
@@ -84,7 +85,6 @@ class ConsoleViewer(object):
                                   fillcolor='#ffffff')
 
                 graph_nodes[node_id] = new_g_node
-                graph.add_node(new_g_node)
 
             g_node =  graph_nodes[node_id]
 
@@ -111,7 +111,7 @@ class ConsoleViewer(object):
                 edge.set_color(self.chosen_color)
                 edge.set_labelfontcolor(self.chosen_color)
 
-            graph.add_edge(edge)
+            graph_edges[id(node)] = edge
 
         if self.last_event == 'chosen_node':
             add_node(self.last_chosen, chosen=True)
@@ -131,6 +131,11 @@ class ConsoleViewer(object):
 
                 done.add(node)
                 node = node.parent
+
+        for node_id in sorted(graph_nodes.keys()):
+            graph.add_node(graph_nodes[node_id])
+        for node_id in sorted(graph_edges.keys()):
+            graph.add_edge(graph_edges[node_id])
 
         graph.write_png(png_path)
 
