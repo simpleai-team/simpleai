@@ -69,17 +69,19 @@ class ConsoleViewer(object):
         def get_graph_node(node, expanded=False, chosen=False, in_fringe=False):
             node_id = id(node)
             if node_id not in graph_nodes:
-                if expanded or chosen:
-                    fillcolor = '#00cc00'
-                else:
-                    fillcolor = '#ffffff'
-
                 new_g_node = Node('%s\n[%s]' % (repr(node), node_id),
                                   style='filled',
-                                  fillcolor=fillcolor)
+                                  fillcolor='#ffffff')
                 graph_nodes[node_id] = new_g_node
 
-            return graph_nodes[node_id]
+            g_node =  graph_nodes[node_id]
+
+            if expanded or chosen:
+                g_node.set_fillcolor('#00cc00')
+            if in_fringe:
+                g_node.set_color('#ff0000')
+
+            return g_node
 
         def get_edge_to_parent(node, is_successor=False):
             if is_successor:
