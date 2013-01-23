@@ -66,7 +66,8 @@ class ConsoleViewer(object):
         graph_nodes = {}
         done = set()
 
-        def add_node(node, expanded=False, chosen=False, in_fringe=False):
+        def add_node(node, expanded=False, chosen=False, in_fringe=False,
+                     in_successors=False):
             node_id = id(node)
             if node_id not in graph_nodes:
                 new_g_node = Node('%s\n[%s]' % (repr(node), node_id),
@@ -81,23 +82,27 @@ class ConsoleViewer(object):
             if expanded or chosen:
                 g_node.set_fillcolor('#00cc00')
             if in_fringe:
-                g_node.set_color('#ff0000')
+                g_node.set_color('#0000ff')
+                g_node.set_fontcolor('#0000ff')
+            if in_successors:
+                g_node.set_color('#00aa00')
+                g_node.set_fontcolor('#00aa00')
 
             return g_node
 
         def add_edge_to_parent(node, is_successor=False):
-            if is_successor:
-                color = '#00cc00'
-            else:
-                color = '#000000'
-
-            g_node = add_node(node)
+            g_node = add_node(node, in_successors=is_successor)
             g_parent_node = add_node(node.parent)
 
-            return graph.add_edge(Edge(g_parent_node,
-                                       g_node,
-                                       label=str(node.action),
-                                       color=color))
+            edge = Edge(g_parent_node,
+                        g_node,
+                        label=str(node.action))
+
+            if is_successor:
+                edge.set_color('#00aa00')
+                edge.set_labelfontcolor('#00aa00')
+
+            graph.add_edge(edge)
 
         if self.last_event == 'chosen_node':
             add_node(self.last_chosen, chosen=True)
