@@ -157,6 +157,7 @@ class WebViewer(ConsoleViewer):
 
         route('/')(self.web_status)
         route('/next')(self.web_next)
+        route('/graph')(self.web_graph)
 
         t = Thread(target=run, kwargs=dict(host=self.host, port=self.port))
         t.daemon = True
@@ -167,6 +168,12 @@ class WebViewer(ConsoleViewer):
     def web_status(self):
         from bottle import template
         return template(self.web_template, events=self.events)
+
+    def web_graph(self):
+        from bottle import static_file
+        graph_name = 'graph.png'
+        self.create_graph(graph_name)
+        return static_file(graph_name, root='.')
 
     def web_next(self):
         from bottle import redirect
