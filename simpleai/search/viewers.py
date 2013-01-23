@@ -49,22 +49,23 @@ class ConsoleViewer(DummyViewer):
             prompt = False
             if self.interactive:
                 option = raw_input('> ').strip()
-                if option == 'h':
-                    self.help()
-                    prompt = True
-                elif option == 'e':
-                    self.interactive = False
-                elif option == 'q':
-                    sys.exit()
-                elif option.startswith('g ') and len(option) > 2:
-                    png_path = option[2:]
-                    self.create_graph(png_path)
-                    self.output('graph saved to ' + png_path)
-                    prompt = True
-                else:
-                    self.output('Incorrect command')
-                    self.help()
-                    self.pause()
+                if option:
+                    if option == 'h':
+                        self.help()
+                        prompt = True
+                    elif option == 'e':
+                        self.interactive = False
+                    elif option == 'q':
+                        sys.exit()
+                    elif option.startswith('g ') and len(option) > 2:
+                        png_path = option[2:]
+                        self.create_graph(png_path)
+                        self.output('graph saved to ' + png_path)
+                        prompt = True
+                    else:
+                        self.output('Incorrect command')
+                        self.help()
+                        self.pause()
 
     def output(self, *args):
         print ' '.join(map(str, args))
