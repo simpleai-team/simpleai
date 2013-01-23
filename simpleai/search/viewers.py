@@ -59,6 +59,7 @@ class ConsoleViewer(DummyViewer):
                 elif option.startswith('g ') and len(option) > 2:
                     png_path = option[2:]
                     self.create_graph(png_path)
+                    self.output('graph saved to ' + png_path)
                     prompt = True
                 else:
                     self.output('Incorrect command')
@@ -69,7 +70,15 @@ class ConsoleViewer(DummyViewer):
         print ' '.join(map(str, args))
 
     def create_graph(self, png_path):
-        print 'will create graph'
+        from pydot import Dot
+        g = Dot(graph_type='digraph')
+        pending = self.current_fringe[:]
+        while pending:
+            node = pending.pop()
+            if node.parent:
+                g.add_edge(id(node), id(node.parent))
+
+        g.write_png(png_path)
 
     def new_iteration(self, fringe):
         self.current_fringe = fringe
