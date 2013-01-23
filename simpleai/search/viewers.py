@@ -58,23 +58,35 @@ class ConsoleViewer(object):
 
     def create_graph(self, png_path):
         from pydot import Dot, Edge, Node
-        node_label = lambda node: "%s\n(%s)" % (repr(node), id(node))
-        g = Dot(graph_type='digraph')
-        pending = self.current_fringe[:]
-        done = set()
-        while pending:
-            node = pending.pop()
-            if node not in done:
-                if node.parent:
-                    g.add_edge(Edge(node_label(node.parent),
-                                    node_label(node),
-                                    label=str(node.action)))
-                    pending.append(node.parent)
-                else:
-                    g.add_node(Node(node_label(node)))
-                done.add(node)
 
-        g.write_png(png_path)
+        graph = Dot(graph_type='digraph')
+
+        graph_nodes = {}
+        done = set()
+
+        def get_graph_node(node):
+            node_id = id(node)
+            if node_id not in graph_nodes:
+                graph_nodes[node_id] = Node('%s\n[%s]' % (repr(node), node_id))
+            return graph_nodes[node_id]
+
+        for node in self.current_fringe:
+            while node is not None and node not in done:
+                g_node = get_graph_node(node)
+
+                if node.parent is not None:
+                    g_parent_node = get_graph_node(node.parent)
+
+                    graph.add_edge(Edge(g_parent_node,
+                                        g_node,
+                                        label=str(node.action)))
+                else:
+                    graph.add_node(g_node)
+
+                done.add(node)
+                node = node.parent
+
+        graph.write_png(png_path)
 
     def new_iteration(self, fringe):
         self.current_fringe = fringe
