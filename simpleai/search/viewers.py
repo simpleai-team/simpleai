@@ -9,6 +9,7 @@ class ConsoleViewer(object):
     def __init__(self, interactive=True):
         self.interactive = interactive
 
+        self.last_event = ''
         self.current_fringe = []
         self.last_chosen = None
         self.last_is_goal = False
@@ -16,6 +17,7 @@ class ConsoleViewer(object):
         self.last_successors = []
 
     def start(self):
+        self.last_event = 'start'
         self.help()
         self.pause()
 
@@ -89,12 +91,14 @@ class ConsoleViewer(object):
         graph.write_png(png_path)
 
     def new_iteration(self, fringe):
+        self.last_event = 'new_iteration'
         self.current_fringe = fringe
         self.output(' **** New iteration ****')
         self.output(len(fringe), 'elements in fringe:', fringe)
         self.pause()
 
     def chosen_node(self, node, is_goal):
+        self.last_event = 'chosen_node'
         self.last_chosen, self.last_is_goal = node, is_goal
         self.output('Chosen node:', node)
         if is_goal:
@@ -104,6 +108,7 @@ class ConsoleViewer(object):
         self.pause()
 
     def expanded(self, node, successors):
+        self.last_event = 'expanded'
         self.last_expanded, self.last_successors = node, successors
         self.output('Expand:', node)
         self.output(len(successors), 'successors:', successors)
