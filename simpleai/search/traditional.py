@@ -3,7 +3,6 @@ from simpleai.search.utils import FifoList, BoundedPriorityQueue
 from simpleai.search.models import (SearchNode, SearchNodeHeuristicOrdered,
                                     SearchNodeStarOrdered,
                                     SearchNodeCostOrdered)
-from simpleai.search.viewers import DummyViewer
 
 
 def breadth_first(problem, graph_search=False, viewer=None):
@@ -125,9 +124,7 @@ def _search(problem, fringe, graph_search=False, depth_limit=None,
     '''
     Basic search algorithm, base of all the other search algorithms.
     '''
-    if viewer is None:
-        viewer = DummyViewer()
-    viewer.start()
+    if viewer: viewer.start()
 
     memory = {}
     initial_node = node_factory(state=problem.initial_state,
@@ -136,20 +133,20 @@ def _search(problem, fringe, graph_search=False, depth_limit=None,
     memory[problem.initial_state] = initial_node
 
     while fringe:
-        viewer.new_iteration([n for n in fringe])
+        if viewer: viewer.new_iteration([n for n in fringe])
 
         node = fringe.pop()
 
         if problem.is_goal(node.state):
-            viewer.chosen_node(node, True)
+            if viewer: viewer.chosen_node(node, True)
             return node
         else:
-            viewer.chosen_node(node, False)
+            if viewer: viewer.chosen_node(node, False)
 
         if depth_limit is None or node.depth < depth_limit:
             childs = []
             expanded = node.expand()
-            viewer.expanded(node, expanded)
+            if viewer: viewer.expanded(node, expanded)
 
             for n in expanded:
                 if graph_search:
