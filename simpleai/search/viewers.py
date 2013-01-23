@@ -66,24 +66,50 @@ class ConsoleViewer(object):
         graph_nodes = {}
         done = set()
 
-        def get_graph_node(node):
+        def get_graph_node(node, expanded=False, chosen=False, in_fringe=False):
             node_id = id(node)
             if node_id not in graph_nodes:
-                graph_nodes[node_id] = Node('%s\n[%s]' % (repr(node), node_id))
+                if expanded or chosen:
+                    fillcolor = '#00cc00'
+                else:
+                    fillcolor = '#ffffff'
+
+                new_g_node = Node('%s\n[%s]' % (repr(node), node_id),
+                                  style='filled',
+                                  fillcolor=fillcolor)
+                graph_nodes[node_id] = new_g_node
+
             return graph_nodes[node_id]
 
+        def get_edge_to_parent(node, is_successor=False):
+            if is_successor:
+                color = '#00cc00'
+            else:
+                color = '#000000'
+
+            g_node = get_graph_node(node)
+            g_parent_node = get_graph_node(node.parent)
+
+            return Edge(g_parent_node,
+                        g_node,
+                        label=str(node.action),
+                        color=color)
+
+        if self.last_event == 'chosen_node':
+            get_graph_node(self.last_chosen, chosen=True)
+
+        if self.last_event == 'expanded':
+            get_graph_node(self.last_expanded, expanded=True)
+            for node in self.last_successors:
+                graph.add_edge(get_edge_to_parent(node, is_successor=True))
+
         for node in self.current_fringe:
+            get_graph_node(node, in_fringe=True)
             while node is not None and node not in done:
-                g_node = get_graph_node(node)
-
                 if node.parent is not None:
-                    g_parent_node = get_graph_node(node.parent)
-
-                    graph.add_edge(Edge(g_parent_node,
-                                        g_node,
-                                        label=str(node.action)))
+                    graph.add_edge(get_edge_to_parent(node))
                 else:
-                    graph.add_node(g_node)
+                    graph.add_node(get_graph_node(node))
 
                 done.add(node)
                 node = node.parent
