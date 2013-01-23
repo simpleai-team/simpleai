@@ -5,21 +5,7 @@ from threading import Thread
 from time import sleep
 
 
-class DummyViewer(object):
-    def start(self):
-        pass
-
-    def new_iteration(self, fringe):
-        pass
-
-    def chosen_node(self, node, is_goal):
-        pass
-
-    def expanded(self, node, successors):
-        pass
-
-
-class ConsoleViewer(DummyViewer):
+class ConsoleViewer(object):
     def __init__(self, interactive=True):
         self.interactive = interactive
 
