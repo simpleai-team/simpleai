@@ -1,5 +1,6 @@
 # coding: utf-8
 from os import path
+import sys
 from threading import Thread
 from time import sleep
 
@@ -22,9 +23,32 @@ class ConsoleViewer(DummyViewer):
     def __init__(self, interactive=True):
         self.interactive = interactive
 
+    def start(self):
+        self.help()
+
+    def help(self):
+        self.output('After each step, a prompt will be shown.')
+        self.output('On the prompt, you can just press Enter to continue to the next step.')
+        self.output('But you can also:')
+        self.output('* write h then Enter: get help.')
+        self.output('* write g PATH_TO_PNG_IMAGE then Enter: create png with graph of the current state.')
+        self.output('* write e then Enter: run non-interactively to the end of the algorithm.')
+        self.output('* write q then Enter: quit program.')
+        self.output('---')
+        self.pause()
+
     def pause(self):
         if self.interactive:
-            raw_input('> press Enter ')
+            option = raw_input('>').strip()
+            if option == 'h':
+                self.help()
+            elif option == 'e':
+                self.interactive = False
+            elif option == 'q':
+                sys.exit()
+            elif option.startswith('g '):
+                png_path = option[2:]
+                self.create_graph(png_path)
 
     def output(self, *args):
         print ' '.join(map(str, args))
