@@ -63,7 +63,7 @@ class ConsoleViewer(object):
         while pending:
             node = pending.pop()
             if node.parent:
-                g.add_edge(Edge(id(node.parent), id(node)))
+                g.add_edge(Edge(id(node.parent), id(node), label=str(node.action)))
                 pending.append(node.parent)
 
         g.write_png(png_path)
