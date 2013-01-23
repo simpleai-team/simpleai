@@ -76,7 +76,7 @@ class ConsoleViewer(object):
                 c = getattr(node, 'cost', '-')
                 h = getattr(node, 'heuristic', '-')
                 label = '%s\nCost: %s\nHeuristic: %s'
-                label = label % (repr(node), c, h)
+                label = label % (node.state_representation(), c, h)
 
                 new_g_node = Node(node_id,
                                   label=label,
@@ -105,7 +105,7 @@ class ConsoleViewer(object):
 
             edge = Edge(g_parent_node,
                         g_node,
-                        label=str(node.action))
+                        label=node.action_representation())
 
             if is_successor:
                 edge.set_color(self.chosen_color)
