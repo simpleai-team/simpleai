@@ -31,6 +31,7 @@ class ConsoleViewer(DummyViewer):
 
     def start(self):
         self.help()
+        self.pause()
 
     def help(self):
         self.output('After each step, a prompt will be shown.')
@@ -41,20 +42,28 @@ class ConsoleViewer(DummyViewer):
         self.output('* write e then Enter: run non-interactively to the end of the algorithm.')
         self.output('* write q then Enter: quit program.')
         self.output('---')
-        self.pause()
 
     def pause(self):
-        if self.interactive:
-            option = raw_input('>').strip()
-            if option == 'h':
-                self.help()
-            elif option == 'e':
-                self.interactive = False
-            elif option == 'q':
-                sys.exit()
-            elif option.startswith('g '):
-                png_path = option[2:]
-                self.create_graph(png_path)
+        prompt = True
+        while prompt:
+            prompt = False
+            if self.interactive:
+                option = raw_input('> ').strip()
+                if option == 'h':
+                    self.help()
+                    prompt = True
+                elif option == 'e':
+                    self.interactive = False
+                elif option == 'q':
+                    sys.exit()
+                elif option.startswith('g ') and len(option) > 2:
+                    png_path = option[2:]
+                    self.create_graph(png_path)
+                    prompt = True
+                else:
+                    self.output('Incorrect command')
+                    self.help()
+                    self.pause()
 
     def output(self, *args):
         print ' '.join(map(str, args))
