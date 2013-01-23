@@ -57,14 +57,19 @@ class ConsoleViewer(object):
         print ' '.join(map(str, args))
 
     def create_graph(self, png_path):
-        from pydot import Dot, Edge
+        from pydot import Dot, Edge, Node
+        node_label = lambda node: "%s (%s)" % (repr(node), id(node))
         g = Dot(graph_type='digraph')
         pending = self.current_fringe[:]
         while pending:
             node = pending.pop()
             if node.parent:
-                g.add_edge(Edge(id(node.parent), id(node), label=str(node.action)))
+                g.add_edge(Edge(node_label(node.parent),
+                                node_label(node),
+                                label=str(node.action)))
                 pending.append(node.parent)
+            else:
+                g.add_node(Node(node_label(node)))
 
         g.write_png(png_path)
 
