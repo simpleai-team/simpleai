@@ -91,8 +91,12 @@
       <div class="nav-bar">
         <ul>
           <li><a href="/next/{{status_type}}">Next step</a></li>
-          <li><a href="/view/graph">Graph</a></li>
-          <li><a href="/view/log">Log</a></li>
+          %if status_type != 'log':
+            <li><a href="/view/log">Log</a></li>
+          %end
+          %if status_type != 'graph':
+            <li><a href="/view/graph">Graph</a></li>
+          %end
           <li>Max fringe size: {{max_fringe_size}}</li>
           <li>Visited nodes: {{visited_nodes}}</li>
         </ul>
