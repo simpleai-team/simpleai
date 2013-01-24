@@ -181,8 +181,9 @@ class WebViewer(ConsoleViewer):
     def start(self):
         from bottle import route, run
 
-        route('/')(self.web_status)
-        route('/next')(self.web_next)
+        route('/')(self.web_index)
+        route('/view/:status_type')(self.web_view)
+        route('/next/:status_type')(self.web_next)
         route('/graph')(self.web_graph)
 
         t = Thread(target=run, kwargs=dict(host=self.host, port=self.port))
@@ -191,9 +192,15 @@ class WebViewer(ConsoleViewer):
 
         self.pause()
 
-    def web_status(self):
+    def web_index(self):
+        from bottle import redirect
+        return redirect('/view/graph')
+
+    def web_view(self, status_type='graph'):
         from bottle import template
-        return template(self.web_template, events=self.events)
+        return template(self.web_template,
+                        events=self.events,
+                        status_type=status_type)
 
     def web_graph(self):
         from bottle import static_file
@@ -201,13 +208,14 @@ class WebViewer(ConsoleViewer):
         self.create_graph(graph_name)
         return static_file(graph_name, root='.')
 
-    def web_next(self):
+    def web_next(self, status_type='graph'):
         from bottle import redirect
 
         self.paused = False
         while not self.paused:
             sleep(0.1)
-        redirect('/')
+
+        redirect('/view/' + status_type)
 
     def pause(self):
         self.paused = True

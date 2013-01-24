@@ -1,14 +1,77 @@
 <HTML>
-<body>
-<h1>SimpleAI</h1>
-<div><a href="/next">Next</a></div>
-<div><img src="/graph" /></div>
-<div>
-  <ul>
-  %for event in events:
-    <li>{{event}}</li>
-  %end
-  </ul>
-</div>
-</body>
+  <head>
+    <style type="text/css">
+      body, div, h1, ul, li, a, p {
+        margin: 0;
+        padding: 0;
+        font-family: "OpenSans", "Helvetica Neue", "Helvetica", Arial, Verdana, sans-serif;
+        font-style: normal;
+      }
+      .top-bar {
+        color: #ffffff;
+        display: block;
+        height: 40px;
+        width: 100%;
+        max-width: 100%;
+        position: relative;
+        padding: 12px 0 0 150px;
+        background-color: #000000;
+      }
+      .nav-bar {
+        color: #ffffff;
+        display: block;
+        height: 35px;
+        width: 100%;
+        max-width: 100%;
+        position: relative;
+        padding: 16px 0 0 150px;
+        background-color: #2ba6cb;
+      }
+      .top-bar h1 {
+        float: left;
+        font-size: 20px;
+      }
+      .nav-bar ul {
+        display: block;
+        float: left;
+        list-style-image: none;
+        list-style-position: outside;
+        list-style-type: none;
+      }
+      .nav-bar ul li {
+        display: inline;
+        padding-right: 30px;
+      }
+      .top-bar h1 a, .nav-bar ul li a {
+        color: #ffffff;
+        text-decoration: none;
+      }
+      .top-bar h1 a:hover, .nav-bar ul li a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="top-bar">
+      <h1><a href="http://github.com/simpleai-team/simpleai">SimpleAI</a></h1>
+    </div>
+    <div class="nav-bar">
+      <ul>
+        <li><a href="/next/{{status_type}}">Next step</a></li>
+        <li><a href="/view/graph">Graph</a></li>
+        <li><a href="/view/log">Log</a></li>
+      </ul>
+    </div>
+    %if status_type == 'graph':
+      <div id="graph"><img src="/graph" /></div>
+    %elif status_type == 'log':
+      <div id="log">
+        <ul>
+        %for event in events:
+          <li>{{event}}</li>
+        %end
+        </ul>
+      </div>
+    %end
+  </body>
 </HTML>
