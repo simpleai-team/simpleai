@@ -115,8 +115,10 @@ def _search(problem, fringe, graph_search=False, depth_limit=None,
     Basic search algorithm, base of all the other search algorithms.
     '''
     memory = {}
-    fringe.append(node_factory(state=problem.initial_state,
-                               problem=problem))
+    initial_node = node_factory(state=problem.initial_state,
+                                problem=problem)
+    fringe.append(initial_node)
+    memory[problem.initial_state] = initial_node
 
     while fringe:
         node = fringe.pop()
