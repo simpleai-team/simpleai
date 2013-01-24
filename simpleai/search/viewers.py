@@ -192,8 +192,10 @@ class ConsoleViewer(object):
     def finish(self, node, solution_type):
         self.solution_node, self.solution_type = node, solution_type
 
-        description = 'Finished algorithm returning%s\nSolution type:%s'
+        description = 'Finished algorithm returning %s\nSolution type: %s'
         description = description % (node, solution_type)
+        if node.parent is not None:
+            description += '\nPath from initial to goal: %s' % str(node.path())
         self.event('finish', description)
 
         self.pause()
