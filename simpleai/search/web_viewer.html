@@ -71,7 +71,7 @@
       %elif status_type == 'log':
         <ul>
         %for event, description in events:
-          <li><strong>{{event}}</strong><p>{{description}}</p></li>
+          <li><strong>{{event}}</strong><p>{{!description.replace('\n', '<br />')}}</p></li>
         %end
         </ul>
       %end
