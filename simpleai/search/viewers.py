@@ -17,6 +17,10 @@ class ConsoleViewer(object):
     def __init__(self, interactive=True):
         self.interactive = interactive
 
+        self.last_event = ''
+        self.last_event_description = ''
+        self.events = []
+
         self.current_fringe = []
         self.last_chosen = None
         self.last_is_goal = False
@@ -56,6 +60,10 @@ class ConsoleViewer(object):
                         self.pause()
 
     def event(self, event, description):
+        self.last_event = event
+        self.last_event_description = description
+        self.events.append((event, description))
+
         print 'EVENT:', event
         print description
 
@@ -175,10 +183,6 @@ class WebViewer(ConsoleViewer):
         self.port = port
         self.paused = True
 
-        self.last_event = ''
-        self.last_event_description = ''
-        self.events = []
-
         web_template_path = path.join(path.dirname(__file__), 'web_viewer.html')
         self.web_template = open(web_template_path).read()
 
@@ -225,8 +229,3 @@ class WebViewer(ConsoleViewer):
         self.paused = True
         while self.paused:
             sleep(0.1)
-
-    def event(self, event, description):
-        self.last_event = event
-        self.last_event_description = description
-        self.events.append((event, description))
