@@ -4,12 +4,19 @@ import sys
 from threading import Thread
 from time import sleep
 
+HELP_TEXT = '''After each step, a prompt will be shown.
+On the prompt, you can just press Enter to continue to the next step.
+But you can also:
+* write h then Enter: get help.
+* write g PATH_TO_PNG_IMAGE then Enter: create png with graph of the current state.
+* write e then Enter: run non-interactively to the end of the algorithm.
+* write q then Enter: quit program.'''
+
 
 class ConsoleViewer(object):
     def __init__(self, interactive=True):
         self.interactive = interactive
 
-        self.last_event = ''
         self.current_fringe = []
         self.last_chosen = None
         self.last_is_goal = False
@@ -21,19 +28,8 @@ class ConsoleViewer(object):
         self.font_size = 11
 
     def start(self):
-        self.last_event = 'start'
-        self.help()
+        self.event('start', HELP_TEXT)
         self.pause()
-
-    def help(self):
-        self.output('After each step, a prompt will be shown.')
-        self.output('On the prompt, you can just press Enter to continue to the next step.')
-        self.output('But you can also:')
-        self.output('* write h then Enter: get help.')
-        self.output('* write g PATH_TO_PNG_IMAGE then Enter: create png with graph of the current state.')
-        self.output('* write e then Enter: run non-interactively to the end of the algorithm.')
-        self.output('* write q then Enter: quit program.')
-        self.output('---')
 
     def pause(self):
         prompt = True
@@ -43,7 +39,7 @@ class ConsoleViewer(object):
                 option = raw_input('> ').strip()
                 if option:
                     if option == 'h':
-                        self.help()
+                        print HELP_TEXT
                         prompt = True
                     elif option == 'e':
                         self.interactive = False
@@ -52,15 +48,16 @@ class ConsoleViewer(object):
                     elif option.startswith('g ') and len(option) > 2:
                         png_path = option[2:]
                         self.create_graph(png_path)
-                        self.output('graph saved to ' + png_path)
+                        print 'graph saved to ' + png_path
                         prompt = True
                     else:
-                        self.output('Incorrect command')
-                        self.help()
+                        print 'Incorrect command'
+                        print HELP_TEXT
                         self.pause()
 
-    def output(self, *args):
-        print ' '.join(map(str, args))
+    def event(self, event, description):
+        print 'EVENT:', event
+        print description
 
     def create_graph(self, png_path):
         from pydot import Dot, Edge, Node
@@ -143,27 +140,31 @@ class ConsoleViewer(object):
         graph.write_png(png_path)
 
     def new_iteration(self, fringe):
-        self.last_event = 'new_iteration'
         self.current_fringe = fringe
-        self.output(' **** New iteration ****')
-        self.output(len(fringe), 'elements in fringe:', fringe)
+
+        description = 'New iteration with %i elements in the fringe:\n%s'
+        description = description % (len(fringe), str(fringe))
+        self.event('new_iteration', description)
+
         self.pause()
 
     def chosen_node(self, node, is_goal):
-        self.last_event = 'chosen_node'
         self.last_chosen, self.last_is_goal = node, is_goal
-        self.output('Chosen node:', node)
-        if is_goal:
-            self.output('Is goal!')
-        else:
-            self.output('Not goal')
+
+        goal_text = 'Is goal!' if is_goal else 'Not goal'
+        description = 'Chosen node: %s\n%s'
+        description = description % (node, goal_text)
+        self.event('chosen_node', description)
+
         self.pause()
 
     def expanded(self, node, successors):
-        self.last_event = 'expanded'
         self.last_expanded, self.last_successors = node, successors
-        self.output('Expand:', node)
-        self.output(len(successors), 'successors:', successors)
+
+        description = 'Expanded %s\n%i successors:%s'
+        description = description % (node, len(successors), successors)
+        self.event('expanded', description)
+
         self.pause()
 
 
@@ -173,6 +174,9 @@ class WebViewer(ConsoleViewer):
         self.host = host
         self.port = port
         self.paused = True
+
+        self.last_event = ''
+        self.last_event_description = ''
         self.events = []
 
         web_template_path = path.join(path.dirname(__file__), 'web_viewer.html')
@@ -222,5 +226,7 @@ class WebViewer(ConsoleViewer):
         while self.paused:
             sleep(0.1)
 
-    def output(self, *args):
-        self.events.append(' '.join(map(str, args)))
+    def event(self, event, description):
+        self.last_event = event
+        self.last_event_description = description
+        self.events.append((event, description))
