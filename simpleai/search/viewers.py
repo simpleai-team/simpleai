@@ -31,10 +31,6 @@ class ConsoleViewer(object):
         self.fringe_color = '#0000dd'
         self.font_size = 11
 
-    def start(self):
-        self.event('start', HELP_TEXT)
-        self.pause()
-
     def pause(self):
         prompt = True
         while prompt:
@@ -66,6 +62,10 @@ class ConsoleViewer(object):
 
         print 'EVENT:', event
         print description
+
+    def start(self):
+        self.event('start', HELP_TEXT)
+        self.pause()
 
     def create_graph(self, png_path):
         from pydot import Dot, Edge, Node
