@@ -172,7 +172,7 @@ class ConsoleViewer(object):
     def expanded(self, node, successors):
         self.last_expanded, self.last_successors = node, successors
 
-        description = 'Expanded %s\n%i successors:%s'
+        description = 'Expanded %s\n%i successors: %s'
         description = description % (node, len(successors), successors)
         self.event('expanded', description)
 
