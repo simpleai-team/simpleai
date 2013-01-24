@@ -1,7 +1,7 @@
 <HTML>
   <head>
     <style type="text/css">
-      body, div, h1, ul, li, a, p {
+      body, div, h1, h2, ul, li, a, p {
         margin: 0;
         padding: 0;
         font-family: "OpenSans", "Helvetica Neue", "Helvetica", Arial, Verdana, sans-serif;
@@ -52,6 +52,11 @@
       div.content {
         padding: 16px 0 0 150px;
       }
+      div.content h2 {
+        margin: 20px 0 10px 0;
+        font-size: 20px;
+        color: #DD4814;
+      }
     </style>
   </head>
   <body>
@@ -69,11 +74,10 @@
       %if status_type == 'graph':
         <img src="/graph" />
       %elif status_type == 'log':
-        <ul>
         %for event, description in events:
-          <li><strong>{{event}}</strong><p>{{!description.replace('\n', '<br />')}}</p></li>
+          <h2>{{event}}</h2>
+          <p>{{!description.replace('\n', '<br />')}}</p>
         %end
-        </ul>
       %end
     </div>
   </body>
