@@ -39,7 +39,7 @@ class ConsoleViewer(object):
                 option = raw_input('> ').strip()
                 if option:
                     if option == 'h':
-                        print HELP_TEXT
+                        self.output(HELP_TEXT)
                         prompt = True
                     elif option == 'e':
                         self.interactive = False
@@ -48,11 +48,11 @@ class ConsoleViewer(object):
                     elif option.startswith('g ') and len(option) > 2:
                         png_path = option[2:]
                         self.create_graph(png_path)
-                        print 'graph saved to ' + png_path
+                        self.output('graph saved to %s' % png_path)
                         prompt = True
                     else:
-                        print 'Incorrect command'
-                        print HELP_TEXT
+                        self.output('Incorrect command')
+                        self.output(HELP_TEXT)
                         self.pause()
 
     def event(self, event, description):
@@ -60,8 +60,11 @@ class ConsoleViewer(object):
         self.last_event_description = description
         self.events.append((event, description))
 
-        print 'EVENT:', event
-        print description
+        self.output('EVENT: %s' % event)
+        self.output(description)
+
+    def output(self, text):
+        print text
 
     def start(self):
         self.event('start', HELP_TEXT)
@@ -229,3 +232,6 @@ class WebViewer(ConsoleViewer):
         self.paused = True
         while self.paused:
             sleep(0.1)
+
+    def output(self, text):
+        pass
