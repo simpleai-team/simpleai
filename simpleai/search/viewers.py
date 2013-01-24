@@ -10,6 +10,7 @@ But you can also:
 * write h then Enter: get help.
 * write g PATH_TO_PNG_IMAGE then Enter: create png with graph of the current state.
 * write e then Enter: run non-interactively to the end of the algorithm.
+* write s then Enter: show statistics of the execution (max fringe size, visited nodes).
 * write q then Enter: quit program.'''
 
 
@@ -20,6 +21,9 @@ class ConsoleViewer(object):
         self.last_event = ''
         self.last_event_description = ''
         self.events = []
+
+        self.max_fringe_size = 0
+        self.visited_nodes = 0
 
         self.current_fringe = []
         self.last_chosen = None
@@ -43,6 +47,11 @@ class ConsoleViewer(object):
                         prompt = True
                     elif option == 'e':
                         self.interactive = False
+                    elif option == 's':
+                        self.output('Statistics:')
+                        self.output('Max fringe size: %i' % self.max_fringe_size)
+                        self.output('Visited nodes: %i' % self.visited_nodes)
+                        prompt = True
                     elif option == 'q':
                         sys.exit()
                     elif option.startswith('g ') and len(option) > 2:
@@ -152,6 +161,7 @@ class ConsoleViewer(object):
 
     def new_iteration(self, fringe):
         self.current_fringe = fringe
+        self.max_fringe_size = max(self.max_fringe_size, len(fringe))
 
         description = 'New iteration with %i elements in the fringe:\n%s'
         description = description % (len(fringe), str(fringe))
@@ -161,6 +171,7 @@ class ConsoleViewer(object):
 
     def chosen_node(self, node, is_goal):
         self.last_chosen, self.last_is_goal = node, is_goal
+        self.visited_nodes += 1
 
         goal_text = 'Is goal!' if is_goal else 'Not goal'
         description = 'Chosen node: %s\n%s'
@@ -210,6 +221,8 @@ class WebViewer(ConsoleViewer):
     def web_view(self, status_type='graph'):
         from bottle import template
         return template(self.web_template,
+                        max_fringe_size=self.max_fringe_size,
+                        visited_nodes=self.visited_nodes,
                         last_event = self.last_event,
                         last_event_description = self.last_event_description,
                         events=self.events,
