@@ -27,8 +27,8 @@ class ConsoleViewer(object):
         self.last_expanded = None
         self.last_successors = []
 
-        self.chosen_color = '#00cc00'
-        self.fringe_color = '#0000dd'
+        self.successor_color = '#DD4814'
+        self.fringe_color = '#20a0c0'
         self.font_size = 11
 
     def pause(self):
@@ -99,13 +99,13 @@ class ConsoleViewer(object):
             g_node =  graph_nodes[node_id]
 
             if expanded or chosen:
-                g_node.set_fillcolor(self.chosen_color)
+                g_node.set_fillcolor(self.fringe_color)
             if in_fringe:
                 g_node.set_color(self.fringe_color)
-                g_node.set_fontcolor(self.fringe_color)
+                g_node.set_penwidth(3)
             if in_successors:
-                g_node.set_color(self.chosen_color)
-                g_node.set_fontcolor(self.chosen_color)
+                g_node.set_color(self.successor_color)
+                g_node.set_fontcolor(self.successor_color)
 
             return g_node
 
@@ -119,8 +119,8 @@ class ConsoleViewer(object):
                         fontsize=self.font_size)
 
             if is_successor:
-                edge.set_color(self.chosen_color)
-                edge.set_labelfontcolor(self.chosen_color)
+                edge.set_color(self.successor_color)
+                edge.set_labelfontcolor(self.successor_color)
 
             graph_edges[id(node)] = edge
 
