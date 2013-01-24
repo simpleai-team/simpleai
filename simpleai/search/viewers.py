@@ -225,7 +225,7 @@ class WebViewer(ConsoleViewer):
                         visited_nodes=self.visited_nodes,
                         last_event = self.last_event,
                         last_event_description = self.last_event_description,
-                        events=self.events,
+                        events=self.events[:-1],
                         status_type=status_type)
 
     def web_graph(self):
