@@ -8,6 +8,12 @@
         font-style: normal;
       }
       .top-bar {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        max-width: 100%;
+      }
+      .title-bar {
         color: #ffffff;
         display: block;
         height: 40px;
@@ -27,7 +33,7 @@
         padding: 16px 0 0 150px;
         background-color: #2ba6cb;
       }
-      .top-bar h1 {
+      .title-bar h1 {
         float: left;
         font-size: 20px;
       }
@@ -46,10 +52,11 @@
         color: #ffffff;
         text-decoration: none;
       }
-      .top-bar h1 a:hover, .nav-bar ul li a:hover {
+      .title-bar h1 a:hover, .nav-bar ul li a:hover {
         text-decoration: underline;
       }
       div.content {
+        margin-top: 100px;
         padding: 16px 0 0 150px;
       }
       div.content h2 {
@@ -61,16 +68,18 @@
   </head>
   <body>
     <div class="top-bar">
-      <h1><a href="http://github.com/simpleai-team/simpleai">SimpleAI</a></h1>
-    </div>
-    <div class="nav-bar">
-      <ul>
-        <li><a href="/next/{{status_type}}">Next step</a></li>
-        <li><a href="/view/graph">Graph</a></li>
-        <li><a href="/view/log">Log</a></li>
-        <li>Max fringe size: {{max_fringe_size}}</li>
-        <li>Visited nodes: {{visited_nodes}}</li>
-      </ul>
+      <div class="title-bar">
+        <h1><a href="http://github.com/simpleai-team/simpleai">SimpleAI</a></h1>
+      </div>
+      <div class="nav-bar">
+        <ul>
+          <li><a href="/next/{{status_type}}">Next step</a></li>
+          <li><a href="/view/graph">Graph</a></li>
+          <li><a href="/view/log">Log</a></li>
+          <li>Max fringe size: {{max_fringe_size}}</li>
+          <li>Visited nodes: {{visited_nodes}}</li>
+        </ul>
+      </div>
     </div>
     <div class="content">
       %if status_type == 'graph':
