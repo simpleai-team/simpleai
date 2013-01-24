@@ -189,6 +189,15 @@ class ConsoleViewer(object):
 
         self.pause()
 
+    def finish(self, node, solution_type):
+        self.solution_node, self.solution_type = node, solution_type
+
+        description = 'Finished algorithm returning%s\nSolution type:%s'
+        description = description % (node, solution_type)
+        self.event('finish', description)
+
+        self.pause()
+
 
 class WebViewer(ConsoleViewer):
     def __init__(self, host='127.0.0.1', port=8000):
