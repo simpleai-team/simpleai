@@ -194,7 +194,7 @@ class ConsoleViewer(object):
 
         description = 'Finished algorithm returning %s\nSolution type: %s'
         description = description % (node, solution_type)
-        if node.parent is not None:
+        if node is not None and node.parent is not None:
             description += '\nPath from initial to goal: %s' % str(node.path())
         self.event('finish', description)
 
