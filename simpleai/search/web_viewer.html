@@ -49,6 +49,9 @@
       .top-bar h1 a:hover, .nav-bar ul li a:hover {
         text-decoration: underline;
       }
+      div.content {
+        padding: 16px 0 0 150px;
+      }
     </style>
   </head>
   <body>
@@ -62,16 +65,16 @@
         <li><a href="/view/log">Log</a></li>
       </ul>
     </div>
-    %if status_type == 'graph':
-      <div id="graph"><img src="/graph" /></div>
-    %elif status_type == 'log':
-      <div id="log">
+    <div class="content">
+      %if status_type == 'graph':
+        <img src="/graph" />
+      %elif status_type == 'log':
         <ul>
         %for event in events:
           <li>{{event}}</li>
         %end
         </ul>
-      </div>
-    %end
+      %end
+    </div>
   </body>
 </HTML>
