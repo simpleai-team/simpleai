@@ -70,8 +70,8 @@
         <img src="/graph" />
       %elif status_type == 'log':
         <ul>
-        %for event in events:
-          <li>{{event}}</li>
+        %for event, description in events:
+          <li><strong>{{event}}</strong><p>{{description}}</p></li>
         %end
         </ul>
       %end
