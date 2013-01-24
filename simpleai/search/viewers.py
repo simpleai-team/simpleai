@@ -210,6 +210,8 @@ class WebViewer(ConsoleViewer):
     def web_view(self, status_type='graph'):
         from bottle import template
         return template(self.web_template,
+                        last_event = self.last_event,
+                        last_event_description = self.last_event_description,
                         events=self.events,
                         status_type=status_type)
 

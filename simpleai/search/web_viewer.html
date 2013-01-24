@@ -73,6 +73,8 @@
     <div class="content">
       %if status_type == 'graph':
         <img src="/graph" />
+        <h2>{{last_event}}</h2>
+        <p>{{!last_event_description.replace('\n', '<br />')}}</p>
       %elif status_type == 'log':
         %for event, description in events:
           <h2>{{event}}</h2>
