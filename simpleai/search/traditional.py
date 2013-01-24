@@ -138,7 +138,9 @@ def _search(problem, fringe, graph_search=False, depth_limit=None,
         node = fringe.pop()
 
         if problem.is_goal(node.state):
-            if viewer: viewer.chosen_node(node, True)
+            if viewer:
+                viewer.chosen_node(node, True)
+                viewer.finish(node, 'goal found')
             return node
         else:
             if viewer: viewer.chosen_node(node, False)
@@ -164,3 +166,5 @@ def _search(problem, fringe, graph_search=False, depth_limit=None,
 
             for n in childs:
                 fringe.append(n)
+
+    if viewer: viewer.finish(None, 'goal not found')
