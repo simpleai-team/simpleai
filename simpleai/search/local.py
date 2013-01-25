@@ -46,12 +46,15 @@ def _first_expander(fringe, iteration, viewer):
     '''
     Expander that expands only the first node on the fringe.
     '''
-    if viewer: viewer.chosen_node(fringe[0])
+    current = fringe[0]
+    neighbors = current.expand(local_search=True)
 
-    neighbors = fringe[0].expand(local_search=True)
+    if viewer:
+        viewer.chosen_node(current)
+        viewer.expanded([current], [neighbors])
+
     fringe.extend(neighbors)
 
-    if viewer: viewer.expanded([fringe[0]], [neighbors])
 
 
 def beam_best_first(problem, beam_size=100, iterations_limit=0, viewer=None):
