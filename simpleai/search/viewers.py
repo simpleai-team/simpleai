@@ -92,10 +92,13 @@ class ConsoleViewer(object):
                      in_successors=False):
             node_id = id(node)
             if node_id not in graph_nodes:
-                c = getattr(node, 'cost', '-')
-                h = getattr(node, 'heuristic', '-')
-                label = '%s\nCost: %s\nHeuristic: %s'
-                label = label % (node.state_representation(), c, h)
+                label = node.state_representation()
+                if hasattr(node, 'cost'):
+                    label += '\nCost: %s' % node.cost
+                if hasattr(node, 'heuristic'):
+                    label += '\nHeuristic: %s' % node.heuristic
+                if hasattr(node, 'value'):
+                    label += '\nValue: %s' % node.value
 
                 new_g_node = Node(node_id,
                                   label=label,
