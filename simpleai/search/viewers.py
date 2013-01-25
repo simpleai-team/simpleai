@@ -134,7 +134,7 @@ class ConsoleViewer(object):
                 edge.set_color(self.successor_color)
                 edge.set_labelfontcolor(self.successor_color)
 
-            graph_edges[id(node)] = edge
+            graph_edges[id(node), id(parent)] = edge
 
         if self.last_event == 'chosen_node':
             add_node(self.last_chosen, chosen=True)
@@ -161,8 +161,8 @@ class ConsoleViewer(object):
 
         for node_id in sorted(graph_nodes.keys()):
             graph.add_node(graph_nodes[node_id])
-        for node_id in sorted(graph_edges.keys()):
-            graph.add_edge(graph_edges[node_id])
+        for node_id, parent_id in sorted(graph_edges.keys()):
+            graph.add_edge(graph_edges[node_id, parent_id])
 
         graph.write_png(png_path)
 
