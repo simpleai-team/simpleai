@@ -203,7 +203,7 @@ def simulated_annealing(problem, schedule=_exp_schedule, iterations_limit=0, vie
                          viewer=viewer)
 
 
-def _create_genetic_expander(problem, mutation_chance):
+def _create_genetic_expander(problem, mutation_chance, viewer):
     '''
     Creates an expander that expands the bests nodes of the population,
     crossing over them.
@@ -212,6 +212,10 @@ def _create_genetic_expander(problem, mutation_chance):
         fitness = [x.value for x in fringe]
         sampler = InverseTransformSampler(fitness, fringe)
         new_generation = []
+
+        expanded_nodes = []
+        expanded_neighbors = []
+
         for _ in fringe:
             node1 = sampler.sample()
             node2 = sampler.sample()
@@ -220,6 +224,13 @@ def _create_genetic_expander(problem, mutation_chance):
                 # Noooouuu! she is... he is... *IT* is a mutant!
                 child = problem.mutate(child)
             new_generation.append(child)
+
+            expanded_nodes.append(node1)
+            expanded_neighbors.append([child])
+            expanded_nodes.append(node2)
+            expanded_neighbors.append([child])
+
+        if viewer: viewer.expanded(expanded_nodes, expanded_neighbors)
 
         fringe.clear()
         for s in new_generation:
