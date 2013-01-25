@@ -79,16 +79,16 @@ class SearchProblem(object):
     def state_representation(self, state):
         """
         Returns a string representation of a state.
-        By default it returns repr(state).
+        By default it returns str(state).
         """
-        return repr(state)
+        return str(state)
 
     def action_representation(self, action):
         """
         Returns a string representation of an action.
-        By default it returns repr(action).
+        By default it returns str(action).
         """
-        return repr(action)
+        return str(action)
 
 
 class SearchNode(object):
