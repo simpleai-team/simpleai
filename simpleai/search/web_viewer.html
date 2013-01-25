@@ -90,7 +90,7 @@
       </div>
       <div class="nav-bar">
         <ul>
-          %if last_event != 'finish':
+          %if last_event != 'finished':
             <li><a href="/next/{{status_type}}">Next step</a></li>
           %else:
             <li>Finished!</li>
@@ -103,7 +103,7 @@
           %end
           <li>Max fringe size: {{max_fringe_size}}</li>
           <li>Visited nodes: {{visited_nodes}}</li>
-          %if last_event == 'finish':
+          %if last_event == 'finished':
             <li><a href="/next/{{status_type}}">Click here to close the server and continue your program</a></li>
           %end
         </ul>

@@ -75,8 +75,8 @@ class ConsoleViewer(object):
     def output(self, text):
         print text
 
-    def start(self):
-        self.event('start', HELP_TEXT)
+    def started(self):
+        self.event('started', HELP_TEXT)
         self.pause()
 
     def create_graph(self, png_path):
@@ -189,14 +189,14 @@ class ConsoleViewer(object):
 
         self.pause()
 
-    def finish(self, node, solution_type):
+    def finished(self, node, solution_type):
         self.solution_node, self.solution_type = node, solution_type
 
         description = 'Finished algorithm returning %s\nSolution type: %s'
         description = description % (node, solution_type)
         if node is not None and node.parent is not None:
             description += '\nPath from initial to goal: %s' % str(node.path())
-        self.event('finish', description)
+        self.event('finished', description)
 
         self.pause()
 
@@ -211,7 +211,7 @@ class WebViewer(ConsoleViewer):
         web_template_path = path.join(path.dirname(__file__), 'web_viewer.html')
         self.web_template = open(web_template_path).read()
 
-    def start(self):
+    def started(self):
         from bottle import route, run
 
         route('/')(self.web_index)
