@@ -5,12 +5,23 @@ import math
 import random
 
 
-def _all_expander(fringe, iteration):
+def _all_expander(fringe, iteration, viewer):
     '''
     Expander that expands all nodes on the fringe.
     '''
+    expanded_nodes = []
+    expanded_neighbors = []
     for node in fringe:
-        fringe.extend(node.expand(local_search=True))
+        neighbors = node.expand(local_search=True)
+
+        if viewer:
+            expanded_nodes.append(node)
+            expanded_neighbors.append(neighbors)
+
+    for neighbors in expanded_neighbors:
+        fringe.extend(neighbors)
+
+    if viewer: viewer.expanded(expanded_nodes, expanded_neighbors)
 
 
 def beam(problem, beam_size=100, iterations_limit=0, viewer=None):
@@ -31,11 +42,16 @@ def beam(problem, beam_size=100, iterations_limit=0, viewer=None):
                          viewer=viewer)
 
 
-def _first_expander(fringe, iteration):
+def _first_expander(fringe, iteration, viewer):
     '''
     Expander that expands only the first node on the fringe.
     '''
-    fringe.extend(fringe[0].expand(local_search=True))
+    if viewer: viewer.chosen_node(fringe[0])
+
+    neighbors = fringe[0].expand(local_search=True)
+    fringe.extend(neighbors)
+
+    if viewer: viewer.expanded([fringe[0]], [neighbors])
 
 
 def beam_best_first(problem, beam_size=100, iterations_limit=0, viewer=None):
@@ -73,17 +89,21 @@ def hill_climbing(problem, iterations_limit=0, viewer=None):
                          viewer=viewer)
 
 
-def _random_best_expander(fringe, iteration):
+def _random_best_expander(fringe, iteration, viewer):
     '''
     Expander that expands one randomly choosen nodes on the fringe that
     is better than the current (first) node.
     '''
     current = fringe[0]
-    betters = [n for n in current.expand(local_search=True)
+    neighbors = current.expand(local_search=True)
+    if viewer: viewer.expanded([current], [neighbors])
+
+    betters = [n for n in neighbors
                if n.value > current.value]
     if betters:
-        random.shuffle(betters)
-        fringe.append(betters[0])
+        chosen = random.choice(betters)
+        if viewer: viewer.chosen_node(chosen)
+        fringe.append(chosen)
 
 
 def hill_climbing_stochastic(problem, iterations_limit=0, viewer=None):
@@ -248,7 +268,7 @@ def _local_search(problem, fringe_expander, iterations_limit=0, fringe_size=1,
         if viewer: viewer.new_iteration([n for n in fringe])
 
         old_best = fringe[0]
-        fringe_expander(fringe, iteration)
+        fringe_expander(fringe, iteration, viewer)
         best = fringe[0]
 
         iteration += 1
