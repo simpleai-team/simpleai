@@ -28,7 +28,7 @@ class ConsoleViewer(object):
         self.current_fringe = []
         self.last_chosen = None
         self.last_is_goal = False
-        self.last_expanded = None
+        self.last_expandeds = []
         self.last_successors = []
 
         self.successor_color = '#DD4814'
@@ -118,9 +118,12 @@ class ConsoleViewer(object):
 
             return g_node
 
-        def add_edge_to_parent(node, is_successor=False):
+        def add_edge_to_parent(node, is_successor=False, parent=None):
+            if parent is None:
+                parent = node.parent
+
             g_node = add_node(node, in_successors=is_successor)
-            g_parent_node = add_node(node.parent)
+            g_parent_node = add_node(parent)
 
             edge = Edge(g_parent_node,
                         g_node,
@@ -137,9 +140,13 @@ class ConsoleViewer(object):
             add_node(self.last_chosen, chosen=True)
 
         if self.last_event == 'expanded':
-            add_node(self.last_expanded, expanded=True)
-            for node in self.last_successors:
-                add_edge_to_parent(node, is_successor=True)
+            for node, successors in zip(self.last_expandeds,
+                                        self.last_successors):
+                add_node(node, expanded=True)
+                for succesor_node in successors:
+                    add_edge_to_parent(succesor_node,
+                                       is_successor=True,
+                                       parent=node)
 
         for node in self.current_fringe:
             add_node(node, in_fringe=True)
