@@ -223,18 +223,20 @@ def _create_genetic_expander(problem, mutation_chance):
             if random.random() < mutation_chance:
                 # Noooouuu! she is... he is... *IT* is a mutant!
                 child = problem.mutate(child)
-            new_generation.append(child)
+
+            child_node = SearchNodeValueOrdered(state=child, problem=problem)
+            new_generation.append(child_node)
 
             expanded_nodes.append(node1)
-            expanded_neighbors.append([child])
+            expanded_neighbors.append([child_node])
             expanded_nodes.append(node2)
-            expanded_neighbors.append([child])
+            expanded_neighbors.append([child_node])
 
         if viewer: viewer.expanded(expanded_nodes, expanded_neighbors)
 
         fringe.clear()
-        for s in new_generation:
-            fringe.append(SearchNodeValueOrdered(state=s, problem=problem))
+        for node in new_generation:
+            fringe.append(node)
 
     return _expander
 
