@@ -50,9 +50,7 @@ def _first_expander(fringe, iteration, viewer):
     current = fringe[0]
     neighbors = current.expand(local_search=True)
 
-    if viewer:
-        viewer.chosen_node(current)
-        viewer.expanded([current], [neighbors])
+    if viewer: viewer.expanded([current], [neighbors])
 
     fringe.extend(neighbors)
 
