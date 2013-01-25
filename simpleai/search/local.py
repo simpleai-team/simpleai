@@ -302,6 +302,6 @@ def _local_search(problem, fringe_expander, iterations_limit=0, fringe_size=1,
             run = False
             finish_reason = 'not being able to improve solution'
 
-    if viewer: viewer.finished(best, 'returned after %s' % finish_reason)
+    if viewer: viewer.finished(fringe, best, 'returned after %s' % finish_reason)
 
     return best
