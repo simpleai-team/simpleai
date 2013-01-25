@@ -177,16 +177,15 @@ class ConsoleViewer(object):
         description = 'Chosen node: %s' % node
         if is_goal is not None:
             description += '\n' + goal_text
-
         self.event('chosen_node', description)
 
         self.pause()
 
-    def expanded(self, node, successors):
-        self.last_expanded, self.last_successors = node, successors
+    def expanded(self, nodes, successors):
+        self.last_expandeds, self.last_successors = nodes, successors
 
-        description = 'Expanded %s\n%i successors: %s'
-        description = description % (node, len(successors), successors)
+        description = 'Expanded %s\nSuccessors: %s'
+        description = description % (nodes, successors)
         self.event('expanded', description)
 
         self.pause()
