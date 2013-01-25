@@ -91,7 +91,7 @@ def hill_climbing(problem, iterations_limit=0, viewer=None):
 
 def _random_best_expander(fringe, iteration, viewer):
     '''
-    Expander that expands one randomly choosen nodes on the fringe that
+    Expander that expands one randomly chosen nodes on the fringe that
     is better than the current (first) node.
     '''
     current = fringe[0]
