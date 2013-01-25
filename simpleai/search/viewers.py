@@ -200,8 +200,10 @@ class ConsoleViewer(object):
 
         self.pause()
 
-    def finished(self, node, solution_type):
-        self.solution_node, self.solution_type = node, solution_type
+    def finished(self, fringe, node, solution_type):
+        self.current_fringe = fringe
+        self.solution_node = node
+        self.solution_type = solution_type
 
         description = 'Finished algorithm returning %s\nSolution type: %s'
         description = description % (node, solution_type)
