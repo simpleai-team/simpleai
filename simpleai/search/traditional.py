@@ -124,7 +124,7 @@ def _search(problem, fringe, graph_search=False, depth_limit=None,
     '''
     Basic search algorithm, base of all the other search algorithms.
     '''
-    if viewer: viewer.start()
+    if viewer: viewer.started()
 
     memory = {}
     initial_node = node_factory(state=problem.initial_state,
@@ -140,7 +140,7 @@ def _search(problem, fringe, graph_search=False, depth_limit=None,
         if problem.is_goal(node.state):
             if viewer:
                 viewer.chosen_node(node, True)
-                viewer.finish(node, 'goal found')
+                viewer.finished(node, 'goal found')
             return node
         else:
             if viewer: viewer.chosen_node(node, False)
@@ -167,4 +167,4 @@ def _search(problem, fringe, graph_search=False, depth_limit=None,
             for n in childs:
                 fringe.append(n)
 
-    if viewer: viewer.finish(None, 'goal not found')
+    if viewer: viewer.finished(None, 'goal not found')
