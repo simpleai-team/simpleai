@@ -212,6 +212,7 @@ class WebViewer(ConsoleViewer):
         self.web_template = open(web_template_path).read()
 
     def started(self):
+        self.event('started', 'Started running')
         from bottle import route, run
 
         route('/')(self.web_index)

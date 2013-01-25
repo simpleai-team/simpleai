@@ -110,12 +110,19 @@
       </div>
     </div>
     <div class="content">
-      %if status_type == 'graph':
-        <img src="/graph" />
-      %elif status_type == 'log':
-        %for event, description in events:
-          <h2>{{event}}:</h2>
-          <p>{{!description.replace('\n', '<br />')}}</p>
+      %if last_event == 'started':
+        <h2>Welcome to the SimpleAI execution web viewer</h2>
+        <p>Started running. Click on "Next step" to continue the execution of the algorithm.</p>
+        <p>On the top bar you have links to switch between the graph mode and the log mode. And on the bottom bar 
+        you have information about the current step (hover with your mouse over it to see more detail).</p>
+      %else:
+        %if status_type == 'graph':
+          <img src="/graph" />
+        %elif status_type == 'log':
+          %for event, description in events:
+            <h2>{{event}}:</h2>
+            <p>{{!description.replace('\n', '<br />')}}</p>
+          %end
         %end
       %end
     </div>
