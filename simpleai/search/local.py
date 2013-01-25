@@ -165,16 +165,22 @@ def _create_simulated_annealing_expander(schedule):
     Creates an expander that has a random chance to choose a node that is worse
     than the current (first) node, but that chance decreases with time.
     '''
-    def _expander(fringe, iteration):
+    def _expander(fringe, iteration, viewer):
         T = schedule(iteration)
         current = fringe[0]
         neighbors = current.expand(local_search=True)
+
+        if viewer: viewer.expanded([current], [neighbors])
+
         if neighbors:
             succ = random.choice(neighbors)
             delta_e = succ.value - current.value
             if delta_e > 0 or random.random() < math.exp(delta_e / T):
                 fringe.pop()
                 fringe.append(succ)
+
+                if viewer: viewer.chosen_node(succ)
+
     return _expander
 
 
