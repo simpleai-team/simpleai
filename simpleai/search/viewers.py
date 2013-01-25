@@ -169,13 +169,15 @@ class ConsoleViewer(object):
 
         self.pause()
 
-    def chosen_node(self, node, is_goal):
+    def chosen_node(self, node, is_goal=None):
         self.last_chosen, self.last_is_goal = node, is_goal
         self.visited_nodes += 1
 
         goal_text = 'Is goal!' if is_goal else 'Not goal'
-        description = 'Chosen node: %s\n%s'
-        description = description % (node, goal_text)
+        description = 'Chosen node: %s' % node
+        if is_goal is not None:
+            description += '\n' + goal_text
+
         self.event('chosen_node', description)
 
         self.pause()
