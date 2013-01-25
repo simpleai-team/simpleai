@@ -220,11 +220,13 @@ def _create_genetic_expander(problem, mutation_chance):
             node1 = sampler.sample()
             node2 = sampler.sample()
             child = problem.crossover(node1.state, node2.state)
+            action = 'crossover'
             if random.random() < mutation_chance:
                 # Noooouuu! she is... he is... *IT* is a mutant!
                 child = problem.mutate(child)
+                action += '+mutation'
 
-            child_node = SearchNodeValueOrdered(state=child, problem=problem)
+            child_node = SearchNodeValueOrdered(state=child, problem=problem, action=action)
             new_generation.append(child_node)
 
             expanded_nodes.append(node1)
