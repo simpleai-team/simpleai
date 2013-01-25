@@ -143,8 +143,8 @@ class ConsoleViewer(object):
             for node, successors in zip(self.last_expandeds,
                                         self.last_successors):
                 add_node(node, expanded=True)
-                for succesor_node in successors:
-                    add_edge_to_parent(succesor_node,
+                for successor_node in successors:
+                    add_edge_to_parent(successor_node,
                                        is_successor=True,
                                        parent=node)
 
