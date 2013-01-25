@@ -148,7 +148,7 @@ def _search(problem, fringe, graph_search=False, depth_limit=None,
         if depth_limit is None or node.depth < depth_limit:
             childs = []
             expanded = node.expand()
-            if viewer: viewer.expanded(node, expanded)
+            if viewer: viewer.expanded([node], [expanded])
 
             for n in expanded:
                 if graph_search:
