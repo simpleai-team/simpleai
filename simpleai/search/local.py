@@ -77,7 +77,7 @@ def _random_best_expander(fringe, iteration):
     '''
     current = fringe[0]
     betters = [n for n in current.expand(local_search=True)
-               if n.value() > current.value()]
+               if n.value > current.value]
     if betters:
         random.shuffle(betters)
         fringe.append(betters[0])
@@ -119,7 +119,7 @@ def hill_climbing_random_restarts(problem, restarts_limit, iterations_limit=0):
                             fringe_size=1,
                             random_initial_states=True)
 
-        if not best or best.value() < new.value():
+        if not best or best.value < new.value:
             best = new
 
         restarts += 1
@@ -146,7 +146,7 @@ def _create_simulated_annealing_expander(schedule):
         neighbors = current.expand(local_search=True)
         if neighbors:
             succ = random.choice(neighbors)
-            delta_e = succ.value() - current.value()
+            delta_e = succ.value - current.value
             if delta_e > 0 or random.random() < math.exp(delta_e / T):
                 fringe.pop()
                 fringe.append(succ)
@@ -177,7 +177,7 @@ def _create_genetic_expander(problem, mutation_chance):
     crossing over them.
     '''
     def _expander(fringe, iteration):
-        fitness = [x.value() for x in fringe]
+        fitness = [x.value for x in fringe]
         sampler = InverseTransformSampler(fitness, fringe)
         new_generation = []
         for _ in fringe:
@@ -243,7 +243,7 @@ def _local_search(problem, fringe_expander, iterations_limit=0, fringe_size=1,
 
         if iterations_limit and iteration >= iterations_limit:
             run = False
-        elif old_best.value() >= best.value():
+        elif old_best.value >= best.value:
             run = False
 
     return best

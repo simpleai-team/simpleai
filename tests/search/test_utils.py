@@ -13,9 +13,7 @@ class TestFifoList(unittest.TestCase):
 
     def test_pop_returns_first_element(self):
         self.assertEquals(self.f.pop(), 1)
-
-    def test_pop_with_index_works(self):
-        self.assertEquals(self.f.pop(1), 2)
+        self.assertEquals(len(self.f), 2)
 
 
 class TestBoundedPriorityQueue(unittest.TestCase):

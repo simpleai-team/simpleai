@@ -91,6 +91,4 @@ Authors
 * Rafael Carrascosa <rcarrascosa@machinalis.com>
 * Santiago Romero <sromero@machinalis.com>
 * Gonzalo García Berrotarán <ggarcia@machinalis.com>
-
-Special acknowledgements to `Machinalis <http://www.machinalis.com/>`_ for the
-time provided to work on this project.
+* Special acknowledgements to `Machinalis <http://www.machinalis.com/>`_ for the time provided to work on this project. Machinalis also works on some other very interesting projects, like `Quepy <http://quepy.machinalis.com/>`_ and `more <https://github.com/machinalis>`_.

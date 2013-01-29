@@ -122,9 +122,6 @@ class SearchNode(object):
             node = node.parent
         return list(reversed(path))
 
-    def value(self):
-        return self.problem.value(self.state)
-
     def __eq__(self, other):
         return isinstance(other, SearchNode) and self.state == other.state
 
@@ -138,22 +135,28 @@ class SearchNodeCostOrdered(SearchNode):
 
 
 class SearchNodeValueOrdered(SearchNode):
+    def __init__(self, *args, **kwargs):
+        super(SearchNodeValueOrdered, self).__init__(*args, **kwargs)
+        self.value = self.problem.value(self.state)
+
     def __lt__(self, other):
         # value must work inverted, because heapq sorts 1-9
         # and we need 9-1 sorting
-        return -self.value() < -other.value()
+        return -self.value < -other.value
 
 
 class SearchNodeHeuristicOrdered(SearchNode):
+    def __init__(self, *args, **kwargs):
+        super(SearchNodeHeuristicOrdered, self).__init__(*args, **kwargs)
+        self.heuristic = self.problem.heuristic(self.state)
+
     def __lt__(self, other):
-        return self.problem.heuristic(self.state) < \
-               self.problem.heuristic(other.state)
+        return self.heuristic < other.heuristic
 
 
-class SearchNodeStarOrdered(SearchNode):
+class SearchNodeStarOrdered(SearchNodeHeuristicOrdered):
     def __lt__(self, other):
-        return self.problem.heuristic(self.state) + self.cost < \
-               self.problem.heuristic(other.state) + other.cost
+        return self.heuristic + self.cost < other.heuristic + other.cost
 
 
 class CspProblem(object):
