@@ -19,14 +19,14 @@ MAP = """
 MAP = [list(x) for x in MAP.split("\n") if x]
 
 COSTS = {
-    "up": 10,
-    "down": 10,
-    "left": 10,
-    "right": 10,
-    "up left": 14,
-    "up right": 14,
-    "down left": 14,
-    "down right": 14,
+    "up": 1.0,
+    "down": 1.0,
+    "left": 1.0,
+    "right": 1.0,
+    "up left": 1.4,
+    "up right": 1.4,
+    "down left": 1.4,
+    "down right": 1.4,
 }
 
 
