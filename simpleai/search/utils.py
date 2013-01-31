@@ -1,13 +1,14 @@
 # coding=utf-8
 import heapq
+from collections import deque
 from itertools import izip
 import random
 
 
-class FifoList(list):
-    '''List that pops from the begining.'''
-    def pop(self, index=0):
-        return super(FifoList, self).pop(index)
+class FifoList(deque):
+    '''List that pops from the beginning.'''
+    def pop(self):
+        return super(FifoList, self).popleft()
 
 
 class BoundedPriorityQueue(object):
