@@ -30,6 +30,7 @@ Example:
 
     GOAL = 'HELLO WORLD'
 
+
     class HelloProblem(SearchProblem):
         def actions(self, state):
             if len(state) < len(GOAL):
