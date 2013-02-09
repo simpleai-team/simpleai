@@ -45,6 +45,7 @@ This problem tries to create the string "HELLO WORLD" using the A* algorithm:
 
     GOAL = 'HELLO WORLD'
 
+
     class HelloProblem(SearchProblem):
         def actions(self, state):
             if len(state) < len(GOAL):
@@ -65,13 +66,12 @@ This problem tries to create the string "HELLO WORLD" using the A* algorithm:
             missing = len(GOAL) - len(state)
             return wrong + missing
 
-
     problem = HelloProblem(initial_state='')
     result = astar(problem)
 
     print result.state
     print result.path()
-
+    
 
 More detailed documentation
 ===========================
