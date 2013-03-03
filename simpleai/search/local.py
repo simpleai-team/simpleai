@@ -279,7 +279,9 @@ def _local_search(problem, fringe_expander, iterations_limit=0, fringe_size=1,
     '''
     Basic algorithm for all local search algorithms.
     '''
-    if viewer: viewer.started()
+    if viewer:
+        viewer.clean()
+        viewer.started()
 
     fringe = BoundedPriorityQueue(fringe_size)
     if random_initial_states:

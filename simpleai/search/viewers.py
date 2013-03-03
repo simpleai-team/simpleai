@@ -15,9 +15,17 @@ But you can also:
 
 
 class ConsoleViewer(object):
-    def __init__(self, interactive=True):
+    def __init__(self, interactive=True, multiple_runs=False):
         self.interactive = interactive
+        self.multiple_runs = multiple_runs
 
+        self.successor_color = '#DD4814'
+        self.fringe_color = '#20a0c0'
+        self.font_size = 11
+
+        self.clean()
+
+    def clean(self):
         self.last_event = ''
         self.last_event_description = ''
         self.events = []
@@ -30,12 +38,6 @@ class ConsoleViewer(object):
         self.last_is_goal = False
         self.last_expandeds = []
         self.last_successors = []
-
-        self.successor_color = '#DD4814'
-        self.fringe_color = '#20a0c0'
-        self.font_size = 11
-
-        self.multiple_runs = False
 
     def pause(self):
         prompt = True

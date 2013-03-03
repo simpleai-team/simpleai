@@ -124,7 +124,9 @@ def _search(problem, fringe, graph_search=False, depth_limit=None,
     '''
     Basic search algorithm, base of all the other search algorithms.
     '''
-    if viewer: viewer.started()
+    if viewer:
+        viewer.clean()
+        viewer.started()
 
     memory = {}
     initial_node = node_factory(state=problem.initial_state,
