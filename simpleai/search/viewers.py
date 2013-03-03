@@ -35,6 +35,8 @@ class ConsoleViewer(object):
         self.fringe_color = '#20a0c0'
         self.font_size = 11
 
+        self.multiple_runs = False
+
     def pause(self):
         prompt = True
         while prompt:
