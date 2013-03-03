@@ -57,6 +57,9 @@ def iterative_limited_depth_first(problem, graph_search=False, viewer=None):
     Requires: SearchProblem.actions, SearchProblem.result, and
     SearchProblem.is_goal.
     '''
+    if viewer:
+        viewer.multiple_runs = True
+
     solution = None
     limit = 0
 

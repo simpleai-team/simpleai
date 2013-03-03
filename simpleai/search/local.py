@@ -135,8 +135,12 @@ def hill_climbing_random_restarts(problem, restarts_limit, iterations_limit=0, v
     Requires: SearchProblem.actions, SearchProblem.result, SearchProblem.value,
     and SearchProblem.generate_random_state.
     '''
+    if viewer:
+        viewer.multiple_runs = True
+
     restarts = 0
     best = None
+
     while restarts < restarts_limit:
         new = _local_search(problem,
                             _first_expander,
@@ -288,6 +292,7 @@ def _local_search(problem, fringe_expander, iterations_limit=0, fringe_size=1,
     iteration = 0
     run = True
     best = None
+
     while run:
         if viewer: viewer.new_iteration([n for n in fringe])
 
