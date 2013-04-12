@@ -100,13 +100,22 @@ class ClassificationProblem(object):
     """
 
     def __init__(self):
-        attrs = []
+        self._load_self_attributes()
+
+    def _load_self_attributes(self, attrs=None):
+        if attrs is None:
+            attrs = []
         for name in dir(self):
             method = getattr(self, name)
             if hasattr(method, "is_attribute"):
                 attr = Attribute(method, method.name)
                 attrs.append(attr)
         self.attributes = attrs
+        # This sort is useful in cases where attributes are feeded vectorized
+        # to the classifier (like SVMs) and you want to pickle and unpickle it
+        # safely.
+        # Requieres attributes to have names.
+        self.attributes.sort(key=lambda attr: attr.name)
 
     def target(self, example):
         """
@@ -114,6 +123,20 @@ class ClassificationProblem(object):
         example.
         """
         raise NotImplementedError()
+
+    def __getstate__(self):
+        # For pickle-ability of method objects
+        attributes = [a for a in self.attributes
+                      if not hasattr(a.function, "is_attribute")]
+        d = dict(self.__dict__)
+        d["attributes"] = attributes
+        return d
+
+    def __setstate__(self, d):
+        # For pickle-ability
+        for name, value in d.iteritems():
+            setattr(self, name, value)
+        self._load_self_attributes(self.attributes)
 
 
 class VectorDataClassificationProblem(ClassificationProblem):
