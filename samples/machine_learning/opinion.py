@@ -110,7 +110,7 @@ def main():
     classifier = NaiveBayes(corpus, problem)
     print "Classifier created"
 
-    p = precision(classifier, problem.target, test)
+    p = precision(classifier, test)
     print "Precision = {}".format(p)
 
 if __name__ == "__main__":

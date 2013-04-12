@@ -26,18 +26,18 @@ class TestPrecision(unittest.TestCase):
 
     def test_is_1(self):
         test = [(0, 3, 3), (0, 2, 2)]
-        p = precision(self.c, self.p.target, test)
+        p = precision(self.c, test)
         self.assertEqual(p, 1.0)
 
     def test_is_0(self):
         test = [(1, 3, 3), (1, 2, 2)]
-        p = precision(self.c, self.p.target, test)
+        p = precision(self.c, test)
         self.assertEqual(p, 0.0)
 
     def test_bad_testset(self):
         test = []
         with self.assertRaises(ValueError):
-            precision(self.c, self.p.target, test)
+            precision(self.c, test)
 
 
 class TestKfold(unittest.TestCase):

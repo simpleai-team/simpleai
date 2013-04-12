@@ -9,7 +9,7 @@ Tools for evaluate the classification algorithms
 import random
 
 
-def precision(classifier, target, testset):
+def precision(classifier, testset):
     """
     Runs the classifier for each example in `testset`
     and verifies that the classification is correct
@@ -22,7 +22,7 @@ def precision(classifier, target, testset):
     hit = 0
     total = 0
     for example in testset:
-        if classifier.classify(example)[0] == target(example):
+        if classifier.classify(example)[0] == classifier.target(example):
             hit += 1
         total += 1
     if total == 0:

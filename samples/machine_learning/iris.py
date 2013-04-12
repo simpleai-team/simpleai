@@ -70,7 +70,7 @@ def main():
     print "Precision:\n"
     for name, method in classifiers.iteritems():
         classifier = method(dataset, problem)
-        p = precision(classifier, problem.target, testset)
+        p = precision(classifier, testset)
         print "{:>20} = {:.2}".format(name, p)
 
 
