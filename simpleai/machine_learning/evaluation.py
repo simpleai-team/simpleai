@@ -6,7 +6,10 @@ Tools for evaluate the classification algorithms
 """
 
 
-def precision(classifier, target, testset):
+import random
+
+
+def precision(classifier, testset):
     """
     Runs the classifier for each example in `testset`
     and verifies that the classification is correct
@@ -19,7 +22,7 @@ def precision(classifier, target, testset):
     hit = 0
     total = 0
     for example in testset:
-        if classifier.classify(example)[0] == target(example):
+        if classifier.classify(example)[0] == classifier.target(example):
             hit += 1
         total += 1
     if total == 0:
@@ -30,27 +33,26 @@ def precision(classifier, target, testset):
 def kfold(dataset, problem, method, k=10):
     """
     Does a k-fold on `dataset` with `method`.
-    This is, creates k-partitions of the dataset, and k-times
+    This is, it randomly creates k-partitions of the dataset, and k-times
     trains the method with k-1 parts and runs it with the partition left.
     After all this, returns the overall success ratio.
     """
 
+    if k <= 1:
+        raise ValueError("k argument must be at least 2")
+
+    dataset = list(dataset)
+    random.shuffle(dataset)
+
     trials = 0
     positive = 0
-    div = len(dataset) / k
-
     for i in xrange(k):
-        partition_start = div * i
-        partition_end = div * (i + 1)
-        to_test = dataset[partition_start:partition_end]
-        corpus = dataset[:partition_start - 1] + \
-                 dataset[partition_end:]
-
-        tree = method(corpus, problem)
-
-        for row in to_test:
+        train = [x for j, x in enumerate(dataset) if j % k != i]
+        test = [x for j, x in enumerate(dataset) if j % k == i]
+        classifier = method(train, problem)
+        for data in test:
             trials += 1
-            if tree.classify(row)[0] == problem.target(row):
+            if classifier.classify(data)[0] == problem.target(data):
                 positive += 1
 
     return float(positive) / float(trials)

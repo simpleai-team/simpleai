@@ -96,7 +96,7 @@ test = OnlineCorpusReader(input_files, lambda i: i in testindexes)
 print "Training Naive Bayes..."
 classifier = NaiveBayes(train, problem)
 print "Testing..."
-p = precision(classifier, problem.target, test)
+p = precision(classifier, test)
 print "Precision Naive Bayes = {}".format(p)
 
 
@@ -105,5 +105,5 @@ classifier = DecisionTreeLearner_LargeData(train, problem, minsample=500)
 print "Final tree:"
 print tree_to_str(classifier.root)
 print "Testing..."
-p = precision(classifier, problem.target, test)
+p = precision(classifier, test)
 print "Precision Decision Tree = {}".format(p)

@@ -50,12 +50,14 @@ class TestClassifier(object):
         majority = max(d, key=d.get)
 
         class MockClassifier(object):
+            target = self.target
             def classify(self, example):
                 return majority, 1.0
 
+
         mock = MockClassifier()
-        mock_prec = evaluation.precision(mock, self.target, self.test_set)
-        this_prec = evaluation.precision(self.this, self.target, self.test_set)
+        mock_prec = evaluation.precision(mock, self.test_set)
+        this_prec = evaluation.precision(self.this, self.test_set)
         try:
             self.assertGreaterEqual(this_prec, mock_prec)
         except:
@@ -64,7 +66,7 @@ class TestClassifier(object):
     def test_tolerates_empty_attributes(self):
         self.problem.attributes = []
         self.this = self.classifier(self.corpus, self.problem)
-        evaluation.precision(self.this, self.target, self.test_set)
+        evaluation.precision(self.this, self.test_set)
 
     def test_handles_empty_dataset(self):
         self.assertRaises(ValueError, self.classifier,
@@ -76,7 +78,7 @@ class TestClassifier(object):
         """
         self.problem.attributes = [self.target]
         self.this = self.classifier(self.corpus, self.problem)
-        prec = evaluation.precision(self.this, self.target, self.test_set)
+        prec = evaluation.precision(self.this, self.test_set)
         self.assertEqual(prec, 1.0)
 
     def test_save_classifier(self):
