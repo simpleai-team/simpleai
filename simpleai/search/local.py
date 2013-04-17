@@ -27,7 +27,8 @@ def beam(problem, beam_size=100, iterations_limit=0):
     return _local_search(problem,
                          _all_expander,
                          iterations_limit=iterations_limit,
-                         fringe_size=beam_size)
+                         fringe_size=beam_size,
+                         stop_when_no_better=iterations_limit==0)
 
 
 def _first_expander(fringe, iteration):
@@ -51,7 +52,8 @@ def beam_best_first(problem, beam_size=100, iterations_limit=0):
     return _local_search(problem,
                          _first_expander,
                          iterations_limit=iterations_limit,
-                         fringe_size=beam_size)
+                         fringe_size=beam_size,
+                         stop_when_no_better=iterations_limit==0)
 
 
 def hill_climbing(problem, iterations_limit=0):
@@ -67,7 +69,8 @@ def hill_climbing(problem, iterations_limit=0):
     return _local_search(problem,
                          _first_expander,
                          iterations_limit=iterations_limit,
-                         fringe_size=1)
+                         fringe_size=1,
+                         stop_when_no_better=True)
 
 
 def _random_best_expander(fringe, iteration):
@@ -96,7 +99,8 @@ def hill_climbing_stochastic(problem, iterations_limit=0):
     return _local_search(problem,
                          _random_best_expander,
                          iterations_limit=iterations_limit,
-                         fringe_size=1)
+                         fringe_size=1,
+                         stop_when_no_better=iterations_limit==0)
 
 
 def hill_climbing_random_restarts(problem, restarts_limit, iterations_limit=0):
@@ -117,7 +121,8 @@ def hill_climbing_random_restarts(problem, restarts_limit, iterations_limit=0):
                             _first_expander,
                             iterations_limit=iterations_limit,
                             fringe_size=1,
-                            random_initial_states=True)
+                            random_initial_states=True,
+                            stop_when_no_better=True)
 
         if not best or best.value < new.value:
             best = new
@@ -168,7 +173,8 @@ def simulated_annealing(problem, schedule=_exp_schedule, iterations_limit=0):
     return _local_search(problem,
                          _create_simulated_annealing_expander(schedule),
                          iterations_limit=iterations_limit,
-                         fringe_size=1)
+                         fringe_size=1,
+                         stop_when_no_better=iterations_limit==0)
 
 
 def _create_genetic_expander(problem, mutation_chance):
@@ -214,11 +220,12 @@ def genetic(problem, population_size=100, mutation_chance=0.1,
                          _create_genetic_expander(problem, mutation_chance),
                          iterations_limit=iterations_limit,
                          fringe_size=population_size,
-                         random_initial_states=True)
+                         random_initial_states=True,
+                         stop_when_no_better=iterations_limit==0)
 
 
 def _local_search(problem, fringe_expander, iterations_limit=0, fringe_size=1,
-                  random_initial_states=False):
+                  random_initial_states=False, stop_when_no_better=True):
     '''
     Basic algorithm for all local search algorithms.
     '''
@@ -243,7 +250,7 @@ def _local_search(problem, fringe_expander, iterations_limit=0, fringe_size=1,
 
         if iterations_limit and iteration >= iterations_limit:
             run = False
-        elif old_best.value >= best.value:
+        elif old_best.value >= best.value and stop_when_no_better:
             run = False
 
     return best
