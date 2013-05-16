@@ -15,9 +15,11 @@ But you can also:
 
 
 class ConsoleViewer(object):
-    def __init__(self, interactive=True, multiple_runs=False):
+    def __init__(self, interactive=True, output_enabled=True,
+                 multiple_runs=False):
         self.interactive = interactive
         self.multiple_runs = multiple_runs
+        self.output_enabled = output_enabled
 
         self.successor_color = '#DD4814'
         self.fringe_color = '#20a0c0'
@@ -77,7 +79,8 @@ class ConsoleViewer(object):
         self.output(description)
 
     def output(self, text):
-        print text
+        if not self.output_enabled:
+            print text
 
     def started(self):
         self.event('started', HELP_TEXT)
@@ -220,7 +223,7 @@ class ConsoleViewer(object):
 
 class WebViewer(ConsoleViewer):
     def __init__(self, host='127.0.0.1', port=8000):
-        super(WebViewer, self).__init__(interactive=True)
+        super(WebViewer, self).__init__(interactive=True, output_enabled=False)
         self.host = host
         self.port = port
         self.paused = True
