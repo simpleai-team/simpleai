@@ -110,6 +110,7 @@ class ConsoleViewer(object):
                 new_g_node = Node(node_id,
                                   label=label,
                                   style='filled',
+                                  shape='circle',
                                   fillcolor='#ffffff',
                                   fontsize=self.font_size)
 
