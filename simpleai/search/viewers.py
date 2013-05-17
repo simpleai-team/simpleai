@@ -79,7 +79,7 @@ class ConsoleViewer(object):
         self.output(description)
 
     def output(self, text):
-        if not self.output_enabled:
+        if self.output_enabled:
             print text
 
     def started(self):
