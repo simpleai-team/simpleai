@@ -9,17 +9,11 @@ def _all_expander(fringe, iteration, viewer):
     '''
     Expander that expands all nodes on the fringe.
     '''
-    expanded_nodes = []
-    expanded_neighbors = []
-    for node in fringe:
-        neighbors = node.expand(local_search=True)
+    if viewer: expanded_nodes = fringe[:]
 
-        if viewer:
-            expanded_nodes.append(node)
-            expanded_neighbors.append(neighbors)
-
-    for neighbors in expanded_neighbors:
-        fringe.extend(neighbors)
+    expanded_neighbors = [node.expand(local_search=True)
+                          for node in fringe]
+    map(fringe.extend, expanded_neighbors)
 
     if viewer: viewer.expanded(expanded_nodes, expanded_neighbors)
 
