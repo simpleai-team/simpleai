@@ -213,11 +213,28 @@ class ConsoleViewer(object):
         self.solution_node = node
         self.solution_type = solution_type
 
-        description = 'Finished algorithm returning %s\nSolution type: %s'
+        if self.multiple_runs:
+            description = 'Finished one of the runs of the inner algorithm returning %s\nSolution type: %s'
+        else:
+            description = 'Finished algorithm returning %s\nSolution type: %s'
         description = description % (node, solution_type)
+
         if node is not None and node.parent is not None:
             description += '\nPath from initial to goal: %s' % str(node.path())
         self.event('finished', description)
+
+        self.pause()
+
+    def no_more_runs(self, node, solution_type):
+        self.solution_node = node
+        self.solution_type = solution_type
+
+        description = 'Finished all of the runs of the inner algorithm returning %s\nSolution type: %s'
+        description = description % (node, solution_type)
+
+        if node is not None and node.parent is not None:
+            description += '\nPath from initial to goal: %s' % str(node.path())
+        self.event('no_more_runs', description)
 
         self.pause()
 
@@ -258,6 +275,7 @@ class WebViewer(ConsoleViewer):
                         visited_nodes=self.visited_nodes,
                         last_event = self.last_event,
                         last_event_description = self.last_event_description,
+                        multiple_runs=self.multiple_runs,
                         events=self.events[:-1],
                         status_type=status_type)
 

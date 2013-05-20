@@ -90,10 +90,12 @@
       </div>
       <div class="nav-bar">
         <ul>
-          %if last_event != 'finished':
-            <li><a href="/next/{{status_type}}">Next step</a></li>
-          %else:
+          %if last_event == 'finished':
             <li>Finished!</li>
+          %elif last_event == 'no_more_runs':
+            <li>No more runs</li>
+          %else:
+            <li><a href="/next/{{status_type}}">Next step</a></li>
           %end
           %if status_type != 'log':
             <li><a href="/view/log">Log</a></li>
@@ -103,7 +105,9 @@
           %end
           <li>Max fringe size: {{max_fringe_size}}</li>
           <li>Visited nodes: {{visited_nodes}}</li>
-          %if last_event == 'finished':
+          %if last_event == 'finished' and multiple_runs:
+            <li><a href="/next/{{status_type}}">Click here to start the next run of the inner algorithm</a></li>
+          %elif last_event in ('finished', 'no_more_runs'):
             <li><a href="/next/{{status_type}}">Click here to close the server and continue your program</a></li>
           %end
         </ul>

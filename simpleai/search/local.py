@@ -152,6 +152,9 @@ def hill_climbing_random_restarts(problem, restarts_limit, iterations_limit=0, v
 
         restarts += 1
 
+    if viewer:
+        viewer.no_more_runs(best, 'returned after %i runs' % restarts_limit)
+
     return best
 
 
