@@ -70,6 +70,9 @@ def iterative_limited_depth_first(problem, graph_search=False, viewer=None):
                                        viewer=viewer)
         limit += 1
 
+    if viewer:
+        viewer.no_more_runs(solution, 'returned after %i runs' % limit)
+
     return solution
 
 
