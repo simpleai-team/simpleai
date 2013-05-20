@@ -9,13 +9,12 @@ def _all_expander(fringe, iteration, viewer):
     '''
     Expander that expands all nodes on the fringe.
     '''
-    if viewer: expanded_nodes = fringe[:]
-
     expanded_neighbors = [node.expand(local_search=True)
                           for node in fringe]
-    map(fringe.extend, expanded_neighbors)
 
-    if viewer: viewer.expanded(expanded_nodes, expanded_neighbors)
+    if viewer: viewer.expanded(fringe[:], expanded_neighbors)
+
+    map(fringe.extend, expanded_neighbors)
 
 
 def beam(problem, beam_size=100, iterations_limit=0, viewer=None):
