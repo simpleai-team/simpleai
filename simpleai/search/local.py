@@ -295,7 +295,7 @@ def _local_search(problem, fringe_expander, iterations_limit=0, fringe_size=1,
     best = None
 
     while run:
-        if viewer: viewer.new_iteration([n for n in fringe])
+        if viewer: viewer.new_iteration(fringe[:])
 
         old_best = fringe[0]
         fringe_expander(fringe, iteration, viewer)

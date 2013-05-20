@@ -138,7 +138,7 @@ def _search(problem, fringe, graph_search=False, depth_limit=None,
     memory[problem.initial_state] = initial_node
 
     while fringe:
-        if viewer: viewer.new_iteration([n for n in fringe])
+        if viewer: viewer.new_iteration(fringe[:])
 
         node = fringe.pop()
 
