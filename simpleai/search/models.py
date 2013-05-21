@@ -79,9 +79,16 @@ class SearchProblem(object):
     def state_representation(self, state):
         """
         Returns a string representation of a state.
-        By default it returns repr(state).
+        By default it returns str(state).
         """
-        return repr(state)
+        return str(state)
+
+    def action_representation(self, action):
+        """
+        Returns a string representation of an action.
+        By default it returns str(action).
+        """
+        return str(action)
 
 
 class SearchNode(object):
@@ -125,8 +132,14 @@ class SearchNode(object):
     def __eq__(self, other):
         return isinstance(other, SearchNode) and self.state == other.state
 
+    def state_representation(self):
+        return self.problem.state_representation(self.state)
+
+    def action_representation(self):
+        return self.problem.action_representation(self.action)
+
     def __repr__(self):
-        return 'Node <%s>' % self.problem.state_representation(self.state)
+        return 'Node <%s>' % self.state_representation()
 
 
 class SearchNodeCostOrdered(SearchNode):
