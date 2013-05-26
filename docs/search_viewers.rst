@@ -134,6 +134,20 @@ default values):
 * **port** (integer, optional, default to 8000): the port where the website
   will be listening.
 
+Example usage:
+
+.. code-block:: python
+
+    from simpleai.search import breadth_first
+    from simpleai.search.viewers import WebViewer
+
+    # class HelloProblem..., my_problem = ... (steps from the previous sections about search problems)
+
+    my_viewer = ConsoleViewer(host='0.0.0.0', port=9090)
+
+    result = breadth_first(my_problem, viewer=my_viewer)
+
+
 Statistics
 ----------
 
