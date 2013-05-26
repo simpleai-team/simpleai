@@ -65,12 +65,14 @@ explained here.
 You can also specify some configuration for the ConsoleViewer when creating it.
 It allows two parameters:
 
-* **interactive**: You could disable all interactions and let the algorithm run
+* **interactive** (boolean): You can disable all interactions and let the algorithm run
   until the end. This is useful when you want to use the viewer just to collect
   statistics to be analyzed after the execution, and not to debug each step.
-* **output_enabled**: You could disable all output. This is useful when running
+* **output_enabled** (boolean): You can disable all output. This is useful when running
   a non-interactive viewer, to avoid flooding the console output with the
   information of each event during the execution.
+
+For more information about the graph, see the next section.
 
 Example usage:
 
@@ -88,6 +90,36 @@ Example usage:
 
 WebViewer
 ---------
+
+The WebViewer will start a small website, and keep waiting for interactions
+done on the website (this website runs locally, so don't worry, you don't need
+an internet connection, and no data is being sent outside your computer. You
+can check the WebViewer class code if you are suspicious).
+
+When you run your program you will see a message indicating the web server is
+up, and instructions on how to stop it if you don't want it anymore. Once the
+server is up, to access the website open a web browser and navigate to `this
+address <http://localhost:8000/>`_.
+
+By default, you will see a welcome message, and you will be able to start
+running the algorithm by clicking on the "Next step" link. Similar to the
+ConsoleViewer, the execution will stop on each event of the algorithm (new
+iteration, node expanded, ...) and wait for you to click on the "Next step"
+link to run until the next event.  But on each step, you will see a graph
+showing the current search tree. Below the graph you will also have useful
+information about the last event (the information box is expanded when hovering
+with the mouse). And also, you can access a log of all the past events,
+clicking on the "Log" link.
+
+The colors of the nodes on the graph have special meanings:
+
+* Blue border, white background: node that are currently part of the fringe
+  (waiting to be visited).  
+* Blue border, blue background: current node, being analyzed or expanded.
+* Orange border, white background: newly created nodes, after expanding a
+  parent node.
+* Black border, white background: the rest of the nodes kept in memory, needed
+  to keep the search tree from the fringe to the initial node.
 
 Statistics
 ----------
