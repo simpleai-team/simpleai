@@ -26,6 +26,16 @@ Just get it:
 
     pip install simpleai
 
+And if you want to use the interactive search viewers, also install:
+
+.. code-block:: none
+
+    pip install pyparsing==1.5.7 pydot bottle
+
+You will need to have pip installed on your system. On linux install the 
+python-pip package, on windows follow `this <http://stackoverflow.com/questions/4750806/how-to-install-pip-on-windows>`_.
+Also, if you are on linux and not working with a virtualenv, remember to use
+``sudo`` for both commands (``sudo pip install ...``).
 
 Examples
 ========
