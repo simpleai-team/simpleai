@@ -148,9 +148,37 @@ Example usage:
     result = breadth_first(my_problem, viewer=my_viewer)
 
 
-Statistics
-----------
+Statistics and Logs
+-------------------
 
+After running the algorithm, the viewer (Console or Web) will have some
+interesting statistics and logs, that may be useful to analyze:
+
+* **max_fringe_size**: the maximum reached size of the fringe.
+* **visited_nodes**: number of nodes that were visited.
+* **events**: a list of all the events ocurred during the algorithm execution.
+  Each event is a tuple with the following structure: (event_name,
+  event_description).
+
+You can access those statistics and logs as attributes of the viewer instance,
+like this:
+
+.. code-block:: python
+
+    from simpleai.search import breadth_first
+    from simpleai.search.viewers import ConsoleViewer
+
+    # class HelloProblem..., my_problem = ... (steps from the previous sections about search problems)
+
+    my_viewer = ConsoleViewer(interactive=False, output_enabled=False)
+
+    result = breadth_first(my_problem, viewer=my_viewer)
+
+    print 'Max fringe size:', my_viewer.max_fringe_size
+    print 'Visited nodes:', my_viewer.visited_nodes
+
+    print 'Events:'
+    print my_viewer.events
 
 
 Creating your own execution viewer
