@@ -62,6 +62,8 @@ statistics, and more. These commands are explained on the interactive prompt
 shown when you run the algorithm using the ConsoleViewer, so they won't be 
 explained here.
 
+For more information about the graph, see the next section.
+
 You can also specify some configuration for the ConsoleViewer when creating it.
 It allows two parameters:
 
@@ -73,8 +75,6 @@ It allows two parameters:
   output. This is useful when running a non-interactive viewer, to avoid
   flooding the console output with the information of each event during the
   execution.
-
-For more information about the graph, see the next section.
 
 Example usage:
 
