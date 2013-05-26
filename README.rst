@@ -13,11 +13,9 @@ At this moment, the implementation includes:
     * Traditional search algorithms (not informed and informed)
     * Local Search algorithms
     * Constraint Satisfaction Problems algorithms
+    * Interactive execution viewers for search algorithms (web-based and terminal-based)
 * Machine Learning
     * Statistical Classification 
-
-And we are working on an interactive execution viewer for search algorithms (display the search tree on each iteration).
-
 
 Installation
 ============
