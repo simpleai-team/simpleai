@@ -65,12 +65,14 @@ explained here.
 You can also specify some configuration for the ConsoleViewer when creating it.
 It allows two parameters:
 
-* **interactive** (boolean): You can disable all interactions and let the algorithm run
-  until the end. This is useful when you want to use the viewer just to collect
-  statistics to be analyzed after the execution, and not to debug each step.
-* **output_enabled** (boolean): You can disable all output. This is useful when running
-  a non-interactive viewer, to avoid flooding the console output with the
-  information of each event during the execution.
+* **interactive** (boolean, optional, default to True): You can disable all
+  interactions and let the algorithm run until the end. This is useful when you
+  want to use the viewer just to collect statistics to be analyzed after the
+  execution, and not to debug each step.
+* **output_enabled** (boolean, optional, default to True): You can disable all
+  output. This is useful when running a non-interactive viewer, to avoid
+  flooding the console output with the information of each event during the
+  execution.
 
 For more information about the graph, see the next section.
 
@@ -121,8 +123,21 @@ The colors of the nodes on the graph have special meanings:
 * Black border, white background: the rest of the nodes kept in memory, needed
   to keep the search tree from the fringe to the initial node.
 
+Like the ConsoleViewer, the WebViewer can receive some configuration parameters
+(they are all optional, if you don't understand them just leave them with their
+default values):
+
+* **host** (string, optional, default to '127.0.0.1'): by default, the website
+  will only allow connections coming from the same machine. If you want to use
+  the viewer website from a machine which isn't the one running your program,
+  then you can specify that using this parameter.
+* **port** (integer, optional, default to 8000): the port where the website
+  will be listening.
+
 Statistics
 ----------
+
+
 
 Creating your own execution viewer
 ----------------------------------
