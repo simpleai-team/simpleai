@@ -161,7 +161,7 @@ interesting statistics and logs, that may be useful to analyze:
   event_description).
 
 You can access those statistics and logs as attributes of the viewer instance,
-like this:
+after the algorithm finished, like this:
 
 .. code-block:: python
 
