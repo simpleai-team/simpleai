@@ -72,7 +72,7 @@ For example, if you want to use backtracking search, you would do:
 
     # my_problem = ... (steps from the previous section)
 
-    result = backtrack(problem)
+    result = backtrack(my_problem)
 
 And what will you receive on ``result``? You will receive a dictionary with the assigned values to the variables if a solution was found, or None if couldn't find a solution.
 
@@ -100,7 +100,7 @@ Example:
 
     # my_problem = ... (steps from the previous section)
 
-    result = backtrack(problem, 
+    result = backtrack(my_problem,
                        variable_heuristic=MOST_CONSTRAINED_VARIABLE, 
                        value_heuristic=LEAST_CONSTRAINING_VALUE)
 
