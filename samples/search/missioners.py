@@ -1,5 +1,5 @@
 # coding=utf-8
-from simpleai.search import SearchProblem, breadth_first, depth_first, limited_depth_first, iterative_limited_depth_first, uniform_cost, greedy, astar, beam, hill_climbing, hill_climbing_stochastic, simulated_annealing
+from simpleai.search import SearchProblem, astar
 
 
 class MissionersProblem(SearchProblem):
@@ -51,38 +51,5 @@ class MissionersProblem(SearchProblem):
 
 problem = MissionersProblem()
 
-result = breadth_first(problem)
-#result = breadth_first(problem, graph_search=True)
-
-#result = depth_first(problem)
-#result = depth_first(problem, graph_search=True)
-
-#result = limited_depth_first(problem, depth_limit=10)
-#result = limited_depth_first(problem, depth_limit=11)
-#result = limited_depth_first(problem, depth_limit=10, graph_search=True)
-#result = limited_depth_first(problem, depth_limit=11, graph_search=True)
-
-#result = iterative_limited_depth_first(problem)
-#result = iterative_limited_depth_first(problem, graph_search=True)
-
-#result = uniform_cost(problem)
-#result = uniform_cost(problem, graph_search=True)
-
-#result = greedy(problem)
-#result = greedy(problem, graph_search=True)
-
-#result = astar(problem)
-#result = astar(problem, graph_search=True)
-
-#result = beam(problem, beam_size=5)
-#result = beam(problem, beam_size=5, iterations_limit=20)
-
-#result = hill_climbing(problem)
-#result = hill_climbing(problem, iterations_limit=20)
-
-#result = hill_climbing_stochastic(problem)
-#result = hill_climbing_stochastic(problem, iterations_limit=20)
-
-#result = simulated_annealing(problem)
-
+result = astar(problem)
 print result.path()

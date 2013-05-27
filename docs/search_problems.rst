@@ -92,7 +92,7 @@ For example, if you want to use breadth first search, you would do:
 
     # class HelloProblem..., my_problem = ... (steps from the previous section)
 
-    result = breadth_first(problem)
+    result = breadth_first(my_problem)
 
 And what will you receive on ``result``? You will receive the soultion node from the search tree if a solution was found, or None if couldn't find a solution. A solution node has this notable attributes:
 

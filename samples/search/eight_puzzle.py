@@ -1,90 +1,125 @@
-# coding=utf-8
-from simpleai.search import SearchProblem, astar
-import copy
+'''
+8 puzzle problem, a smaller version of the fifteen puzzle:
+http://en.wikipedia.org/wiki/Fifteen_puzzle
+States are defined as string representations of the pieces on the puzzle.
+Actions denote what piece will be moved to the empty space.
+
+States must allways be inmutable. We will use strings, but internally most of
+the time we will convert those strings to lists, which are easier to handle.
+For example, the state (string):
+
+'1-2-3
+ 4-5-6
+ 7-8-e'
+
+will become (in lists):
+
+[['1', '2', '3'],
+ ['4', '5', '6'],
+ ['7', '8', 'e']]
+
+'''
+
+from simpleai.search import astar, SearchProblem
+from simpleai.search.viewers import WebViewer
 
 
-class EightPuzzleProblem(SearchProblem):
-    ''' 8 puzzle problem, a smaller version of the fifteen puzzle:
-        http://en.wikipedia.org/wiki/Fifteen_puzzle
-        States are defined as a list of lists of integers, being 0 the
-        empty tile.
-        Actions denote where the empty tile goes, meaning that another tile
-        takes its place.
-    '''
+GOAL = '''1-2-3
+4-5-6
+7-8-e'''
 
-    def __init__(self):
-        initial = [
-            [0, 2, 3],
-            [1, 8, 5],
-            [4, 7, 6]]
-        super(EightPuzzleProblem, self).__init__(initial_state=initial)
+INITIAL = '''4-1-2
+7-e-3
+8-5-6'''
 
-    def _get_empty_coordinates(self, state):
-        '''Returns the coordinates of the empty tile as dictionary'''
-        for row in state:
-            if 0 in row:
-                break
-        return {'row': state.index(row), 'column': row.index(0)}
 
-    def _switch_tiles(self, state, tile1, tile2):
-        '''Makes a copy of ``state`` and switches the ``tile1`` with
-           the ``tile2``'''
-        new_state = copy.deepcopy(state)
-        aux = new_state[tile2[0]][tile2[1]]
-        new_state[tile2[0]][tile2[1]] = new_state[tile1[0]][tile1[1]]
-        new_state[tile1[0]][tile1[1]] = aux
-        return new_state
+def list_to_string(list_):
+    return '\n'.join(['-'.join(row) for row in list_])
 
+
+def string_to_list(string_):
+    return [row.split('-') for row in string_.split('\n')]
+
+
+def find_location(rows, element_to_find):
+    '''Find the location of a piece in the puzzle.
+       Returns a tuple: row, column'''
+    for ir, row in enumerate(rows):
+        for ic, element in enumerate(row):
+            if element == element_to_find:
+                return ir, ic
+
+
+# we create a cache for the goal position of each piece, so we don't have to
+# recalculate them every time
+goal_positions = {}
+rows_goal = string_to_list(GOAL)
+for number in '12345678e':
+    goal_positions[number] = find_location(rows_goal, number)
+
+
+class EigthPuzzleProblem(SearchProblem):
     def actions(self, state):
+        '''Returns a list of the pieces we can move to the empty space.'''
+        rows = string_to_list(state)
+        row_e, col_e = find_location(rows, 'e')
+
         actions = []
-        coordinates = self._get_empty_coordinates(state)
-        if coordinates['row'] > 0:
-            actions.append('up')
-        if coordinates['row'] < 2:
-            actions.append('down')
-        if coordinates['column'] > 0:
-            actions.append('left')
-        if coordinates['column'] < 2:
-            actions.append('right')
+        if row_e > 0:
+            actions.append(rows[row_e - 1][col_e])
+        if row_e < 2:
+            actions.append(rows[row_e + 1][col_e])
+        if col_e > 0:
+            actions.append(rows[row_e][col_e - 1])
+        if col_e < 2:
+            actions.append(rows[row_e][col_e + 1])
+
         return actions
 
     def result(self, state, action):
-        coordinates = self._get_empty_coordinates(state)
-        empty_tile = (coordinates['row'], coordinates['column'])
-        if action == 'up' and coordinates['row'] > 0:
-            tile2 = (coordinates['row'] - 1, coordinates['column'])
-        if action == 'down' and coordinates['row'] < 2:
-            tile2 = (coordinates['row'] + 1, coordinates['column'])
-        if action == 'left' and coordinates['column'] > 0:
-            tile2 = (coordinates['row'], coordinates['column'] - 1)
-        if action == 'right' and coordinates['column'] < 2:
-            tile2 = (coordinates['row'], coordinates['column'] + 1)
-        new_state = self._switch_tiles(state, empty_tile, tile2)
-        return new_state
+        '''Return the resulting state after moving a piece to the empty space.
+           (the "action" parameter contains the piece to move)
+        '''
+        rows = string_to_list(state)
+        row_e, col_e = find_location(rows, 'e')
+        row_n, col_n = find_location(rows, action)
+
+        rows[row_e][col_e], rows[row_n][col_n] = rows[row_n][col_n], rows[row_e][col_e]
+
+        return list_to_string(rows)
 
     def is_goal(self, state):
-        ''' Check if the state is goal:
-            | 1 2 3 |
-            | 4 5 6 |
-            | 7 8   |
+        '''Returns true if a state is the goal state.'''
+        return state == GOAL
+
+    def cost(self, state1, action, state2):
+        '''Returns the cost of performing an action. No useful on this problem, i
+           but needed.
         '''
-        return (state[0] == [1, 2, 3] and
-                state[1] == [4, 5, 6] and state[2] == [7, 8, 0])
+        return 1
 
     def heuristic(self, state):
-        total = 0
-        row_no = 0
-        for row in state:
-            for i in row:
-                total += abs(int((i - 1) / 3) - row_no) + \
-                    abs((i - 1) % 3 - row.index(i))
-            row_no += 1
-        return total
+        '''Returns an *estimation* of the distance from a state to the goal.
+           We are using the manhattan distance.
+        '''
+        rows = string_to_list(state)
 
-problem = EightPuzzleProblem()
+        distance = 0
 
-# NOTE: because of using a mutable type (list) as state, you can't use
-# graph_search=True for this problem
-result = astar(problem)
+        for number in '12345678e':
+            row_n, col_n = find_location(rows, number)
+            row_n_goal, col_n_goal = goal_positions[number]
 
-print result.path()
+            distance += abs(row_n - row_n_goal) + abs(col_n - col_n_goal)
+
+        return distance
+
+
+result = astar(EigthPuzzleProblem(INITIAL))
+# if you want to use the visual debugger, use this instead:
+# result = astar(EigthPuzzleProblem(INITIAL), viewer=WebViewer())
+
+for action, state in result.path():
+    print 'Move number', action
+    print state
+
