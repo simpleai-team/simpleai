@@ -1,2 +1,6 @@
 # Numpy required for the machine learning modules
 numpy
+# Required for the search viewers
+pyparsing==1.5.7
+pydot
+bottle
