@@ -184,3 +184,8 @@ after the algorithm finished, like this:
 Creating your own execution viewer
 ----------------------------------
 
+You can also create your own execution viewer from scratch, or modifying
+(inheriting) the existing ones. But this is still experimental, and will be
+standarized on the future, so there is no current documentation on this topic.
+
+Still, you could use the ConsoleViewer as a start point.
