@@ -24,6 +24,10 @@ algorithms a little. But are also useful to collect statistics during the
 execution of the algorithms, like maximum size of the fringe, or number of
 expanded nodes.
 
+.. image:: ./images/web_viewer_screenshot.png
+   :width: 50%
+   :align: center
+
 Basic usage
 -----------
 
