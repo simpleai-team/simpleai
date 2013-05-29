@@ -25,13 +25,14 @@ def beam(problem, beam_size=100, iterations_limit=0, viewer=None):
     If iterations_limit is specified, the algorithm will end after that
     number of iterations. Else, it will continue until it can't find a
     better node than the current one.
-    Requires: SearchProblem.actions, SearchProblem.result, and
-    SearchProblem.value.
+    Requires: SearchProblem.actions, SearchProblem.result, SearchProblem.value,
+    and SearchProblem.generate_random_state.
     '''
     return _local_search(problem,
                          _all_expander,
                          iterations_limit=iterations_limit,
                          fringe_size=beam_size,
+                         random_initial_states=True,
                          stop_when_no_better=iterations_limit==0,
                          viewer=viewer)
 
