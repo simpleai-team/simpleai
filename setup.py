@@ -5,13 +5,14 @@ from distutils.core import setup
 
 setup(
     name='simpleai',
-    version='0.6.2',
+    version='0.6.3',
     description=u'An implementation of AI algorithms based on aima-python',
     long_description=open('README.rst').read(),
     author = u'Juan Pedro Fisanotti',
     author_email = 'fisadev@gmail.com',
     url='http://github.com/simpleai-team/simpleai',
     packages=['simpleai', 'simpleai.search', 'simpleai.machine_learning'],
+    package_data={'simpleai.search': ['*.html']},
     license='LICENSE.txt',
     classifiers = [
         'Intended Audience :: Developers',
