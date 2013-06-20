@@ -139,7 +139,7 @@ class SearchNode(object):
         return self.problem.action_representation(self.action)
 
     def __repr__(self):
-        return 'Node <%s>' % self.state_representation()
+        return 'Node <%s>' % self.state_representation().replace('\n', ' ')
 
 
 class SearchNodeCostOrdered(SearchNode):
