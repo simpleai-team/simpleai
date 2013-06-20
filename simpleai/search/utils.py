@@ -11,18 +11,18 @@ class FifoList(deque):
         return super(FifoList, self).popleft()
 
 
-class BoundedPriorityQueue(list):
+class BoundedPriorityQueue(object):
     def __init__(self, limit=None, *args):
         self.limit = limit
-        super(BoundedPriorityQueue, self).__init__(*args)
+        self.queue = list()
 
     def append(self, x):
-        heapq.heappush(self, x)
-        if self.limit and len(self) > self.limit:
-            self.remove(heapq.nlargest(1, self)[0])
+        heapq.heappush(self.queue, x)
+        if self.limit and len(self.queue) > self.limit:
+            self.queue.remove(heapq.nlargest(1, self.queue)[0])
 
     def pop(self):
-        return heapq.heappop(self)
+        return heapq.heappop(self.queue)
 
     def extend(self, iterable):
         for x in iterable:
@@ -30,7 +30,7 @@ class BoundedPriorityQueue(list):
 
     def clear(self):
         for x in self:
-            self.remove(x)
+            self.queue.remove(x)
 
 
 class InverseTransformSampler(object):
