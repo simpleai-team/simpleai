@@ -1,6 +1,7 @@
 # coding: utf-8
-from tempfile import mkdtemp
 import sys
+from tempfile import mkdtemp
+from time import sleep
 from threading import Thread
 
 
@@ -248,17 +249,24 @@ class WebViewer(BaseViewer):
         self.host = host
         self.port = port
         self.static_folder = mkdtemp(prefix='simpleai_web_server')
+        self.status = 'paused'
 
     def event(self, event, description):
         super(WebViewer, self).event(event, description)
         self.create_graph('svg', 'graph.svg')
 
-    def started(self):
-        super(WebViewer, self).started()
+        if self.status == 'running_step':
+            self.status = 'paused'
 
+        while self.status == 'paused':
+            sleep(0.5)
+
+    def started(self):
         from web_viewer_server import get_server
         app = get_server(self)
 
         t = Thread(target=app.run, kwargs=dict(host=self.host, port=self.port))
         t.daemon = True
         t.start()
+
+        super(WebViewer, self).started()
