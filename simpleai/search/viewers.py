@@ -230,7 +230,7 @@ class ConsoleViewer(BaseViewer):
                     sys.exit()
                 elif option.startswith('g ') and len(option) > 2:
                     png_path = option[2:]
-                    self.create_graph(png_path)
+                    self.create_graph('png', png_path)
                     self.output('graph saved to %s' % png_path)
                     prompt = True
                 else:
