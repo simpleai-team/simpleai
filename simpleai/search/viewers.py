@@ -27,8 +27,7 @@ class BaseViewer(object):
         self.clean()
 
     def clean(self):
-        self.last_event = ''
-        self.last_event_description = ''
+        self.last_event = '', ''
         self.events = []
 
         self.max_fringe_size = 0
@@ -41,8 +40,7 @@ class BaseViewer(object):
         self.last_successors = []
 
     def event(self, event, description):
-        self.last_event = event
-        self.last_event_description = description
+        self.last_event = event, description
         self.events.append((event, description))
 
     def started(self):
@@ -160,10 +158,10 @@ class BaseViewer(object):
 
             graph_edges[id(node), id(parent)] = edge
 
-        if self.last_event == 'chosen_node':
+        if self.last_event[0] == 'chosen_node':
             add_node(self.last_chosen, chosen=True)
 
-        if self.last_event == 'expanded':
+        if self.last_event[0] == 'expanded':
             for node, successors in zip(self.last_expandeds,
                                         self.last_successors):
                 add_node(node, expanded=True)
