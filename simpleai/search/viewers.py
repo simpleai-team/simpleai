@@ -262,8 +262,11 @@ class WebViewer(BaseViewer):
     def started(self):
         from web_viewer_server import get_server
         app = get_server(self)
+        args = {'host': self.host,
+                'port': self.port,
+                'threaded': True}
 
-        t = Thread(target=app.run, kwargs=dict(host=self.host, port=self.port))
+        t = Thread(target=app.run, kwargs=args)
         t.daemon = True
         t.start()
 
