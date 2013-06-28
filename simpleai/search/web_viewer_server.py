@@ -8,7 +8,8 @@ from flask import Flask, Response, url_for, redirect
 
 def get_server(viewer):
     app = Flask(__name__,
-                static_folder=viewer.tmp_folder)
+                static_folder=viewer.tmp_folder,
+                static_path='/static')
 
     html_name = 'web_viewer.html'
 
