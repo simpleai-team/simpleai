@@ -246,7 +246,7 @@ class WebViewer(BaseViewer):
         super(WebViewer, self).__init__()
         self.host = host
         self.port = port
-        self.static_folder = mkdtemp(prefix='simpleai_web_server')
+        self.tmp_folder = mkdtemp(prefix='simpleai_web_server_')
         self.status = 'paused'
 
     def event(self, event, description):
