@@ -6,7 +6,7 @@ from time import sleep
 from flask import Flask, Response, url_for, redirect
 
 
-def get_server(viewer):
+def run_server(viewer):
     app = Flask(__name__,
                 static_folder=viewer.tmp_folder,
                 static_path='/static')
@@ -67,4 +67,4 @@ def get_server(viewer):
         return Response(event_stream(), mimetype="text/event-stream")
 
 
-    return app
+    return app.run(host=viewer.host, port=viewer.port, threaded=True)
