@@ -113,7 +113,7 @@
       </div>
 
       <div id="graph" class="tab">
-        <iframe id="graph_frame" src="/graph"></iframe>
+        <img id="graph_image" src="/graph" />
       </div>
 
       <div id="log" class="tab">
@@ -142,8 +142,8 @@
             $scope.events.push($scope.last_event);
           });
 
-          var iframe = $('#graph_frame');
-          iframe.attr('src', iframe.attr('src'));
+          var graph = $('#graph_image');
+          graph.attr('src', graph.attr('src'));
         };
       }
 

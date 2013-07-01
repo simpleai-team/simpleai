@@ -255,13 +255,13 @@ class WebViewer(BaseViewer):
         self.creating_graph = False
 
         tmp_folder = mkdtemp(prefix='simpleai_web_server_')
-        self.graph_path = path.join(tmp_folder, 'graph.svg')
+        self.graph_path = path.join(tmp_folder, 'graph.png')
 
     def event(self, event, description):
         super(WebViewer, self).event(event, description)
 
         self.creating_graph = True
-        self.create_graph('svg', self.graph_path)
+        self.create_graph('png', self.graph_path)
         self.creating_graph = False
 
         if self.status == 'running_step':
