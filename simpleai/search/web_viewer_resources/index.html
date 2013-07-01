@@ -115,9 +115,11 @@
         <iframe id="graph_frame" src="/graph"></iframe>
       </div>
 
-      <div id="log" class="tab" ng-repeat="event in events">
-        <h2>{{event.name}}:</h2>
-        <p>{{event.description}}</p>
+      <div id="log" class="tab">
+        <div ng-repeat="event in events">
+          <h2>{{event.name}}:</h2>
+          <p>{{event.description}}</p>
+        </div>
       </div>
     </div>
 
