@@ -59,4 +59,4 @@ def run_server(viewer):
         return Response(event_stream(), mimetype="text/event-stream")
 
 
-    app.run(host=viewer.host, port=viewer.port, processes=5)
+    app.run(host=viewer.host, port=viewer.port, threaded=True)
