@@ -2,7 +2,7 @@
 import json
 from os import path
 from time import sleep
-from flask import Flask, Response, url_for, redirect, send_from_directory
+from flask import Flask, Response, send_from_directory
 
 
 def run_server(viewer):
