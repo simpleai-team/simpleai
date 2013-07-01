@@ -13,7 +13,7 @@ def run_server(viewer):
 
     resources = path.join(path.dirname(path.realpath(__file__)),
                           'web_viewer_resources')
-    html_name = 'web_viewer.html'
+    html_name = 'index.html'
 
     source = path.join(resources, html_name)
     destination = path.join(viewer.tmp_folder,
