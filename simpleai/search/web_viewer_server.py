@@ -19,9 +19,9 @@ def run_server(viewer):
         return send_from_directory(app.static_folder, 'index.html')
 
 
-    @app.route('/graph/<graph_format>')
+    @app.route('/graph')
     def graph(graph_format):
-        return send_from_directory(viewer.tmp_folder, 'graph.' + graph_format)
+        return send_from_directory(viewer.tmp_folder, 'graph.svg')
 
 
     @app.route('/play')
