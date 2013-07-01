@@ -2,7 +2,7 @@
 import json
 from os import path
 from time import sleep
-from flask import Flask, Response, url_for, redirect
+from flask import Flask, Response, url_for, redirect, send_from_directory
 
 
 def run_server(viewer):
@@ -16,7 +16,7 @@ def run_server(viewer):
 
     @app.route('/')
     def index():
-        return redirect(url_for('static', filename='index.html'))
+        return send_from_directory(app.static_folder, 'index.html')
 
 
     @app.route('/play')
