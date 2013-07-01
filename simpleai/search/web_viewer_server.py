@@ -51,12 +51,10 @@ def run_server(viewer):
                 if len(viewer.events) > announced:
                     news_limit = len(viewer.events)
 
-                    for event, description in viewer.events[announced:news_limit]:
+                    for event in viewer.events[announced:news_limit]:
                         event_data = {
                             'event': event,
-                            'description': description,
-                            'last_event': viewer.last_event[0],
-                            'last_event_description': viewer.last_event[1],
+                            'last_event': viewer.last_event,
                             'max_fringe_size': viewer.max_fringe_size,
                             'visited_nodes': viewer.visited_nodes,
                         }

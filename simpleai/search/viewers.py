@@ -1,8 +1,12 @@
 # coding: utf-8
+from collections import namedtuple
 import sys
 from tempfile import mkdtemp
 from time import sleep
 from threading import Thread
+
+
+Event = namedtuple('Event', 'name description')
 
 
 CONSOLE_HELP_TEXT = '''After each step, a prompt will be shown.
@@ -27,7 +31,7 @@ class BaseViewer(object):
         self.clean()
 
     def clean(self):
-        self.last_event = '', ''
+        self.last_event = None
         self.events = []
 
         self.max_fringe_size = 0
@@ -39,9 +43,10 @@ class BaseViewer(object):
         self.last_expandeds = []
         self.last_successors = []
 
-    def event(self, event, description):
-        self.last_event = event, description
-        self.events.append((event, description))
+    def event(self, name, description):
+        self.last_event = Event(name=name,
+                                description=description)
+        self.events.append(self.last_event)
 
     def started(self):
         self.event('started', 'Algorithm just started.')
@@ -158,10 +163,10 @@ class BaseViewer(object):
 
             graph_edges[id(node), id(parent)] = edge
 
-        if self.last_event[0] == 'chosen_node':
+        if self.last_event.name == 'chosen_node':
             add_node(self.last_chosen, chosen=True)
 
-        if self.last_event[0] == 'expanded':
+        if self.last_event.name == 'expanded':
             for node, successors in zip(self.last_expandeds,
                                         self.last_successors):
                 add_node(node, expanded=True)
@@ -196,10 +201,10 @@ class ConsoleViewer(BaseViewer):
         super(ConsoleViewer, self).__init__()
         self.interactive = interactive
 
-    def event(self, event, description):
-        super(ConsoleViewer, self).event(event, description)
+    def event(self, name, description):
+        super(ConsoleViewer, self).event(name, description)
 
-        self.output('EVENT: %s' % event)
+        self.output('EVENT: %s' % name)
         self.output(description)
 
         self.pause()
