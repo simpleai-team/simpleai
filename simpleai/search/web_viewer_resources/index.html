@@ -1,4 +1,4 @@
-<HTML>
+<html ng-app>
   <head>
     <style type="text/css">
       body, div, h1, h2, ul, li, a, p {
@@ -82,57 +82,78 @@
         font-size: 20px;
       }
     </style>
+    <script src="/static/angular.min.js"></script>
+    <script src="/static/jquery-2.0.2.min.js"></script>
   </head>
-  <body>
+  <body ng-controller="AlgorithmInfoCtrl">
     <div class="top-bar">
       <div class="title-bar">
         <h1><a href="http://github.com/simpleai-team/simpleai" target="_blank">SimpleAI</a></h1>
       </div>
       <div class="nav-bar">
         <ul>
-          %if last_event == 'finished':
-            <li>Finished!</li>
-          %elif last_event == 'no_more_runs':
-            <li>No more runs</li>
-          %else:
-            <li><a href="/next/{{status_type}}">Next step</a></li>
-          %end
-          %if status_type != 'log':
-            <li><a href="/view/log">Log</a></li>
-          %end
-          %if status_type != 'graph':
-            <li><a href="/view/graph">Graph</a></li>
-          %end
+          <li><a href="#" onclick="showTab('log')">Log</a></li>
+          <li><a href="#" onclick="showTab('graph')">Graph</a></li>
+          <li><a href="#" onclick="controlAlgorithm('play')">Play</a></li>
+          <li><a href="#" onclick="controlAlgorithm('step')">Step</a></li>
+          <li><a href="#" onclick="controlAlgorithm('pause')">Pause</a></li>
+          <li><a href="#" onclick="controlAlgorithm('stop')">Stop running</a></li>
           <li>Max fringe size: {{max_fringe_size}}</li>
           <li>Visited nodes: {{visited_nodes}}</li>
-          %if last_event == 'finished' and multiple_runs:
-            <li><a href="/next/{{status_type}}">Click here to start the next run of the inner algorithm</a></li>
-          %elif last_event in ('finished', 'no_more_runs'):
-            <li><a href="/next/{{status_type}}">Click here to close the server and continue your program</a></li>
-          %end
         </ul>
       </div>
     </div>
     <div class="content">
-      %if last_event == 'started':
+      <div id="welcome" class="tab">
         <h2>Welcome to the SimpleAI execution web viewer</h2>
         <p>Started running. Click on "Next step" to continue the execution of the algorithm.</p>
         <p>On the top bar you have links to switch between the graph mode and the log mode. And on the bottom bar 
         you have information about the current step (hover with your mouse over it to see more detail).</p>
-      %else:
-        %if status_type == 'graph':
-          <img src="/graph" />
-        %elif status_type == 'log':
-          %for event, description in events:
-            <h2>{{event}}:</h2>
-            <p>{{!description.replace('\n', '<br />')}}</p>
-          %end
-        %end
-      %end
+      </div>
+
+      <div id="graph" class="tab">
+        <iframe id="graph_frame" src="/graph"></iframe>
+      </div>
+
+      <div id="log" class="tab" ng-repeat="event in events">
+        <h2>{{event.name}}:</h2>
+        <p>{{event.description}}</p>
+      </div>
     </div>
+
     <div class="bottom-bar">
-      <h2>{{last_event}}</h2>
-      <p>{{!last_event_description.replace('\n', '<br />')}}</p>
+      <h2>{{last_event.name}}</h2>
+      <p>{{last_event.description}}</p>
     </div>
+
+    <script>
+      function AlgorithmInfoCtrl($scope) {
+        $scope.last_event = {name: "hola", description: "chau"};
+        $scope.events = [];
+
+        //event stream client
+        var source = new EventSource('/event_stream');
+        source.onmessage = function(event) {
+          $scope.$apply(function() {
+            $scope.last_event = JSON.parse(event.data);
+            $scope.events.push($scope.last_event);
+          });
+
+          var iframe = $('#graph_frame');
+          iframe.attr('src', iframe.attr('src'));
+        };
+      }
+
+      function showTab(tab_name) {
+        $('.tab').hide();
+        $('#' + tab_name).show();
+      }
+
+      function controlAlgorithm(order) {
+        $.ajax({url: '/control/' + order});
+      }
+
+      showTab('welcome');
+    </script>
   </body>
-</HTML>
+</html>
