@@ -1,5 +1,6 @@
 # coding: utf-8
 from collections import namedtuple
+from os import path
 import sys
 from tempfile import mkdtemp
 from time import sleep
@@ -256,7 +257,8 @@ class WebViewer(BaseViewer):
 
     def event(self, event, description):
         super(WebViewer, self).event(event, description)
-        self.create_graph('svg', 'graph.svg')
+        image_path = path.join(self.tmp_folder, 'graph.svg')
+        self.create_graph('svg', image_path)
 
         if self.status == 'running_step':
             self.status = 'paused'
