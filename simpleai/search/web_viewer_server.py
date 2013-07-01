@@ -11,10 +11,11 @@ def run_server(viewer):
                 static_folder=viewer.tmp_folder,
                 static_path='/static')
 
+    resources = path.join(path.dirname(path.realpath(__file__)),
+                          'web_viewer_resources')
     html_name = 'web_viewer.html'
 
-    source = path.join(path.dirname(path.realpath(__file__)),
-                       html_name)
+    source = path.join(resources, html_name)
     destination = path.join(viewer.tmp_folder,
                             html_name)
     copy(source, destination)
