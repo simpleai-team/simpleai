@@ -1,29 +1,23 @@
 # coding: utf-8
 import json
 from os import path
-from shutil import copy
 from time import sleep
 from flask import Flask, Response, url_for, redirect
 
 
 def run_server(viewer):
-    app = Flask(__name__,
-                static_folder=viewer.tmp_folder,
-                static_path='/static')
-
     resources = path.join(path.dirname(path.realpath(__file__)),
                           'web_viewer_resources')
-    html_name = 'index.html'
 
-    source = path.join(resources, html_name)
-    destination = path.join(viewer.tmp_folder,
-                            html_name)
-    copy(source, destination)
+    app = Flask(__name__,
+                static_folder=resources,
+                static_path='/static')
 
 
     @app.route('/')
     def index():
-        return redirect(url_for('static', filename=html_name))
+        return redirect(url_for('static', filename='index.html'))
+
 
     @app.route('/play')
     def play():
