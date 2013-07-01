@@ -19,6 +19,11 @@ def run_server(viewer):
         return send_from_directory(app.static_folder, 'index.html')
 
 
+    @app.route('/graph/<graph_format>')
+    def graph(graph_format):
+        return send_from_directory(viewer.tmp_folder, 'graph.' + graph_format)
+
+
     @app.route('/play')
     def play():
         viewer.status = 'running'
