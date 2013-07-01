@@ -268,6 +268,8 @@ class WebViewer(BaseViewer):
         while self.status == 'paused':
             sleep(0.5)
 
+        sleep(0.5)
+
     def started(self):
         from web_viewer_server import run_server
 
