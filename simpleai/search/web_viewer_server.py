@@ -20,7 +20,7 @@ def run_server(viewer):
 
 
     @app.route('/graph')
-    def graph(graph_format):
+    def graph():
         return send_from_directory(viewer.tmp_folder, 'graph.svg')
 
 
