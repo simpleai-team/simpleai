@@ -2,7 +2,7 @@
 import json
 from os import path, _exit
 from time import sleep
-from flask import Flask, Response, send_from_directory
+from flask import Flask, Response, send_file
 
 
 def run_server(viewer):
@@ -18,12 +18,14 @@ def run_server(viewer):
 
     @app.route('/')
     def index():
-        return send_from_directory(app.static_folder, 'index.html')
+        return send_file(path.join(resources, 'index.html'))
 
 
     @app.route('/graph')
     def graph():
-        return send_from_directory(viewer.tmp_folder, 'graph.svg')
+        while viewer.creating_graph:
+            sleep(0.1)
+        return send_file(viewer.graph_path)
 
 
     @app.route('/play')

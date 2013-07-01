@@ -251,13 +251,18 @@ class WebViewer(BaseViewer):
         super(WebViewer, self).__init__()
         self.host = host
         self.port = port
-        self.tmp_folder = mkdtemp(prefix='simpleai_web_server_')
         self.status = 'paused'
+        self.creating_graph = False
+
+        tmp_folder = mkdtemp(prefix='simpleai_web_server_')
+        self.graph_path = path.join(tmp_folder, 'graph.svg')
 
     def event(self, event, description):
         super(WebViewer, self).event(event, description)
-        image_path = path.join(self.tmp_folder, 'graph.svg')
-        self.create_graph('svg', image_path)
+
+        self.creating_graph = True
+        self.create_graph('svg', self.graph_path)
+        self.creating_graph = False
 
         if self.status == 'running_step':
             self.status = 'paused'
