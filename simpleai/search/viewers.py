@@ -192,8 +192,7 @@ class BaseViewer(object):
         for node_id, parent_id in sorted(graph_edges.keys()):
             graph.add_edge(graph_edges[node_id, parent_id])
 
-        method = getattr(graph, 'write_' + image_format)
-        method(image_path)
+        graph.write(image_path, format=image_format)
 
 # TODO output_enabled desaparecio
 
