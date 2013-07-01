@@ -194,7 +194,6 @@ class BaseViewer(object):
 
         graph.write(image_path, format=image_format)
 
-# TODO output_enabled desaparecio
 
 class ConsoleViewer(BaseViewer):
     def __init__(self, interactive=True):
@@ -244,7 +243,6 @@ class ConsoleViewer(BaseViewer):
     def output(self, text):
         print text
 
-# TODO como frenar la ejecucion para que sea paso a paso?
 
 class WebViewer(BaseViewer):
     def __init__(self, host='127.0.0.1', port=8000):
