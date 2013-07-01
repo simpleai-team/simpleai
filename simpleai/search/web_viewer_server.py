@@ -1,6 +1,6 @@
 # coding: utf-8
 import json
-from os import path
+from os import path, _exit
 from time import sleep
 from flask import Flask, Response, send_from_directory
 
@@ -40,6 +40,11 @@ def run_server(viewer):
     def stop():
         viewer.status = 'paused'
         return 'ok' # TODO should be a json or something
+
+
+    @app.route('/kill_server')
+    def kill_server():
+        _exit(1)
 
 
     @app.route('/event_stream')
