@@ -28,26 +28,26 @@ def run_server(viewer):
         return send_file(viewer.graph_path)
 
 
-    @app.route('/play')
+    @app.route('/control/play')
     def play():
         viewer.status = 'running'
         return 'ok' # TODO should be a json or something
 
 
-    @app.route('/step')
+    @app.route('/control/step')
     def step():
         viewer.status = 'running_step'
         return 'ok' # TODO should be a json or something
 
 
-    @app.route('/pause')
+    @app.route('/control/pause')
     def pause():
         viewer.status = 'paused'
         return 'ok' # TODO should be a json or something
 
 
-    @app.route('/kill_server')
-    def kill_server():
+    @app.route('/control/stop')
+    def stop():
         _exit(1)
 
 
