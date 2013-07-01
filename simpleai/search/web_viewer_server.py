@@ -40,8 +40,8 @@ def run_server(viewer):
         return 'ok' # TODO should be a json or something
 
 
-    @app.route('/stop')
-    def stop():
+    @app.route('/pause')
+    def pause():
         viewer.status = 'paused'
         return 'ok' # TODO should be a json or something
 
