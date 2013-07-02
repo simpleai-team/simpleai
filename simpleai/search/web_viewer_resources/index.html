@@ -56,7 +56,7 @@
         text-decoration: underline;
       }
       div.content {
-        margin: 106px 0 0 0;
+        margin: 106px 0 25px 0;
       }
       div.content h2 {
         margin: 20px 0 5px 0;
@@ -70,6 +70,23 @@
         position: fixed;
         margin-bottom: 0;
         overflow: hidden;
+      }
+      div.bottom-bar {
+        position: fixed;
+        bottom: 0;
+        padding: 10px 150px 10px 150px;
+        width: 100%;
+        max-width: 100%;
+        height: 25px;
+        background-color: #2ba6cb;
+        color: #ffffff;
+      }
+      div.bottom-bar:hover {
+        height: auto;
+      }
+      div.bottom-bar h2 {
+        margin: 0 0 10px 0;
+        font-size: 20px;
       }
     </style>
     <script src="/static/angular.min.js"></script>
@@ -90,7 +107,6 @@
           <li><a href="#" onclick="controlAlgorithm('step')">Step</a></li>
           <li><a href="#" onclick="controlAlgorithm('pause')">Pause</a></li>
           <li><a href="#" onclick="controlAlgorithm('stop')">Stop running</a></li>
-          <li title="{{last_event.description}}">Last event: {{last_event.name}}</li>
           <li>Max fringe size: {{max_fringe_size}}</li>
           <li>Visited nodes: {{visited_nodes}}</li>
         </ul>
@@ -108,12 +124,17 @@
         <img id="graph_image" src="/graph" />
       </div>
 
-      <div id="log" class="tab">
+      <div id="log" class="tab text_tab">
         <div ng-repeat="event in events">
           <h2>{{event.name}}:</h2>
           <p>{{event.description}}</p>
         </div>
       </div>
+    </div>
+
+    <div class="bottom-bar">
+      <h2>{{last_event.name}}</h2>
+      <p>{{last_event.description}}</p>
     </div>
 
     <script>
