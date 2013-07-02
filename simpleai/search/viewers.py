@@ -85,9 +85,9 @@ class BaseViewer(object):
         self.solution_type = solution_type
 
         if self.multiple_runs:
-            description = 'Finished one of the runs of the inner algorithm returning %s\nSolution type: %s'
+            description = 'Finished one of the runs of the inner algorithm returning %s.\nSolution type: %s'
         else:
-            description = 'Finished algorithm returning %s\nSolution type: %s'
+            description = 'Finished algorithm returning %s.\nSolution type: %s'
         description = description % (node, solution_type)
 
         if node is not None and node.parent is not None:
@@ -98,7 +98,7 @@ class BaseViewer(object):
         self.solution_node = node
         self.solution_type = solution_type
 
-        description = 'Finished all of the runs of the inner algorithm returning %s\nSolution type: %s'
+        description = 'Finished all of the runs of the inner algorithm returning %s.\nSolution type: %s'
         description = description % (node, solution_type)
 
         if node is not None and node.parent is not None:
