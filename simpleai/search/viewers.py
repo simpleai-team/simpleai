@@ -259,7 +259,7 @@ class WebViewer(BaseViewer):
         super(WebViewer, self).event(event, description)
 
         self.creating_graph = True
-        self.create_graph('png', self.graph_path)
+        self.create_graph(self.graph_path.split('.')[-1], self.graph_path)
         self.creating_graph = False
 
         if self.status == 'running_step':
