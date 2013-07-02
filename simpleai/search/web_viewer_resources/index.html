@@ -83,6 +83,9 @@
       }
 
       function controlAlgorithm(order) {
+        if ($('#welcome').is(':visible')) {
+          showTab('graph');
+        }
         $.ajax({url: '/control/' + order});
       }
 
