@@ -2,15 +2,52 @@ from collections import deque
 from operator import itemgetter
 
 
-# First two functions are exported for testing purposes.
-__all__ = ['neighbors', 'all_arcs', 'revise', 'arc_concistency_3']
+# We refer here to callable_constraint as the callable
+# representing constraint between two variables.
+
+
+# The first two functions are exported for testing purposes.
+__all__ = ['constraint_wrapper', 'neighbors', 'all_arcs', 'revise', 'arc_concistency_3']
 
 fst = itemgetter(0)
-snd = itemgetter(1)
+
+
+def constraint_wrapper(vars_, constraint):
+    '''
+    Returns a callable that switches the values argument of @constraint
+    acording to the varibles passed to the wrapper returned.
+
+    @constraint is a callable representing the constraint between @vars_.
+
+    Say @vars_ have (X_i, X_j) because we assume the constraint to be
+    symmetrical, that is constraint must apply to (X_j, X_i) we need
+    to be able to call constraint with the values swapped, according to
+    how the variables of the constraint are.
+    '''
+    X_i, X_j = vars_
+
+    def wrapper(variables, values):
+        if variables == (X_i, X_j):
+            return constraint(variables, values)
+        elif variables == (X_j, X_i):
+            return constraint(variables, (values[1], values[0]))
+        else:
+            raise ValueError("This constraint does not work with %s", ", ".join(vars_))
+    return wrapper
 
 
 def neighbors(xi, constraints, exclude):
+    '''
+    Returns all variables that are related, through a constraint, to @xi
 
+    @constraints is a list of tuples, each tuple having
+    a tuple of variables and a callable which serves as
+    the constraint between the variables. e.g:
+
+    [(('X', 'Y'), lambda vars, values: values[0] == values[1]), .. ]
+
+    If the constraint was as above, 'Y' would be a neighbor of 'X'.
+    '''
     def _neighbor(variables):
         assert len(variables) == 2
         idx_i = variables.index(xi)
@@ -20,7 +57,7 @@ def neighbors(xi, constraints, exclude):
 
     seen = set()
     for t in constraints:
-        variables, constraint = t
+        variables, func = t  # ignore constraint function
         if not xi in variables:
             continue
         xk = _neighbor(variables)
@@ -29,7 +66,7 @@ def neighbors(xi, constraints, exclude):
         if xk in seen:
             continue
         seen.add(xk)
-        yield xk
+        yield ((xk, xi), func)
 
 
 def revise(domains, variables, constraint):
@@ -42,7 +79,8 @@ def revise(domains, variables, constraint):
     revised = False
 
     for x in di:
-        if not any(constraint(variables, (x, y)) for y in dj):
+        if not any(constraint(variables, (x, y))  # constraint is a callable
+                   for y in dj):
             di.remove(x)
             revised = True
     return revised
@@ -58,31 +96,32 @@ def all_arcs(constraints):
         fwd = (x, y)
         bck = (y, x)
 
+        wrapped = constraint_wrapper(vars_, const)
+
         if not fwd in seen:
-            yield (fwd, const)
+            yield (fwd, wrapped)
 
         if not bck in seen:
-            yield (bck, const)
+            yield (bck, wrapped)
 
         map(seen_add, (fwd, bck))
 
 
 def arc_concistency_3(domains, constraints):
     """
-    Assumes that constraints contains binary relations
-    that the constraints are symmetrical, that is:
+    Makes a CSP problem arc concistent.
 
+    Assumes that the constraints are symmetrical, that is:
        constraint(x, y) == constraint(y, x).
     """
     arcs = deque(all_arcs(constraints))
 
     while arcs:
-        variables, constraint = arcs.popleft()
-        print variables
+        variables, func = arcs.popleft()
         xi, xj = variables
-        if revise(domains, variables, constraint):
+        if revise(domains, variables, func):
             if len(domains[xi]) == 0:
                 return False
-            for xk in neighbors(xi, constraints, xj):
-                arcs.append(((xk, xi), constraint))
+            for arc in neighbors(xi, constraints, xj):
+                arcs.append(arc)
     return True

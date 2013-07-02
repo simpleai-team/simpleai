@@ -8,7 +8,7 @@ from simpleai.search import (
     MOST_CONSTRAINED_VARIABLE, HIGHEST_DEGREE_VARIABLE,
     LEAST_CONSTRAINING_VALUE)
 
-from simpleai.search.arc import arc_concistency_3, neighbors
+from simpleai.search.arc import arc_concistency_3
 
 
 variables = ["%s%d" % (i, j) for i in uppercase[:9] for j in xrange(1, 10)]
@@ -72,30 +72,20 @@ def mkconstraints():
 
 def display_solution(sol):
     for i in uppercase[:9]:
-        print "".join([str(sol["%s%d" % (i, j)]) for j in xrange(1, 10)])
-
-
+        print "|".join([str(sol["%s%d" % (i, j)]) for j in xrange(1, 10)])
+        print "-|-|-|-|-|-|-|-|-"
 
 constraints = mkconstraints()
-
-for t in list(neighbors('A1', constraints, 'A2')):
-    print t
-print "----"
-
 domains.update(parsepuzzle(sodoku))
 
-print arc_concistency_3(domains, constraints)
-
-for k, v in domains.iteritems():
-    print k, v
-
-
+arc_concistency_3(domains, constraints)
 my_problem = CspProblem(variables, domains, constraints)
-# sol = backtrack(my_problem, variable_heuristic=MOST_CONSTRAINED_VARIABLE, value_heuristic=LEAST_CONSTRAINING_VALUE)
-# display_solution(sol)
-
 sol = backtrack(my_problem)
 display_solution(sol)
+
+
+# sol = backtrack(my_problem, variable_heuristic=MOST_CONSTRAINED_VARIABLE, value_heuristic=LEAST_CONSTRAINING_VALUE)
+# display_solution(sol)
 
 # print backtrack(my_problem, variable_heuristic=MOST_CONSTRAINED_VARIABLE)
 # print backtrack(my_problem, variable_heuristic=HIGHEST_DEGREE_VARIABLE)
