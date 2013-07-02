@@ -2,11 +2,7 @@ from collections import deque
 from operator import itemgetter
 
 
-# We refer here to callable_constraint as the callable
-# representing constraint between two variables.
-
-
-# The first two functions are exported for testing purposes.
+# The first 3 functions are exported for testing purposes.
 __all__ = ['constraint_wrapper', 'neighbors', 'all_arcs', 'revise', 'arc_concistency_3']
 
 fst = itemgetter(0)
