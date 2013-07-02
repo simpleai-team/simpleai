@@ -52,16 +52,8 @@ def run_server(viewer):
                     news_limit = len(viewer.events)
 
                     data = {}
-                    data['stats'] = [
-                        {
-                            'name': 'Max fringe size',
-                            'value': viewer.max_fringe_size,
-                        },
-                        {
-                            'name': 'Visited nodes',
-                            'value': viewer.visited_nodes,
-                        },
-                    ]
+                    data['stats'] = [{'name': stat.replace('_', ' '), 'value': value}
+                                     for stat, value in viewer.stats.items()]
 
                     for event in viewer.events[announced:news_limit]:
                         data['event'] = event.__dict__
