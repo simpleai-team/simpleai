@@ -90,7 +90,17 @@
         $.ajax({url: '/control/' + order});
       }
 
-      $('#graph_image').panzoom();
+      var graph_image = $('#graph_image');
+      graph_image.panzoom();
+      graph_image.bind('mousewheel', function(e) {
+        if (e.originalEvent.wheelDelta / 120 > 0) {
+          graph_image.panzoom('zoom');
+        }
+        else {
+          graph_image.panzoom('zoom', true);
+        }
+        alert(new_zoom);
+      });
 
       showTab('welcome');
     </script>
