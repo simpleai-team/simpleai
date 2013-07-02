@@ -51,8 +51,21 @@ def run_server(viewer):
                 if len(viewer.events) > announced:
                     news_limit = len(viewer.events)
 
+                    data = {}
+                    data['stats'] = [
+                        {
+                            'name': 'Max fringe size',
+                            'value': viewer.max_fringe_size,
+                        },
+                        {
+                            'name': 'Visited nodes',
+                            'value': viewer.visited_nodes,
+                        },
+                    ]
+
                     for event in viewer.events[announced:news_limit]:
-                        yield 'data: %s\n\n' % json.dumps(event.__dict__)
+                        data['event'] = event.__dict__
+                        yield 'data: %s\n\n' % json.dumps(data)
 
                     announced = news_limit
 

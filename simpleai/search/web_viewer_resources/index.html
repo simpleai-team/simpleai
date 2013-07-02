@@ -13,14 +13,13 @@
       </div>
       <div class="nav-bar">
         <ul>
-          <li><a href="#" onclick="showTab('log')">Log</a></li>
-          <li><a href="#" onclick="showTab('graph')">Graph</a></li>
           <li><a href="#" onclick="controlAlgorithm('play')">Play</a></li>
           <li><a href="#" onclick="controlAlgorithm('step')">Step</a></li>
           <li><a href="#" onclick="controlAlgorithm('pause')">Pause</a></li>
           <li><a href="#" onclick="controlAlgorithm('stop')">Stop running</a></li>
-          <li>Max fringe size: {{max_fringe_size}}</li>
-          <li>Visited nodes: {{visited_nodes}}</li>
+          <li><a href="#" onclick="showTab('graph')">Graph</a></li>
+          <li><a href="#" onclick="showTab('log')">Log</a></li>
+          <li><a href="#" onclick="showTab('stats')">Stats</a></li>
         </ul>
       </div>
     </div>
@@ -42,6 +41,14 @@
           <p>{{event.description}}</p>
         </div>
       </div>
+
+      <div id="stats" class="tab text_tab">
+        <div ng-repeat="stat in stats">
+          <h2>{{stat.name}}:</h2>
+          <p>{{stat.value}}</p>
+        </div>
+      </div>
+
     </div>
 
     <div class="bottom-bar">
@@ -53,12 +60,15 @@
       function AlgorithmInfoCtrl($scope) {
         $scope.last_event = {name: "hola", description: "chau"};
         $scope.events = [];
+        $scope.stats = [];
 
         //event stream client
         var source = new EventSource('/event_stream');
         source.onmessage = function(event) {
           $scope.$apply(function() {
-            $scope.last_event = JSON.parse(event.data);
+            data = JSON.parse(event.data);
+            $scope.last_event = data.event;
+            $scope.stats = data.stats;
             $scope.events.push($scope.last_event);
           });
 
