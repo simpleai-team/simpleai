@@ -25,3 +25,6 @@ pip-log.txt
 
 # Vim tmps
 *.swp
+
+# Emacs backups
+*.*~
