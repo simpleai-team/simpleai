@@ -45,7 +45,6 @@ def neighbors(xi, constraints, exclude):
     If the constraint was as above, 'Y' would be a neighbor of 'X'.
     '''
     def _neighbor(variables):
-        assert len(variables) == 2
         idx_i = variables.index(xi)
         idx_j = 1 - idx_i
         neighbor = variables[idx_j]
@@ -53,7 +52,11 @@ def neighbors(xi, constraints, exclude):
 
     seen = set()
     for t in constraints:
-        variables, func = t  # ignore constraint function
+        variables, func = t
+
+        if len(variables) != 2:  # ignore constraints that are not binary
+            continue
+
         if not xi in variables:
             continue
         xk = _neighbor(variables)
@@ -86,7 +89,10 @@ def all_arcs(constraints):
     seen = set()
     seen_add = seen.add
     for vars_, const in constraints:
-        x, y = vars_
+        try:
+            x, y = vars_
+        except ValueError:
+            continue
 
         # arcs
         fwd = (x, y)
