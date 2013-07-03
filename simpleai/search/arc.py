@@ -20,6 +20,9 @@ def constraint_wrapper(vars_, constraint):
     to be able to call constraint with the values swapped, according to
     how the variables of the constraint are.
     '''
+    if getattr(constraint, 'no_wrap', False):
+        return constraint
+
     X_i, X_j = vars_
 
     def wrapper(variables, values):
@@ -127,3 +130,35 @@ def arc_concistency_3(domains, constraints):
             for arc in neighbors(xi, constraints, xj):
                 arcs.append(arc)
     return True
+
+
+from itertools import product
+
+
+def mkbinary(domains, constraints):
+    last = 0
+
+    def wdiff(vars_):
+        def diff(variables, values):
+            hidden, other = variables
+            if hidden.startswith('hidden'):
+                idx = vars_.index(other)
+                return values[1] == values[0][idx]
+            else:
+                idx = vars_.index(hidden)
+                return values[0] == values[1][idx]
+        diff.no_wrap = True  # so it's not wrapped to swap values
+        return diff
+
+    new_constraints = []
+    for vars_, const in constraints:
+        if len(vars_) == 2:
+            new_constraints.append((vars_, const))
+            continue
+
+        hidden = 'hidden%d' % last
+        last += 1
+        domains[hidden] = [t for t in product(*map(domains.get, vars_)) if const(vars_, t)]
+        for var in vars_:
+            new_constraints.append(((hidden, var), wdiff(vars_)))
+    return new_constraints
