@@ -69,6 +69,7 @@ def _count_conflicts(problem, assignment, variable=None, value=None):
     '''
     return len(_find_conflicts(problem, assignment, variable, value))
 
+
 def _find_conflicts(problem, assignment, variable=None, value=None):
     '''
     Find violated constraints on a given assignment, with the possibility
@@ -119,6 +120,7 @@ def _backtracking(problem, assignment, domains, variable_chooser,
     '''
     Internal recursive backtracking algorithm.
     '''
+    from arc import arc_concistency_3
     if len(assignment) == len(problem.variables):
         return assignment
 
@@ -132,18 +134,18 @@ def _backtracking(problem, assignment, domains, variable_chooser,
         new_assignment = deepcopy(assignment)
         new_assignment[variable] = value
 
-        if not _count_conflicts(problem, new_assignment): # TODO on aima also checks if using fc
+        if not _count_conflicts(problem, new_assignment):  # TODO on aima also checks if using fc
             new_domains = deepcopy(domains)
+            new_domains[variable] = [value]
 
-            # TODO propagation and inferences
-
-            result = _backtracking(problem,
-                                   new_assignment,
-                                   new_domains,
-                                   variable_chooser,
-                                   values_sorter)
-            if result:
-                return result
+            if arc_concistency_3(new_domains, problem.constraints):
+                result = _backtracking(problem,
+                                       new_assignment,
+                                       new_domains,
+                                       variable_chooser,
+                                       values_sorter)
+                if result:
+                    return result
 
     return None
 
