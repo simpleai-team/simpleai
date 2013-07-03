@@ -1,4 +1,5 @@
 from collections import deque
+from itertools import product
 from operator import itemgetter
 
 
@@ -132,10 +133,13 @@ def arc_concistency_3(domains, constraints):
     return True
 
 
-from itertools import product
-
-
 def mkbinary(domains, constraints):
+    """
+    Returns new constraint list, all binary, using hidden variables.
+
+    You can use it as previous step when creating a problem.
+    """
+
     last = 0
 
     def wdiff(vars_):

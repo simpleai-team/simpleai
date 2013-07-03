@@ -1,14 +1,12 @@
+from time import time
 from StringIO import StringIO
 from string import uppercase
 from itertools import combinations
 from collections import OrderedDict
+from copy import deepcopy
 
-from simpleai.search import (
-    CspProblem, backtrack, min_conflicts,
-    MOST_CONSTRAINED_VARIABLE, HIGHEST_DEGREE_VARIABLE,
-    LEAST_CONSTRAINING_VALUE)
-
-from simpleai.search.arc import arc_concistency_3
+from simpleai.search import CspProblem, backtrack, MOST_CONSTRAINED_VARIABLE, LEAST_CONSTRAINING_VALUE
+from simpleai.search.arc import mkbinary
 
 
 variables = ["%s%d" % (i, j) for i in uppercase[:9] for j in xrange(1, 10)]
@@ -51,6 +49,9 @@ def parsepuzzle(puzzle):
 
 
 def mkconstraints():
+    """
+    Make constraint list for binary constraint problem.
+    """
     constraints = []
 
     for j in xrange(1, 10):
@@ -70,26 +71,64 @@ def mkconstraints():
     return constraints
 
 
+def mknaryconstraints():
+
+    def alldiff(variables, values):
+        return len(values) == len(set(values))  # remove repeated values and count
+
+    constraints = []
+
+    for j in xrange(1, 10):
+        vars_ = ["%s%d" % (i, j) for i in uppercase[:9]]
+        constraints.append((vars_, alldiff))
+
+    for i in uppercase[:9]:
+        vars_ = ["%s%d" % (i, j) for j in xrange(1, 10)]
+        constraints.append((vars_, alldiff))
+
+    for b0 in ['ABC', 'DEF', 'GHI']:
+        for b1 in [[1, 2, 3], [4, 5, 6], [7, 8, 9]]:
+            vars_ = ["%s%d" % (i, j) for i in b0 for j in b1]
+            constraints.append((vars_, alldiff))
+
+    return constraints
+
+
 def display_solution(sol):
     for i in uppercase[:9]:
-        print "|".join([str(sol["%s%d" % (i, j)]) for j in xrange(1, 10)])
-        print "-|-|-|-|-|-|-|-|-"
+        print " ".join([str(sol["%s%d" % (i, j)]) for j in xrange(1, 10)])
 
-constraints = mkconstraints()
+
 domains.update(parsepuzzle(sodoku))
 
-#arc_concistency_3(domains, constraints)
-my_problem = CspProblem(variables, domains, constraints)
-sol = backtrack(my_problem)
+# -- Hand made binary constraints --
+constraints = mkconstraints()
+start = time()
+domains0 = deepcopy(domains)
+my_problem = CspProblem(variables, domains0, constraints)
+sol = backtrack(my_problem, variable_heuristic=MOST_CONSTRAINED_VARIABLE, value_heuristic=LEAST_CONSTRAINING_VALUE)
+elapsed = time() - start
 display_solution(sol)
+print "Took %d seconds to finish using binary constraints" % elapsed  # because of AC3 should be quick
 
 
-# sol = backtrack(my_problem, variable_heuristic=MOST_CONSTRAINED_VARIABLE, value_heuristic=LEAST_CONSTRAINING_VALUE)
-# display_solution(sol)
+# -- N-ary constraints made binary using hidden variables --
+domains2 = deepcopy(domains)
+start = time()
+constraints = mkbinary(domains2, mknaryconstraints())
+my_problem = CspProblem(variables, domains2, constraints)
+sol = backtrack(my_problem, variable_heuristic=MOST_CONSTRAINED_VARIABLE, value_heuristic=LEAST_CONSTRAINING_VALUE)
+elapsed = time() - start
+display_solution(sol)
+print "Took %d seconds to finish using binary constraints (hidden variables)" % elapsed
 
-# print backtrack(my_problem, variable_heuristic=MOST_CONSTRAINED_VARIABLE)
-# print backtrack(my_problem, variable_heuristic=HIGHEST_DEGREE_VARIABLE)
-# print backtrack(my_problem, value_heuristic=LEAST_CONSTRAINING_VALUE)
-# print backtrack(my_problem, variable_heuristic=MOST_CONSTRAINED_VARIABLE, value_heuristic=LEAST_CONSTRAINING_VALUE)
-# print backtrack(my_problem, variable_heuristic=HIGHEST_DEGREE_VARIABLE, value_heuristic=LEAST_CONSTRAINING_VALUE)
-# print min_conflicts(my_problem)
+
+# -- N-ary constraints --
+constraints = mknaryconstraints()
+domains1 = deepcopy(domains)
+start = time()
+my_problem = CspProblem(variables, domains1, constraints)
+sol = backtrack(my_problem, variable_heuristic=MOST_CONSTRAINED_VARIABLE, value_heuristic=LEAST_CONSTRAINING_VALUE)
+elapsed = time() - start
+display_solution(sol)
+print "Took %d seconds to finish using n-ary constraints" % elapsed
