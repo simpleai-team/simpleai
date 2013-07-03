@@ -78,7 +78,7 @@ def display_solution(sol):
 constraints = mkconstraints()
 domains.update(parsepuzzle(sodoku))
 
-arc_concistency_3(domains, constraints)
+#arc_concistency_3(domains, constraints)
 my_problem = CspProblem(variables, domains, constraints)
 sol = backtrack(my_problem)
 display_solution(sol)
