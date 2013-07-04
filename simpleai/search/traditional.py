@@ -57,9 +57,6 @@ def iterative_limited_depth_first(problem, graph_search=False, viewer=None):
     Requires: SearchProblem.actions, SearchProblem.result, and
     SearchProblem.is_goal.
     '''
-    if viewer:
-        viewer.multiple_runs = True
-
     solution = None
     limit = 0
 
@@ -71,7 +68,7 @@ def iterative_limited_depth_first(problem, graph_search=False, viewer=None):
         limit += 1
 
     if viewer:
-        viewer.no_more_runs(solution, 'returned after %i runs' % limit)
+        viewer.event('no_more_runs', solution, 'returned after %i runs' % limit)
 
     return solution
 
@@ -131,8 +128,7 @@ def _search(problem, fringe, graph_search=False, depth_limit=None,
     Basic search algorithm, base of all the other search algorithms.
     '''
     if viewer:
-        viewer.clean()
-        viewer.started()
+        viewer.event('started')
 
     memory = {}
     initial_node = node_factory(state=problem.initial_state,
@@ -141,22 +137,25 @@ def _search(problem, fringe, graph_search=False, depth_limit=None,
     memory[problem.initial_state] = initial_node
 
     while fringe:
-        if viewer: viewer.new_iteration(list(fringe))
+        if viewer:
+            viewer.event('new_iteration', list(fringe))
 
         node = fringe.pop()
 
         if problem.is_goal(node.state):
             if viewer:
-                viewer.chosen_node(node, True)
-                viewer.finished(fringe, node, 'goal found')
+                viewer.event('chosen_node', node, True)
+                viewer.event('finished', fringe, node, 'goal found')
             return node
         else:
-            if viewer: viewer.chosen_node(node, False)
+            if viewer:
+                viewer.event('chosen_node', node, False)
 
         if depth_limit is None or node.depth < depth_limit:
             childs = []
             expanded = node.expand()
-            if viewer: viewer.expanded([node], [expanded])
+            if viewer:
+                viewer.event('expanded', [node], [expanded])
 
             for n in expanded:
                 if graph_search:
@@ -175,4 +174,5 @@ def _search(problem, fringe, graph_search=False, depth_limit=None,
             for n in childs:
                 fringe.append(n)
 
-    if viewer: viewer.finished(fringe, None, 'goal not found')
+    if viewer:
+        viewer.event('finished', fringe, None, 'goal not found')
