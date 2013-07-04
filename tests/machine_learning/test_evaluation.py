@@ -63,7 +63,3 @@ class TestKfold(unittest.TestCase):
         self.my_setup(testset)
         p = kfold(testset, self.p, MockClassifier, k=4)
         self.assertLessEqual(p, 0.75)
-
-
-if __name__ == "__main__":
-    unittest.main()
