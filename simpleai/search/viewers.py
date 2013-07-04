@@ -35,6 +35,9 @@ class BaseViewer(object):
             'visited_nodes': 0,
         }
 
+        self.clear_nodes_data()
+
+    def clear_nodes_data(self):
         self.current_fringe = []
         self.last_chosen = None
         self.last_expandeds = []
@@ -49,6 +52,7 @@ class BaseViewer(object):
         self.events.append(self.last_event)
 
     def handle_started(self):
+        self.clear_nodes_data()
         self.log_event('started', 'Algorithm just started.')
 
     def handle_new_iteration(self, fringe):
@@ -77,8 +81,10 @@ class BaseViewer(object):
         self.log_event('expanded', description)
 
     def handle_finished(self, fringe, node, solution_type):
-        self.current_fringe = fringe
+        self.clear_nodes_data()
         self.solution_node = node
+        if node:
+            self.current_fringe = [node]
         self.solution_type = solution_type
 
         description = 'Finished algorithm returning %s.\nSolution type: %s'
@@ -89,7 +95,10 @@ class BaseViewer(object):
         self.log_event('finished', description)
 
     def handle_no_more_runs(self, node, solution_type):
+        self.clear_nodes_data()
         self.solution_node = node
+        if node:
+            self.current_fringe = [node]
         self.solution_type = solution_type
 
         description = 'Finished all of the runs of the inner algorithm returning %s.\nSolution type: %s'
