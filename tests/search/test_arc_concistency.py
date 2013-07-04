@@ -3,7 +3,7 @@ import unittest
 
 from operator import itemgetter
 
-from simpleai.search.arc import constraint_wrapper, neighbors, all_arcs, revise, arc_concistency_3
+from simpleai.search.arc import constraint_wrapper, neighbors, all_arcs, revise, arc_consistency_3
 
 fst = itemgetter(0)
 
@@ -87,5 +87,5 @@ class TestAC3(unittest.TestCase):
         self.set_constraints()
 
     def test_ac3(self):
-        self.assertTrue(arc_concistency_3(self.domains, self.constraints))
+        self.assertTrue(arc_consistency_3(self.domains, self.constraints))
         self.assertEqual(self.domains, {'X': [1, 2, 3, 4], 'Y': [1, 4, 9, 16]})

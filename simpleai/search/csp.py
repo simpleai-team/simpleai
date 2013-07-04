@@ -1,14 +1,14 @@
 # coding=utf-8
 import random
-from copy import deepcopy
-
+from copy import deepcopy, copy
+from itertools import product
 
 MOST_CONSTRAINED_VARIABLE = 'mcv'
 HIGHEST_DEGREE_VARIABLE = 'degree'
 LEAST_CONSTRAINING_VALUE = 'lvc'
 
 
-def backtrack(problem, variable_heuristic='', value_heuristic=''):
+def backtrack(problem, variable_heuristic='', value_heuristic='', inference=True):
     '''
     Backtracking search.
 
@@ -32,12 +32,12 @@ def backtrack(problem, variable_heuristic='', value_heuristic=''):
         values_sorter = _least_constraining_values_sorter
     else:
         values_sorter = _basic_values_sorter
-
     return _backtracking(problem,
                          assignment,
                          domains,
                          variable_chooser,
-                         values_sorter)
+                         values_sorter,
+                         inference=inference)
 
 
 def _basic_variable_chooser(problem, variables, domains):
@@ -115,12 +115,11 @@ def _least_constraining_values_sorter(problem, assignment, variable, domains):
     return values
 
 
-def _backtracking(problem, assignment, domains, variable_chooser,
-                  values_sorter):
+def _backtracking(problem, assignment, domains, variable_chooser, values_sorter, inference=True):
     '''
     Internal recursive backtracking algorithm.
     '''
-    from arc import arc_concistency_3
+    from arc import arc_consistency_3
     if len(assignment) == len(problem.variables):
         return assignment
 
@@ -138,12 +137,13 @@ def _backtracking(problem, assignment, domains, variable_chooser,
             new_domains = deepcopy(domains)
             new_domains[variable] = [value]
 
-            if arc_concistency_3(new_domains, problem.constraints):
+            if (not inference) or (inference and arc_consistency_3(new_domains, problem.constraints)):
                 result = _backtracking(problem,
                                        new_assignment,
                                        new_domains,
                                        variable_chooser,
-                                       values_sorter)
+                                       values_sorter,
+                                       inference=inference)
                 if result:
                     return result
 
@@ -199,3 +199,39 @@ def min_conflicts(problem, initial_assignment=None, iterations_limit=0):
             run = False
 
     return assignment
+
+
+def mk_hidden_variable_representation(domains, constraints):
+    """
+    Returns new constraint list, all binary, using hidden variables.
+
+    You can use it as previous step when creating a problem.
+    """
+
+    def wdiff(vars_):
+        def diff(variables, values):
+            hidden, other = variables
+            if hidden.startswith('hidden'):
+                idx = vars_.index(other)
+                return values[1] == values[0][idx]
+            else:
+                idx = vars_.index(hidden)
+                return values[0] == values[1][idx]
+        diff.no_wrap = True  # so it's not wrapped to swap values
+        return diff
+
+    new_constraints = []
+    last = 0
+    new_domains = copy(domains)
+
+    for vars_, const in constraints:
+        if len(vars_) == 2:
+            new_constraints.append((vars_, const))
+            continue
+
+        hidden = 'hidden%d' % last
+        last += 1
+        new_domains[hidden] = [t for t in product(*map(domains.get, vars_)) if const(vars_, t)]
+        for var in vars_:
+            new_constraints.append(((hidden, var), wdiff(vars_)))
+    return new_domains, new_constraints

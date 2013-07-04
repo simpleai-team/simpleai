@@ -5,9 +5,9 @@ from itertools import combinations
 from collections import OrderedDict
 from copy import deepcopy
 
-from simpleai.search import CspProblem, backtrack, MOST_CONSTRAINED_VARIABLE, LEAST_CONSTRAINING_VALUE
-from simpleai.search.arc import mkbinary
-
+from simpleai.search import (
+    CspProblem, backtrack, MOST_CONSTRAINED_VARIABLE, LEAST_CONSTRAINING_VALUE,
+    mk_hidden_variable_representation)
 
 variables = ["%s%d" % (i, j) for i in uppercase[:9] for j in xrange(1, 10)]
 
@@ -113,10 +113,10 @@ print "Took %d seconds to finish using binary constraints" % elapsed  # because 
 
 
 # -- N-ary constraints made binary using hidden variables --
-domains2 = deepcopy(domains)
+domains1 = deepcopy(domains)
 start = time()
-constraints = mkbinary(domains2, mknaryconstraints())
-my_problem = CspProblem(variables, domains2, constraints)
+domains1, constraints = mk_hidden_variable_representation(domains1, mknaryconstraints())
+my_problem = CspProblem(variables, domains1, constraints)
 sol = backtrack(my_problem, variable_heuristic=MOST_CONSTRAINED_VARIABLE, value_heuristic=LEAST_CONSTRAINING_VALUE)
 elapsed = time() - start
 display_solution(sol)
@@ -125,9 +125,9 @@ print "Took %d seconds to finish using binary constraints (hidden variables)" % 
 
 # -- N-ary constraints --
 constraints = mknaryconstraints()
-domains1 = deepcopy(domains)
+domains3 = deepcopy(domains)
 start = time()
-my_problem = CspProblem(variables, domains1, constraints)
+my_problem = CspProblem(variables, domains3, constraints)
 sol = backtrack(my_problem, variable_heuristic=MOST_CONSTRAINED_VARIABLE, value_heuristic=LEAST_CONSTRAINING_VALUE)
 elapsed = time() - start
 display_solution(sol)
