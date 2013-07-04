@@ -28,3 +28,6 @@ pip-log.txt
 
 # Emacs backups
 *.*~
+# Idea files/directory
+.idea
+*.iml
