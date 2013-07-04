@@ -70,7 +70,3 @@ class TestOnlineInformationGain(unittest.TestCase):
             entropy.add(i)
         self.assertEqual(gain.get_gain(), entropy.get_entropy())
         self.assertGreaterEqual(gain.get_gain(), 0)
-
-
-if __name__ == "__main__":
-    unittest.main()
