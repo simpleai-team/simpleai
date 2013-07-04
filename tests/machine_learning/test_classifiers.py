@@ -23,7 +23,7 @@ def euclidean_vector_distance(x, y):
     return math.sqrt(sum([(a - b) ** 2 for a, b in zip(x, y)]))
 
 
-class TestClassifier(object):
+class BaseTestClassifier(object):
     classifier = None
 
     def setup_dataset(self):
@@ -51,9 +51,9 @@ class TestClassifier(object):
 
         class MockClassifier(object):
             target = self.target
+
             def classify(self, example):
                 return majority, 1.0
-
 
         mock = MockClassifier()
         mock_prec = evaluation.precision(mock, self.test_set)
@@ -126,7 +126,7 @@ class TestClassifier(object):
         self.assertNotEqual(fold, 0)
 
 
-class TestDtree_Pseudo(TestClassifier):
+class BaseTestDtree_Pseudo(BaseTestClassifier):
     classifier = DecisionTreeLearner
 
     def test_no_target_split(self):
@@ -138,7 +138,7 @@ class TestDtree_Pseudo(TestClassifier):
             nodes.extend(node.branches.values())
 
 
-class TestDtree_LargeData(TestDtree_Pseudo):
+class BaseTestDtree_LargeData(BaseTestDtree_Pseudo):
     classifier = DecisionTreeLearner_LargeData
 
     def test_equal_classification(self):
@@ -159,15 +159,15 @@ class TestDtree_LargeData(TestDtree_Pseudo):
             nodes.extend(node.branches.values())
 
 
-class TestDtree_Queued(TestDtree_LargeData):
+class BaseTestDtree_Queued(BaseTestDtree_LargeData):
     classifier = DecisionTreeLearner_Queued
 
 
-class TestNaiveBayes(TestClassifier):
+class BaseTestNaiveBayes(BaseTestClassifier):
     classifier = NaiveBayes
 
 
-class TestKNearestNeighbors(TestClassifier):
+class BaseTestKNearestNeighbors(BaseTestClassifier):
     classifier = KNearestNeighbors
 
 
@@ -259,28 +259,28 @@ class CorpusPrimes(object):
         return True
 
 
-def create_testcase(classifier, corpus):
+def create_tstcase(classifier, corpus):
     name = "{}_{}".format(classifier.__name__, corpus.__name__)
     bases = (corpus, classifier, unittest.TestCase)
     newclass = type(name, bases, {})
     globals()[name] = newclass
 
-classifiers = [TestDtree_Pseudo,
-               TestDtree_Queued,
-               TestDtree_LargeData,
-               TestNaiveBayes]
-corpora = [CorpusIris,
-           CorpusXor,
-           CorpusPrimes]
 
-for classifier in classifiers:
-    for corpus in corpora:
-        create_testcase(classifier, corpus)
+TestDtree_Pseudo_CorpusIris = create_tstcase(BaseTestDtree_Pseudo, CorpusIris)
+TestDtree_Pseudo_CorpusXor = create_tstcase(BaseTestDtree_Pseudo, CorpusXor)
+TestDtree_Pseudo_CorpusPrimes = create_tstcase(BaseTestDtree_Pseudo, CorpusPrimes)
 
-# Add test for KNearestNeighbors with the corpus with distance
-create_testcase(TestKNearestNeighbors, CorpusPrimes)
-create_testcase(TestKNearestNeighbors, CorpusIris)
+TestDtree_Queued_CorpusIris = create_tstcase(BaseTestDtree_Queued, CorpusIris)
+TestDtree_Queued_CorpusXor = create_tstcase(BaseTestDtree_Queued, CorpusXor)
+TestDtree_Queued_CorpusPrimes = create_tstcase(BaseTestDtree_Queued, CorpusPrimes)
 
+TestDtree_LargeData_CorpusIris = create_tstcase(BaseTestDtree_LargeData, CorpusIris)
+TestDtree_LargeData_CorpusXor = create_tstcase(BaseTestDtree_LargeData, CorpusXor)
+TestDtree_LargeData_CorpusPrimes = create_tstcase(BaseTestDtree_LargeData, CorpusPrimes)
 
-if __name__ == "__main__":
-    unittest.main()
+TestNaiveBayes_CorpusIris = create_tstcase(BaseTestNaiveBayes, CorpusIris)
+TestNaiveBayes_CorpusXor = create_tstcase(BaseTestNaiveBayes, CorpusXor)
+TestNaiveBayes_CorpusPrimes = create_tstcase(BaseTestNaiveBayes, CorpusPrimes)
+
+TestKNearestNeighbors_CorpusPrimes = create_tstcase(BaseTestKNearestNeighbors, CorpusPrimes)
+TestKNearestNeighbors_CorpusIris = create_tstcase(BaseTestKNearestNeighbors, CorpusIris)
