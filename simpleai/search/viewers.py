@@ -25,6 +25,7 @@ class BaseViewer(object):
     def __init__(self):
         self.successor_color = '#DD4814'
         self.fringe_color = '#20a0c0'
+        self.solution_color = '#adeba8'
         self.font_size = 11
 
         self.last_event = None
@@ -118,7 +119,7 @@ class BaseViewer(object):
         done = set()
 
         def add_node(node, expanded=False, chosen=False, in_fringe=False,
-                     in_successors=False):
+                     in_successors=False, solution=False):
             node_id = id(node)
             if node_id not in graph_nodes:
                 label = node.state_representation()
@@ -148,6 +149,8 @@ class BaseViewer(object):
             if in_successors:
                 g_node.set_color(self.successor_color)
                 g_node.set_fontcolor(self.successor_color)
+            if solution:
+                g_node.set_fillcolor(self.solution_color)
 
             return g_node
 
@@ -171,6 +174,10 @@ class BaseViewer(object):
 
         if self.last_event.name == 'chosen_node':
             add_node(self.last_chosen, chosen=True)
+
+        if self.last_event.name == 'finished':
+            if self.solution_node:
+                add_node(self.solution_node, solution=True)
 
         if self.last_event.name == 'expanded':
             for node, successors in zip(self.last_expandeds,
