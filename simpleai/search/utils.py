@@ -16,6 +16,12 @@ class BoundedPriorityQueue(object):
         self.limit = limit
         self.queue = list()
 
+    def __getitem__(self, val):
+        return self.queue[val]
+
+    def __len__(self):
+        return len(self.queue)
+
     def append(self, x):
         heapq.heappush(self.queue, x)
         if self.limit and len(self.queue) > self.limit:
