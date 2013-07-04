@@ -104,27 +104,26 @@
         alert(new_zoom);
       });
 
-      showTab('help');
-    </script>
-    <script>
       $(window).keypress(function(event) {
-          if ( event.which == 13 ) {
-              event.preventDefault();
-              controlAlgorithm('step')
-            }
-          else if ( event.which == 113 || event.which == 81) {
-              event.preventDefault();
-              controlAlgorithm('stop')
-            }
-          else if ( event.which == 101 || event.which == 69) {
-              event.preventDefault();
-              controlAlgorithm('play')
-            }
-          else if ( event.which == 112 || event.which == 80) {
-              event.preventDefault();
-              controlAlgorithm('pause')
-          }
-        });
+        if (event.which == 13) {
+          event.preventDefault();
+          controlAlgorithm('step');
+        }
+        else if (event.which == 113 || event.which == 81) {
+          event.preventDefault();
+          controlAlgorithm('stop');
+        }
+        else if (event.which == 101 || event.which == 69) {
+          event.preventDefault();
+          controlAlgorithm('play');
+        }
+        else if (event.which == 112 || event.which == 80) {
+          event.preventDefault();
+          controlAlgorithm('pause');
+        }
+      });
+
+      showTab('help');
     </script>
   </body>
 </html>
