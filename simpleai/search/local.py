@@ -12,7 +12,8 @@ def _all_expander(fringe, iteration, viewer):
     expanded_neighbors = [node.expand(local_search=True)
                           for node in fringe]
 
-    if viewer: viewer.expanded(list(fringe), expanded_neighbors)
+    if viewer:
+        viewer.event('expanded', list(fringe), expanded_neighbors)
 
     map(fringe.extend, expanded_neighbors)
 
@@ -44,7 +45,8 @@ def _first_expander(fringe, iteration, viewer):
     current = fringe[0]
     neighbors = current.expand(local_search=True)
 
-    if viewer: viewer.expanded([current], [neighbors])
+    if viewer:
+        viewer.event('expanded', [current], [neighbors])
 
     fringe.extend(neighbors)
 
@@ -94,13 +96,15 @@ def _random_best_expander(fringe, iteration, viewer):
     '''
     current = fringe[0]
     neighbors = current.expand(local_search=True)
-    if viewer: viewer.expanded([current], [neighbors])
+    if viewer:
+        viewer.event('expanded', [current], [neighbors])
 
     betters = [n for n in neighbors
                if n.value > current.value]
     if betters:
         chosen = random.choice(betters)
-        if viewer: viewer.chosen_node(chosen)
+        if viewer:
+            viewer.event('chosen_node', chosen)
         fringe.append(chosen)
 
 
@@ -133,9 +137,6 @@ def hill_climbing_random_restarts(problem, restarts_limit, iterations_limit=0, v
     Requires: SearchProblem.actions, SearchProblem.result, SearchProblem.value,
     and SearchProblem.generate_random_state.
     '''
-    if viewer:
-        viewer.multiple_runs = True
-
     restarts = 0
     best = None
 
@@ -154,7 +155,7 @@ def hill_climbing_random_restarts(problem, restarts_limit, iterations_limit=0, v
         restarts += 1
 
     if viewer:
-        viewer.no_more_runs(best, 'returned after %i runs' % restarts_limit)
+        viewer.event('no_more_runs', best, 'returned after %i runs' % restarts_limit)
 
     return best
 
@@ -177,7 +178,8 @@ def _create_simulated_annealing_expander(schedule):
         current = fringe[0]
         neighbors = current.expand(local_search=True)
 
-        if viewer: viewer.expanded([current], [neighbors])
+        if viewer:
+            viewer.event('expanded', [current], [neighbors])
 
         if neighbors:
             succ = random.choice(neighbors)
@@ -186,7 +188,8 @@ def _create_simulated_annealing_expander(schedule):
                 fringe.pop()
                 fringe.append(succ)
 
-                if viewer: viewer.chosen_node(succ)
+                if viewer:
+                    viewer.event('chosen_node', succ)
 
     return _expander
 
@@ -242,7 +245,8 @@ def _create_genetic_expander(problem, mutation_chance):
             expanded_nodes.append(node2)
             expanded_neighbors.append([child_node])
 
-        if viewer: viewer.expanded(expanded_nodes, expanded_neighbors)
+        if viewer:
+            viewer.event('expanded', expanded_nodes, expanded_neighbors)
 
         fringe.clear()
         for node in new_generation:
@@ -281,8 +285,7 @@ def _local_search(problem, fringe_expander, iterations_limit=0, fringe_size=1,
     Basic algorithm for all local search algorithms.
     '''
     if viewer:
-        viewer.clean()
-        viewer.started()
+        viewer.event('started')
 
     fringe = BoundedPriorityQueue(fringe_size)
     if random_initial_states:
@@ -299,7 +302,8 @@ def _local_search(problem, fringe_expander, iterations_limit=0, fringe_size=1,
     best = None
 
     while run:
-        if viewer: viewer.new_iteration(list(fringe))
+        if viewer:
+            viewer.event('new_iteration', list(fringe))
 
         old_best = fringe[0]
         fringe_expander(fringe, iteration, viewer)
@@ -314,6 +318,7 @@ def _local_search(problem, fringe_expander, iterations_limit=0, fringe_size=1,
             run = False
             finish_reason = 'not being able to improve solution'
 
-    if viewer: viewer.finished(fringe, best, 'returned after %s' % finish_reason)
+    if viewer:
+        viewer.event('finished', fringe, best, 'returned after %s' % finish_reason)
 
     return best

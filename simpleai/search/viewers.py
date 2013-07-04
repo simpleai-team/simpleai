@@ -22,16 +22,11 @@ But you can also have this commands:
 
 
 class BaseViewer(object):
-    def __init__(self, multiple_runs=False):
-        self.multiple_runs = multiple_runs
-
+    def __init__(self):
         self.successor_color = '#DD4814'
         self.fringe_color = '#20a0c0'
         self.font_size = 11
 
-        self.clean()
-
-    def clean(self):
         self.last_event = None
         self.events = []
 
@@ -42,59 +37,58 @@ class BaseViewer(object):
 
         self.current_fringe = []
         self.last_chosen = None
-        self.last_is_goal = False
         self.last_expandeds = []
         self.last_successors = []
 
-    def event(self, name, description):
+    def event(self, name, *params):
+        getattr(self, 'handle_' + name)(*params)
+
+    def log_event(self, name, description):
         self.last_event = Event(name=name,
                                 description=description)
         self.events.append(self.last_event)
 
-    def started(self):
-        self.event('started', 'Algorithm just started.')
+    def handle_started(self):
+        self.log_event('started', 'Algorithm just started.')
 
-    def new_iteration(self, fringe):
+    def handle_new_iteration(self, fringe):
         self.current_fringe = fringe
         self.stats['max_fringe_size'] = max(self.stats['max_fringe_size'], len(fringe))
 
         description = 'New iteration with %i elements in the fringe:\n%s'
         description = description % (len(fringe), str(fringe))
-        self.event('new_iteration', description)
+        self.log_event('new_iteration', description)
 
-    def chosen_node(self, node, is_goal=None):
-        self.last_chosen, self.last_is_goal = node, is_goal
+    def handle_chosen_node(self, node, is_goal=None):
+        self.last_chosen = node
         self.stats['visited_nodes'] += 1
 
         goal_text = 'Is goal!' if is_goal else 'Not goal'
         description = 'Chosen node: %s' % node
         if is_goal is not None:
             description += '\n' + goal_text
-        self.event('chosen_node', description)
+        self.log_event('chosen_node', description)
 
-    def expanded(self, nodes, successors):
+    def handle_expanded(self, nodes, successors):
         self.last_expandeds, self.last_successors = nodes, successors
 
         description = 'Expanded %s\nSuccessors: %s'
         description = description % (nodes, successors)
-        self.event('expanded', description)
+        self.log_event('expanded', description)
 
-    def finished(self, fringe, node, solution_type):
+    def handle_finished(self, fringe, node, solution_type):
         self.current_fringe = fringe
         self.solution_node = node
         self.solution_type = solution_type
 
-        if self.multiple_runs:
-            description = 'Finished one of the runs of the inner algorithm returning %s.\nSolution type: %s'
-        else:
-            description = 'Finished algorithm returning %s.\nSolution type: %s'
+        description = 'Finished algorithm returning %s.\nSolution type: %s'
         description = description % (node, solution_type)
 
         if node is not None and node.parent is not None:
             description += '\nPath from initial to goal: %s' % str(node.path())
-        self.event('finished', description)
+        self.log_event('finished', description)
 
-    def no_more_runs(self, node, solution_type):
+    def handle_no_more_runs(self, node, solution_type):
         self.solution_node = node
         self.solution_type = solution_type
 
@@ -103,7 +97,7 @@ class BaseViewer(object):
 
         if node is not None and node.parent is not None:
             description += '\nPath from initial to goal: %s' % str(node.path())
-        self.event('no_more_runs', description)
+        self.log_event('no_more_runs', description)
 
     def create_graph(self, image_format, image_path):
         from pydot import Dot, Edge, Node
@@ -202,17 +196,16 @@ class ConsoleViewer(BaseViewer):
         super(ConsoleViewer, self).__init__()
         self.interactive = interactive
 
-    def event(self, name, description):
-        super(ConsoleViewer, self).event(name, description)
+    def event(self, name, *params):
+        if name == 'started':
+            self.output(CONSOLE_HELP_TEXT)
 
-        self.output('EVENT: %s' % name)
-        self.output(description)
+        super(ConsoleViewer, self).event(name, *params)
+
+        self.output('EVENT: %s' % self.last_event.name)
+        self.output(self.last_event.description)
 
         self.pause()
-
-    def started(self):
-        self.output(CONSOLE_HELP_TEXT)
-        super(ConsoleViewer, self).started()
 
     def pause(self):
         prompt = True
@@ -253,12 +246,16 @@ class WebViewer(BaseViewer):
         self.port = port
         self.status = 'paused'
         self.creating_graph = False
+        self.server_running = False
 
         tmp_folder = mkdtemp(prefix='simpleai_web_server_')
         self.graph_path = path.join(tmp_folder, 'graph.png')
 
-    def event(self, event, description):
-        super(WebViewer, self).event(event, description)
+    def event(self, name, *params):
+        if name == 'started':
+            self.start_server()
+
+        super(WebViewer, self).event(name, *params)
 
         self.creating_graph = True
         self.create_graph(self.graph_path.split('.')[-1], self.graph_path)
@@ -272,11 +269,12 @@ class WebViewer(BaseViewer):
 
         sleep(0.5)
 
-    def started(self):
-        from web_viewer_server import run_server
+    def start_server(self):
+        if not self.server_running:
+            from web_viewer_server import run_server
 
-        t = Thread(target=run_server, args=[self])
-        t.daemon = True
-        t.start()
+            t = Thread(target=run_server, args=[self])
+            t.daemon = True
+            t.start()
 
-        super(WebViewer, self).started()
+            self.server_running = True
