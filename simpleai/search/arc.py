@@ -3,7 +3,7 @@ from operator import itemgetter
 
 
 # The first 3 functions are exported for testing purposes.
-__all__ = ['constraint_wrapper', 'neighbors', 'all_arcs', 'revise', 'arc_concistency_3']
+__all__ = ['constraint_wrapper', 'neighbors', 'all_arcs', 'revise', 'arc_consistency_3']
 
 fst = itemgetter(0)
 
@@ -20,6 +20,10 @@ def constraint_wrapper(vars_, constraint):
     to be able to call constraint with the values swapped, according to
     how the variables of the constraint are.
     '''
+
+    if getattr(constraint, 'no_wrap', False):  # constraints made for hidden variables shouldn't be wrapped.
+        return constraint
+
     X_i, X_j = vars_
 
     def wrapper(variables, values):
@@ -70,7 +74,13 @@ def neighbors(xi, constraints, exclude):
 
 def revise(domains, variables, constraint):
     """
-    Expects the domains to be specified in a list
+    Given variables X_i, X_j = variables, removes the values from X_i's domain that
+    do not meet the constraint between X_i and X_j.
+
+    That is, given x in X_i's domain, x will be removed from the domain, if
+    there is no value y in X_j's domain that makes constraint(x,y) True.
+
+    ``constraint`` is a callable from the constraint list.
     """
     xi, xj = variables
     di = domains[xi]  # domain of variable X_i
@@ -86,6 +96,12 @@ def revise(domains, variables, constraint):
 
 
 def all_arcs(constraints):
+    """
+    For each constraint ((X, Y), const) adds ((Y, X), wrapped(const)).
+
+    For why it's wrapped please see constraint_wrapper.
+    """
+
     seen = set()
     seen_add = seen.add
     for vars_, const in constraints:
@@ -109,12 +125,14 @@ def all_arcs(constraints):
         map(seen_add, (fwd, bck))
 
 
-def arc_concistency_3(domains, constraints):
+def arc_consistency_3(domains, constraints):
     """
-    Makes a CSP problem arc concistent.
+    Makes a CSP problem arc consistent.
 
     Assumes that the constraints are symmetrical, that is:
        constraint(x, y) == constraint(y, x).
+
+    Ignores any constraint that is not binary.
     """
     arcs = deque(all_arcs(constraints))
 
