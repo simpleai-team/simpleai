@@ -60,6 +60,10 @@
     </div>
 
     <script>
+      function reset_graph_zoom() {
+        graph_image.panzoom('reset');
+      }
+
       function AlgorithmInfoCtrl($scope) {
         $scope.last_event = {name: "hola", description: "chau"};
         $scope.events = [];
@@ -75,14 +79,22 @@
             $scope.events.push($scope.last_event);
           });
 
+          if ($scope.last_event.name == 'finished') {
+            reset_graph_zoom();
+          }
+
           var graph = $('#graph_image');
           graph.attr('src', '/graph?unique=' + new Date().valueOf());
         };
       }
 
       function showTab(tab_name) {
-        $('.tab').hide();
-        $('#' + tab_name).show();
+        if (tab_name == 'graph' && $('#graph').is(':visible')) {
+          reset_graph_zoom();
+        } else {
+          $('.tab').hide();
+          $('#' + tab_name).show();
+        }
       }
 
       function controlAlgorithm(order) {
