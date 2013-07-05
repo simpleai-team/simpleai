@@ -10,9 +10,9 @@ Defining your problem
 
 You must simply create an instance of this class, specifying the variables, the variable domains, and the constraints as construction parameters:
 
-* **variables** will be a tuple with the variable names. 
+* **variables** will be a tuple with the variable names.
 * **domains** will be a dictionary with the variable names as keys, and the domains as values (in the form of any iterable you want).
-* **constraints** will be a list of tuples with two components each: a tuple with the variables involved on the constraint, and a reference to a function that checks the constraint. 
+* **constraints** will be a list of tuples with two components each: a tuple with the variables involved on the constraint, and a reference to a function that checks the constraint.
 
 **FAQ** why not merge variables and domains on one single dict? Answer: because we need to preserve the order of the variables, and dicts don't have order. We could use an OrderedDict to solve this, but it's only present on python 2.7.
 
@@ -41,8 +41,8 @@ Example:
     # a constraint that expects one variable to be bigger than other
     def const_one_bigger_other(variables, values):
         return values[0] > values[1]
-        
-    # a constraint thet expects two variables to be one odd and the other even, 
+
+    # a constraint thet expects two variables to be one odd and the other even,
     # no matter which one is which type
     def const_one_odd_one_even(variables, values):
         if values[0] % 2 == 0:
@@ -74,7 +74,7 @@ For example, if you want to use backtracking search, you would do:
 
     result = backtrack(my_problem)
 
-And what will you receive on ``result``? You will receive a dictionary with the assigned values to the variables if a solution was found, or None if couldn't find a solution.
+The ``result`` will be a dictionary with the assigned values to the variables if a solution was found, or None if couldn't find a solution.
 
 All the implemented algorithms have their docstring defined. In any python console you can just import them and ask for their help:
 
@@ -101,10 +101,31 @@ Example:
     # my_problem = ... (steps from the previous section)
 
     result = backtrack(my_problem,
-                       variable_heuristic=MOST_CONSTRAINED_VARIABLE, 
+                       variable_heuristic=MOST_CONSTRAINED_VARIABLE,
                        value_heuristic=LEAST_CONSTRAINING_VALUE)
 
-Using constraint propagation (inference)
+Using Constraint Propagation (Inference)
 ----------------------------------------
 
-TODO (not implemented)
+By the default the backtrack algorithm uses AC3 as inference step. It checks arc consistency for constraints involving only two variables. That is if you have a constraint of the form ``(('A', 'B', 'C'), alldiff)`` it will ignore it. You can disable AC3 by passing ``inference=False`` to backtrack. E.g.:
+
+.. code-block:: python
+
+    result = backtrack(my_problem, inference=False)
+
+
+Making a Problem Binary Constraint
+----------------------------------
+
+If you have a problem that has n-ary constraints you may wish to try to make it binary to take advantage of AC3. Depending on the problem backtracking might run faster. Check the samples directory for
+
+Once you have your constraints defined you can call ``mk_hidden_variables_representation`` with the constraint list as a parameter, this will return a new constraint list which adds hidden variables for n-ary and unary constraints and a new domain dictionary with the domain of the hidden variables (old data should remain the same)
+
+The domains of these hidden variables is the product of the domains of the variables for that particular constraint, filter out those values that falsify the constraint. For more information please see "On the conversion between non-binary constraint satisfaction problems (Fahiem Bacchus, Peter van Beek)".
+
+.. code-block:: python
+    from simpleai.search import mk_hidden_variables_representation
+
+    domains, constraints = mk_hidden_variables_representation(constraints)
+    my_problem = CspProblem(variables, domain, constraints)
+    result = backtrack(my_problem, inference=False)
