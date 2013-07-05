@@ -161,7 +161,7 @@ def _min_conflicts_value(problem, assignment, variable):
 
 
 def min_conflicts(problem, initial_assignment=None, iterations_limit=0):
-    '''
+    """
     Min conflicts search.
 
     initial_assignment the initial assignment, or None to generate a random
@@ -169,7 +169,7 @@ def min_conflicts(problem, initial_assignment=None, iterations_limit=0):
     If iterations_limit is specified, the algorithm will end after that
     number of iterations. Else, it will continue until if finds an assignment
     that doesn't generate conflicts (a solution).
-    '''
+    """
     assignment = {}
     if initial_assignment:
         assignment.update(initial_assignment)
@@ -201,7 +201,7 @@ def min_conflicts(problem, initial_assignment=None, iterations_limit=0):
     return assignment
 
 
-def mk_hidden_variable_representation(domains, constraints):
+def mk_hidden_variable_representation(variables, domains, constraints):
     """
     Returns new constraint list, all binary, using hidden variables.
 
@@ -221,8 +221,9 @@ def mk_hidden_variable_representation(domains, constraints):
         return diff
 
     new_constraints = []
-    last = 0
     new_domains = copy(domains)
+    new_variables = list(variables)
+    last = 0
 
     for vars_, const in constraints:
         if len(vars_) == 2:
@@ -230,8 +231,9 @@ def mk_hidden_variable_representation(domains, constraints):
             continue
 
         hidden = 'hidden%d' % last
+        new_variables.append(hidden)
         last += 1
         new_domains[hidden] = [t for t in product(*map(domains.get, vars_)) if const(vars_, t)]
         for var in vars_:
             new_constraints.append(((hidden, var), wdiff(vars_)))
-    return new_domains, new_constraints
+    return new_variables, new_domains, new_constraints
