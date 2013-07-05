@@ -15,18 +15,15 @@ def run_server(viewer):
 
     app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
-
     @app.route('/')
     def index():
         return send_file(path.join(resources, 'index.html'))
-
 
     @app.route('/graph')
     def graph():
         while viewer.creating_graph:
             sleep(0.1)
         return send_file(viewer.graph_path)
-
 
     @app.route('/control/<order>')
     def control(order):
@@ -39,8 +36,7 @@ def run_server(viewer):
         elif order == 'stop':
             stop_server()
 
-        return 'ok' # TODO should be a json or something
-
+        return 'ok'  # TODO should be a json or something
 
     @app.route('/event_stream')
     def stream():
@@ -52,8 +48,9 @@ def run_server(viewer):
                     news_limit = len(viewer.events)
 
                     data = {}
-                    data['stats'] = [{'name': stat.replace('_', ' '), 'value': value}
-                                     for stat, value in viewer.stats.items()]
+                    stats = [{'name': stat.replace('_', ' '), 'value': value}
+                             for stat, value in viewer.stats.items()]
+                    data['stats'] = stats
 
                     for event in viewer.events[announced:news_limit]:
                         data['event'] = event.__dict__
@@ -63,11 +60,12 @@ def run_server(viewer):
 
         return Response(event_stream(), mimetype="text/event-stream")
 
-
     try:
-        print 'Starting the WebViewer, access it from your web browser, navigating to the address:'
+        print 'Starting the WebViewer, access it from your web browser, ' \
+              'navigating to the address:'
         print 'http://%s:%i' % (viewer.host, viewer.port)
-        print 'To stop the WebViewer, use the "Stop running" link (on the viewer site, from the browser)'
+        print 'To stop the WebViewer, use the "Stop running" link (on the ' \
+              'viewer site, from the browser)'
 
         app.run(host=viewer.host, port=viewer.port, threaded=True)
     except Exception as err:

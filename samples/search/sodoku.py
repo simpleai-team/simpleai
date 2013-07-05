@@ -133,12 +133,7 @@ constraints = mknaryconstraints()
 domains3 = deepcopy(domains)
 start = time()
 my_problem = CspProblem(variables, domains3, constraints)
-<<<<<<< HEAD
 sol = backtrack(my_problem)
-=======
-sol = backtrack(my_problem, variable_heuristic=MOST_CONSTRAINED_VARIABLE,
-                value_heuristic=LEAST_CONSTRAINING_VALUE)
->>>>>>> Make PEP8 compliant
 elapsed = time() - start
 display_solution(sol)
 print "Took %d seconds to finish using n-ary constraints" % elapsed
