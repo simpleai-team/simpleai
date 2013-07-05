@@ -52,19 +52,23 @@ class TestGeneticSearch(unittest.TestCase):
         self.problem = DummyGeneticProblem()
 
     def test_solution_is_node(self):
-        node = genetic(self.problem, iterations_limit=1, mutation_chance=0, population_size=1)
+        node = genetic(self.problem, iterations_limit=1, mutation_chance=0,
+                       population_size=1)
         self.assertIsInstance(node, SearchNode)
 
     def test_calls_crossover(self):
-        node = genetic(self.problem, iterations_limit=1, mutation_chance=0, population_size=5)
+        node = genetic(self.problem, iterations_limit=1, mutation_chance=0,
+                       population_size=5)
         self.assertEqual(node.state, 5)
 
     def test_calls_mutation(self):
-        node = genetic(self.problem, iterations_limit=1, mutation_chance=1, population_size=5)
+        node = genetic(self.problem, iterations_limit=1, mutation_chance=1,
+                       population_size=5)
         self.assertEqual(node.state, 20)
 
     def test_count_generations(self):
-        node = genetic(self.problem, iterations_limit=10, mutation_chance=0, population_size=5)
+        node = genetic(self.problem, iterations_limit=10, mutation_chance=0,
+                       population_size=5)
         self.assertEqual(node.state, 14)  # initial is 4, plus 10 generations
 
     def test_zero_fitness_get_waxed(self):
@@ -79,5 +83,6 @@ class TestGeneticSearch(unittest.TestCase):
 
         self.problem.generate_random_state = g
         self.problem.value = fitness
-        node = genetic(self.problem, iterations_limit=1, mutation_chance=0, population_size=5)
+        node = genetic(self.problem, iterations_limit=1, mutation_chance=0,
+                       population_size=5)
         self.assertEqual(node.state, 2)
