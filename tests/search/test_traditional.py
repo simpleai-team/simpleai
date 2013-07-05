@@ -42,4 +42,3 @@ class TestSearch(unittest.TestCase):
     def test_astar(self):
         result = astar(self.problem)
         self.assertEquals(result.state, GOAL)
-

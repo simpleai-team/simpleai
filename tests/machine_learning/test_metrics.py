@@ -6,9 +6,9 @@ Tests for metrics module in machine learning.
 """
 
 import unittest
-from simpleai.machine_learning.metrics import Counter, OnlineEntropy, \
-                                              OnlineLogProbability, \
-                                              OnlineInformationGain
+from simpleai.machine_learning.metrics import (Counter, OnlineEntropy,
+                                               OnlineLogProbability,
+                                               OnlineInformationGain)
 
 
 class TestCounter(unittest.TestCase):

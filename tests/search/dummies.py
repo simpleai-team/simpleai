@@ -11,6 +11,7 @@ class DummyNode(object):
 
 GOAL = 'iabcabc'
 
+
 class DummyProblem(object):
     def actions(self, state):
         return ['a', 'b', 'c'] if len(state) < len(GOAL) else []

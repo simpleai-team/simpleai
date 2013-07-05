@@ -8,7 +8,8 @@ HIGHEST_DEGREE_VARIABLE = 'degree'
 LEAST_CONSTRAINING_VALUE = 'lvc'
 
 
-def backtrack(problem, variable_heuristic='', value_heuristic='', inference=True):
+def backtrack(problem, variable_heuristic='', value_heuristic='',
+              inference=True):
     '''
     Backtracking search.
 
@@ -60,7 +61,9 @@ def _highest_degree_variable_chooser(problem, variables, domains):
     Choose the variable that is involved on more constraints.
     '''
     # the variable involved in more constraints
-    return sorted(variables, key=lambda v: problem.var_degrees[v], reverse=True)[0]
+    return sorted(variables,
+                  key=lambda v: problem.var_degrees[v],
+                  reverse=True)[0]
 
 
 def _count_conflicts(problem, assignment, variable=None, value=None):
@@ -115,7 +118,8 @@ def _least_constraining_values_sorter(problem, assignment, variable, domains):
     return values
 
 
-def _backtracking(problem, assignment, domains, variable_chooser, values_sorter, inference=True):
+def _backtracking(problem, assignment, domains, variable_chooser,
+                  values_sorter, inference=True):
     '''
     Internal recursive backtracking algorithm.
     '''

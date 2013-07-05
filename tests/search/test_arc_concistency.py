@@ -3,7 +3,8 @@ import unittest
 
 from operator import itemgetter
 
-from simpleai.search.arc import constraint_wrapper, neighbors, all_arcs, revise, arc_consistency_3
+from simpleai.search.arc import (constraint_wrapper, neighbors, all_arcs,
+                                 revise, arc_consistency_3)
 
 fst = itemgetter(0)
 
@@ -19,7 +20,8 @@ class TestNeighborsAndArcs(unittest.TestCase):
                             (('E2', 'A1'), unit)]
 
     def test_neighbors(self):
-        variables = map(lambda t: fst(fst(t)), neighbors('A1', self.constraints, 'B2'))
+        variables = map(lambda t: fst(fst(t)),
+                        neighbors('A1', self.constraints, 'B2'))
         self.assertEqual(set(variables), set(['C2', 'D2', 'E2']))
 
     def test_all_arcs(self):
@@ -38,12 +40,14 @@ class TestNeighborsAndArcs(unittest.TestCase):
         self.assertEqual(variables, arcs)
 
     def test_constraint_wrapper(self):
-        constraint = (('X', 'Y'), lambda vars_, values: values[0] ** 2 == values[1])
+        constraint = (
+            ('X', 'Y'), lambda vars_, values: values[0] ** 2 == values[1])
         wrapped = constraint_wrapper(*constraint)
         self.assertTrue(wrapped(('Y', 'X'), (25, 5)))
 
     def test_constraint_wrapper_raises_error(self):
-        constraint = (('X', 'Y'), lambda vars_, values: values[0] ** 2 == values[1])
+        constraint = (
+            ('X', 'Y'), lambda vars_, values: values[0] ** 2 == values[1])
         wrapped = constraint_wrapper(*constraint)
         self.assertRaises(ValueError, wrapped, ('Y', 'Z'), (25, 5))
 
@@ -80,7 +84,8 @@ class TestAC3(unittest.TestCase):
                         'Y': [1, 4, 9, 16, 20]}
 
     def set_constraints(self):
-        self.constraints = [(('X', 'Y'), lambda vars_, values: values[0] ** 2 == values[1])]
+        self.constraints = [
+            (('X', 'Y'), lambda vars_, values: values[0] ** 2 == values[1])]
 
     def setUp(self):
         self.set_domains()
@@ -88,4 +93,5 @@ class TestAC3(unittest.TestCase):
 
     def test_ac3(self):
         self.assertTrue(arc_consistency_3(self.domains, self.constraints))
-        self.assertEqual(self.domains, {'X': [1, 2, 3, 4], 'Y': [1, 4, 9, 16]})
+        self.assertEqual(
+            self.domains, {'X': [1, 2, 3, 4], 'Y': [1, 4, 9, 16]})

@@ -2,30 +2,32 @@
 
 
 class SearchProblem(object):
-    '''Abstract base class to represent and manipulate the search space of a
-       problem.
-       In this class, the search space is meant to be represented implicitly as
-       a graph.
-       Each state corresponds with a problem state (ie, a valid configuration)
-       and each problem action (ie, a valid transformation to a configuracion)
-       corresponds with an edge.
+    '''
+    Abstract base class to represent and manipulate the search space of a
+    problem.
+    In this class, the search space is meant to be represented implicitly as
+    a graph.
+    Each state corresponds with a problem state (ie, a valid configuration)
+    and each problem action (ie, a valid transformation to a configuracion)
+    corresponds with an edge.
 
-       To use this class with a problem seen as a graph search you should at
-       least implement: `actions`, `result` and `is_goal`.
-       Optionally, it might be useful to also implement `cost`.
+    To use this class with a problem seen as a graph search you should at
+    least implement: `actions`, `result` and `is_goal`.
+    Optionally, it might be useful to also implement `cost`.
 
-       To use this class with a problem seen as an optimization over target
-       function you should at least implement: `actions`, `result` and `value`.
-       '''
+    To use this class with a problem seen as an optimization over target
+    function you should at least implement: `actions`, `result` and `value`.
+    '''
 
     def __init__(self, initial_state):
         self.initial_state = initial_state
 
     def actions(self, state):
-        '''Returns the actions available to perform from `state`.
-           The returned value is an iterable over actions.
-           Actions are problem-specific and no assumption should be made about
-           them.
+        '''
+        Returns the actions available to perform from `state`.
+        The returned value is an iterable over actions.
+        Actions are problem-specific and no assumption should be made about
+        them.
         '''
         raise NotImplementedError
 
@@ -34,9 +36,10 @@ class SearchProblem(object):
         raise NotImplementedError
 
     def cost(self, state, action, state2):
-        '''Returns the cost of applying `action` from `state` to `state2`.
-           The returned value is a number (integer or floating point).
-           By default this function returns `1`.
+        '''
+        Returns the cost of applying `action` from `state` to `state2`.
+        The returned value is a number (integer or floating point).
+        By default this function returns `1`.
         '''
         return 1
 
@@ -45,14 +48,18 @@ class SearchProblem(object):
         raise NotImplementedError
 
     def value(self, state):
-        '''Returns the value of `state` as it is needed by optimization
-           problems.
-           Value is a number (integer or floating point).'''
+        '''
+        Returns the value of `state` as it is needed by optimization
+        problems.
+        Value is a number (integer or floating point).
+        '''
         raise NotImplementedError
 
     def heuristic(self, state):
-        '''Returns an estimate of the cost remaining to reach the solution
-           from `state`.'''
+        '''
+        Returns an estimate of the cost remaining to reach the solution
+        from `state`.
+        '''
         return 0
 
     def crossover(self, state1, state2):
@@ -173,6 +180,9 @@ class SearchNodeStarOrdered(SearchNodeHeuristicOrdered):
 
 
 class CspProblem(object):
+    """
+    Constraint Satisfaction Problem.
+    """
     def __init__(self, variables, domains, constraints):
         self.variables = variables
         self.domains = domains

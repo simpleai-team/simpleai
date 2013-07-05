@@ -1,6 +1,8 @@
-from pygraphviz import AGraph
 import base64
 import tempfile
+
+from pygraphviz import AGraph
+
 from simpleai.search import SearchProblem
 
 
@@ -93,7 +95,7 @@ def run_algorithm(algorithm, filename):
                 edge.attr["style"] = "solid"
             prev = state
         return problem.G, goal.state, goal.cost, problem.value(goal.state), \
-               len(problem.seen)
+            len(problem.seen)
     return problem.G, None, None, None, len(problem.seen)
 
 

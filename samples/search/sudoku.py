@@ -14,9 +14,10 @@ domains = OrderedDict((v, range(1, 10)) for v in variables)
 
 
 def const_different(variables, values):
-    return values[0] != values[1]  # expect the value of the neighbors to be different
+    # expect the value of the neighbors to be different
+    return values[0] != values[1]
 
-sodoku = \
+sudoku = \
 """
   3 2 6
 9  3 5  1
@@ -31,12 +32,13 @@ sodoku = \
 
 
 def parsepuzzle(puzzle):
-    sodoku_lines = map(lambda s: s.rstrip("\n"), StringIO(puzzle).readlines()[1:])
+    sudoku_lines = map(lambda s: s.rstrip("\n"),
+                       StringIO(puzzle).readlines()[1:])
     domains = {}
 
     for k, i in enumerate(uppercase[:9]):
         for j in xrange(1, 10):
-            line = sodoku_lines[k]
+            line = sudoku_lines[k]
             if len(line) <= (j - 1):
                 continue
             val = line[j - 1]
@@ -73,7 +75,8 @@ def mkconstraints():
 def mknaryconstraints():
 
     def alldiff(variables, values):
-        return len(values) == len(set(values))  # remove repeated values and count
+        # remove repeated values and count
+        return len(values) == len(set(values))
 
     constraints = []
 
@@ -98,7 +101,7 @@ def display_solution(sol):
         print " ".join([str(sol["%s%d" % (i, j)]) for j in xrange(1, 10)])
 
 
-domains.update(parsepuzzle(sodoku))
+domains.update(parsepuzzle(sudoku))
 
 # -- Hand made binary constraints --
 constraints = mkconstraints()
@@ -108,18 +111,21 @@ my_problem = CspProblem(variables, domains0, constraints)
 sol = backtrack(my_problem)
 elapsed = time() - start
 display_solution(sol)
-print "Took %d seconds to finish using binary constraints" % elapsed  # because of AC3 should be quick
+# because of AC3 should be quick
+print "Took %d seconds to finish using binary constraints" % elapsed
 
 
 # -- N-ary constraints made binary using hidden variables --
 domains1 = deepcopy(domains)
 start = time()
-variables1, domains1, constraints = mk_hidden_variable_representation(variables, domains1, mknaryconstraints())
+variables1, domains1, constraints = mk_hidden_variable_representation(
+    variables, domains1, mknaryconstraints())
 my_problem = CspProblem(variables1, domains1, constraints)
 sol = backtrack(my_problem)
 elapsed = time() - start
 display_solution(sol)
-print "Took %d seconds to finish using binary constraints (hidden variables)" % elapsed
+msg = "Took %d seconds to finish using binary constraints (hidden variables)"
+print msg % elapsed
 
 
 # -- N-ary constraints --

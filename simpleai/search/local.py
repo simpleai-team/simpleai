@@ -1,8 +1,9 @@
 # coding=utf-8
-from simpleai.search.utils import BoundedPriorityQueue, InverseTransformSampler
-from simpleai.search.models import SearchNodeValueOrdered
 import math
 import random
+
+from simpleai.search.models import SearchNodeValueOrdered
+from simpleai.search.utils import BoundedPriorityQueue, InverseTransformSampler
 
 
 def _all_expander(fringe, iteration, viewer):
@@ -34,7 +35,7 @@ def beam(problem, beam_size=100, iterations_limit=0, viewer=None):
                          iterations_limit=iterations_limit,
                          fringe_size=beam_size,
                          random_initial_states=True,
-                         stop_when_no_better=iterations_limit==0,
+                         stop_when_no_better=iterations_limit == 0,
                          viewer=viewer)
 
 
@@ -49,7 +50,6 @@ def _first_expander(fringe, iteration, viewer):
         viewer.event('expanded', [current], [neighbors])
 
     fringe.extend(neighbors)
-
 
 
 def beam_best_first(problem, beam_size=100, iterations_limit=0, viewer=None):
@@ -67,7 +67,7 @@ def beam_best_first(problem, beam_size=100, iterations_limit=0, viewer=None):
                          _first_expander,
                          iterations_limit=iterations_limit,
                          fringe_size=beam_size,
-                         stop_when_no_better=iterations_limit==0,
+                         stop_when_no_better=iterations_limit == 0,
                          viewer=viewer)
 
 
@@ -122,11 +122,12 @@ def hill_climbing_stochastic(problem, iterations_limit=0, viewer=None):
                          _random_best_expander,
                          iterations_limit=iterations_limit,
                          fringe_size=1,
-                         stop_when_no_better=iterations_limit==0,
+                         stop_when_no_better=iterations_limit == 0,
                          viewer=viewer)
 
 
-def hill_climbing_random_restarts(problem, restarts_limit, iterations_limit=0, viewer=None):
+def hill_climbing_random_restarts(problem, restarts_limit, iterations_limit=0,
+                                  viewer=None):
     '''
     Hill climbing with random restarts.
 
@@ -155,7 +156,8 @@ def hill_climbing_random_restarts(problem, restarts_limit, iterations_limit=0, v
         restarts += 1
 
     if viewer:
-        viewer.event('no_more_runs', best, 'returned after %i runs' % restarts_limit)
+        viewer.event('no_more_runs', best,
+                     'returned after %i runs' % restarts_limit)
 
     return best
 
@@ -194,7 +196,8 @@ def _create_simulated_annealing_expander(schedule):
     return _expander
 
 
-def simulated_annealing(problem, schedule=_exp_schedule, iterations_limit=0, viewer=None):
+def simulated_annealing(problem, schedule=_exp_schedule, iterations_limit=0,
+                        viewer=None):
     '''
     Simulated annealing.
 
@@ -210,7 +213,7 @@ def simulated_annealing(problem, schedule=_exp_schedule, iterations_limit=0, vie
                          _create_simulated_annealing_expander(schedule),
                          iterations_limit=iterations_limit,
                          fringe_size=1,
-                         stop_when_no_better=iterations_limit==0,
+                         stop_when_no_better=iterations_limit == 0,
                          viewer=viewer)
 
 
@@ -237,7 +240,8 @@ def _create_genetic_expander(problem, mutation_chance):
                 child = problem.mutate(child)
                 action += '+mutation'
 
-            child_node = SearchNodeValueOrdered(state=child, problem=problem, action=action)
+            child_node = SearchNodeValueOrdered(state=child, problem=problem,
+                                                action=action)
             new_generation.append(child_node)
 
             expanded_nodes.append(node1)
@@ -274,7 +278,7 @@ def genetic(problem, population_size=100, mutation_chance=0.1,
                          iterations_limit=iterations_limit,
                          fringe_size=population_size,
                          random_initial_states=True,
-                         stop_when_no_better=iterations_limit==0,
+                         stop_when_no_better=iterations_limit == 0,
                          viewer=viewer)
 
 
@@ -319,6 +323,7 @@ def _local_search(problem, fringe_expander, iterations_limit=0, fringe_size=1,
             finish_reason = 'not being able to improve solution'
 
     if viewer:
-        viewer.event('finished', fringe, best, 'returned after %s' % finish_reason)
+        viewer.event('finished', fringe, best,
+                     'returned after %s' % finish_reason)
 
     return best
