@@ -37,7 +37,7 @@ def run_server(viewer):
         elif order == 'pause':
             viewer.status = 'paused'
         elif order == 'stop':
-            _exit(1)
+            stop_server()
 
         return 'ok' # TODO should be a json or something
 
@@ -64,4 +64,17 @@ def run_server(viewer):
         return Response(event_stream(), mimetype="text/event-stream")
 
 
-    app.run(host=viewer.host, port=viewer.port, threaded=True)
+    try:
+        print 'Starting the WebViewer, access it from your web browser, navigating to the address:'
+        print 'http://%s:%i' % (viewer.host, viewer.port)
+        print 'To stop the WebViewer, use the "Stop running" link (on the viewer site, from the browser)'
+
+        app.run(host=viewer.host, port=viewer.port, threaded=True)
+    except Exception as err:
+        print 'Failed to start the WebViewer. Error:'
+        print err
+        stop_server()
+
+
+def stop_server():
+    _exit(1)
