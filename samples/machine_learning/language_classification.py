@@ -25,9 +25,9 @@ input_files = [("english", "europarl-v7.es-en.en"),
 
 
 import random
-from simpleai.machine_learning import DecisionTreeLearner_LargeData, \
-                                      ClassificationProblem, Attribute, \
-                                      precision, NaiveBayes
+from simpleai.machine_learning import (DecisionTreeLearner_LargeData,
+                                       ClassificationProblem, Attribute,
+                                       precision, NaiveBayes)
 from simpleai.machine_learning.classifiers import tree_to_str
 
 
