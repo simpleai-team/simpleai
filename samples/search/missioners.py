@@ -9,7 +9,7 @@ class MissionersProblem(SearchProblem):
         super(MissionersProblem, self).__init__(initial_state=(3, 3, 0))
         # each action has a printable text, and the number of missioners
         # and cannibals to move on that action
-        self._actions = [('1c', (0,1)),
+        self._actions = [('1c', (0, 1)),
                          ('1m', (1, 0)),
                          ('2c', (0, 2)),
                          ('2m', (2, 0)),
@@ -25,10 +25,10 @@ class MissionersProblem(SearchProblem):
         '''Check if a state is valid.'''
         # valid states: no more cannibals than missioners on each side,
         # and numbers between 0 and 3
-        return ((s[0] >= s[1] or s[0] == 0)) and \
-                ((3 - s[0]) >= (3 - s[1]) or s[0] == 3) and \
-                (0 <= s[0] <= 3) and \
-                (0 <= s[1] <= 3)
+        return ((s[0] >= s[1] or s[0] == 0) and
+                ((3 - s[0]) >= (3 - s[1]) or s[0] == 3) and
+                (0 <= s[0] <= 3) and
+                (0 <= s[1] <= 3))
 
     def result(self, s, a):
         '''Result of applying an action to a state.'''
