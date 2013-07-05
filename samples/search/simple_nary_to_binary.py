@@ -1,4 +1,5 @@
-from simpleai.search import backtrack, CspProblem, mk_hidden_variable_representation
+from simpleai.search import (backtrack, CspProblem,
+                             mk_hidden_variable_representation)
 
 variables = ('A', 'B', 'C')
 
