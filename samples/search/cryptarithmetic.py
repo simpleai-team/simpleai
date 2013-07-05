@@ -34,9 +34,9 @@ print "Took %d seconds to finish using n-ary constraints" % elapsed
 
 
 start = time()
-domains, constraints = mk_hidden_variable_representation(domains, constraints)
+variables, domains, constraints = mk_hidden_variable_representation(variables, domains, constraints)
 problem = CspProblem(variables, domains, constraints)
-result = backtrack(problem, variable_heuristic=MOST_CONSTRAINED_VARIABLE, value_heuristic=LEAST_CONSTRAINING_VALUE)
+result = backtrack(problem, value_heuristic=LEAST_CONSTRAINING_VALUE)
 elapsed = time() - start
 print result
 print "Took %d seconds to finish using binary constraints" % elapsed

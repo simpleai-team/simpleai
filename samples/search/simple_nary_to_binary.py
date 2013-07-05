@@ -38,10 +38,7 @@ constraints = [
     (('A',), const_not_1)
 ]
 
-domains, constraints = mk_hidden_variable_representation(domains, constraints)
-print "-----"
-print constraints
-print "-------"
+variables, domains, constraints = mk_hidden_variable_representation(variables, domains, constraints)
 problem = CspProblem(variables, domains, constraints)
 result = backtrack(problem)
 print result
