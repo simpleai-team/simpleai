@@ -77,8 +77,9 @@ class EigthPuzzleProblem(SearchProblem):
         return actions
 
     def result(self, state, action):
-        '''Return the resulting state after moving a piece to the empty space.
-           (the "action" parameter contains the piece to move)
+        '''
+        Return the resulting state after moving a piece to the empty space.
+        (the "action" parameter contains the piece to move)
         '''
         rows = string_to_list(state)
         row_e, col_e = find_location(rows, 'e')
@@ -94,14 +95,16 @@ class EigthPuzzleProblem(SearchProblem):
         return state == GOAL
 
     def cost(self, state1, action, state2):
-        '''Returns the cost of performing an action. No useful on this problem,
-           but needed.
+        '''
+        Returns the cost of performing an action. No useful on this problem,
+        but needed.
         '''
         return 1
 
     def heuristic(self, state):
-        '''Returns an *estimation* of the distance from a state to the goal.
-           We are using the manhattan distance.
+        '''
+        Returns an *estimation* of the distance from a state to the goal.
+        We are using the manhattan distance.
         '''
         rows = string_to_list(state)
 
