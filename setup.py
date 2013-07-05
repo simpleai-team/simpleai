@@ -8,13 +8,13 @@ setup(
     version='0.6.3',
     description=u'An implementation of AI algorithms based on aima-python',
     long_description=open('README.rst').read(),
-    author = u'Juan Pedro Fisanotti',
-    author_email = 'fisadev@gmail.com',
+    author=u'Juan Pedro Fisanotti',
+    author_email='fisadev@gmail.com',
     url='http://github.com/simpleai-team/simpleai',
     packages=['simpleai', 'simpleai.search', 'simpleai.machine_learning'],
     package_data={'simpleai.search': ['*.html']},
     license='LICENSE.txt',
-    classifiers = [
+    classifiers=[
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
