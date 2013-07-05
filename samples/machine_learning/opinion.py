@@ -7,7 +7,8 @@ More about opinion mining here: http://en.wikipedia.org/wiki/Sentiment_analysis
 
 Dataset extracted from: http://www.cs.uic.edu/~liub/FBS/sentiment-analysis.html
 precisely http://www.cs.uic.edu/~liub/FBS/pros-cons.rar
-It should be placed in a folder called corpus in the same location of this file.
+It should be placed in a folder called corpus in the same location of this
+file.
 """
 
 import os
