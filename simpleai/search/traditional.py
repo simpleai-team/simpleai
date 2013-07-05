@@ -68,7 +68,8 @@ def iterative_limited_depth_first(problem, graph_search=False, viewer=None):
         limit += 1
 
     if viewer:
-        viewer.event('no_more_runs', solution, 'returned after %i runs' % limit)
+        viewer.event('no_more_runs', solution,
+                     'returned after %i runs' % limit)
 
     return solution
 
