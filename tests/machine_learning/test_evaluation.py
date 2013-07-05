@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
 import unittest
+
 from simpleai.machine_learning.evaluation import precision, kfold
-from simpleai.machine_learning import VectorDataClassificationProblem, \
-                                      Classifier
+from simpleai.machine_learning import (VectorDataClassificationProblem,
+                                       Classifier)
 
 
 class MockClassifier(Classifier):
