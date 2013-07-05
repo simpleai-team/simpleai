@@ -14,9 +14,9 @@ from collections import defaultdict
 
 from simpleai.machine_learning import evaluation
 from simpleai.machine_learning.models import VectorDataClassificationProblem
-from simpleai.machine_learning.classifiers import DecisionTreeLearner, \
-    DecisionTreeLearner_Queued, DecisionTreeLearner_LargeData, NaiveBayes, \
-    KNearestNeighbors
+from simpleai.machine_learning.classifiers import (
+    DecisionTreeLearner, DecisionTreeLearner_Queued, NaiveBayes,
+    DecisionTreeLearner_LargeData, KNearestNeighbors)
 
 
 def euclidean_vector_distance(x, y):
@@ -268,19 +268,26 @@ def create_tstcase(classifier, corpus):
 
 TestDtree_Pseudo_CorpusIris = create_tstcase(BaseTestDtree_Pseudo, CorpusIris)
 TestDtree_Pseudo_CorpusXor = create_tstcase(BaseTestDtree_Pseudo, CorpusXor)
-TestDtree_Pseudo_CorpusPrimes = create_tstcase(BaseTestDtree_Pseudo, CorpusPrimes)
+TestDtree_Pseudo_CorpusPrimes = create_tstcase(BaseTestDtree_Pseudo,
+                                               CorpusPrimes)
 
 TestDtree_Queued_CorpusIris = create_tstcase(BaseTestDtree_Queued, CorpusIris)
 TestDtree_Queued_CorpusXor = create_tstcase(BaseTestDtree_Queued, CorpusXor)
-TestDtree_Queued_CorpusPrimes = create_tstcase(BaseTestDtree_Queued, CorpusPrimes)
+TestDtree_Queued_CorpusPrimes = create_tstcase(BaseTestDtree_Queued,
+                                               CorpusPrimes)
 
-TestDtree_LargeData_CorpusIris = create_tstcase(BaseTestDtree_LargeData, CorpusIris)
-TestDtree_LargeData_CorpusXor = create_tstcase(BaseTestDtree_LargeData, CorpusXor)
-TestDtree_LargeData_CorpusPrimes = create_tstcase(BaseTestDtree_LargeData, CorpusPrimes)
+TestDtree_LargeData_CorpusIris = create_tstcase(BaseTestDtree_LargeData,
+                                                CorpusIris)
+TestDtree_LargeData_CorpusXor = create_tstcase(BaseTestDtree_LargeData,
+                                               CorpusXor)
+TestDtree_LargeData_CorpusPrimes = create_tstcase(BaseTestDtree_LargeData,
+                                                  CorpusPrimes)
 
 TestNaiveBayes_CorpusIris = create_tstcase(BaseTestNaiveBayes, CorpusIris)
 TestNaiveBayes_CorpusXor = create_tstcase(BaseTestNaiveBayes, CorpusXor)
 TestNaiveBayes_CorpusPrimes = create_tstcase(BaseTestNaiveBayes, CorpusPrimes)
 
-TestKNearestNeighbors_CorpusPrimes = create_tstcase(BaseTestKNearestNeighbors, CorpusPrimes)
-TestKNearestNeighbors_CorpusIris = create_tstcase(BaseTestKNearestNeighbors, CorpusIris)
+TestKNearestNeighbors_CorpusPrimes = create_tstcase(BaseTestKNearestNeighbors,
+                                                    CorpusPrimes)
+TestKNearestNeighbors_CorpusIris = create_tstcase(BaseTestKNearestNeighbors,
+                                                  CorpusIris)
