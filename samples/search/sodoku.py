@@ -6,8 +6,7 @@ from collections import OrderedDict
 from copy import deepcopy
 
 from simpleai.search import (
-    CspProblem, backtrack, MOST_CONSTRAINED_VARIABLE, LEAST_CONSTRAINING_VALUE,
-    mk_hidden_variable_representation)
+    CspProblem, backtrack, mk_hidden_variable_representation)
 
 variables = ["%s%d" % (i, j) for i in uppercase[:9] for j in xrange(1, 10)]
 
@@ -106,7 +105,7 @@ constraints = mkconstraints()
 start = time()
 domains0 = deepcopy(domains)
 my_problem = CspProblem(variables, domains0, constraints)
-sol = backtrack(my_problem, variable_heuristic=MOST_CONSTRAINED_VARIABLE, value_heuristic=LEAST_CONSTRAINING_VALUE)
+sol = backtrack(my_problem)
 elapsed = time() - start
 display_solution(sol)
 print "Took %d seconds to finish using binary constraints" % elapsed  # because of AC3 should be quick
@@ -115,9 +114,9 @@ print "Took %d seconds to finish using binary constraints" % elapsed  # because 
 # -- N-ary constraints made binary using hidden variables --
 domains1 = deepcopy(domains)
 start = time()
-domains1, constraints = mk_hidden_variable_representation(domains1, mknaryconstraints())
-my_problem = CspProblem(variables, domains1, constraints)
-sol = backtrack(my_problem, variable_heuristic=MOST_CONSTRAINED_VARIABLE, value_heuristic=LEAST_CONSTRAINING_VALUE)
+variables1, domains1, constraints = mk_hidden_variable_representation(variables, domains1, mknaryconstraints())
+my_problem = CspProblem(variables1, domains1, constraints)
+sol = backtrack(my_problem)
 elapsed = time() - start
 display_solution(sol)
 print "Took %d seconds to finish using binary constraints (hidden variables)" % elapsed
@@ -128,7 +127,7 @@ constraints = mknaryconstraints()
 domains3 = deepcopy(domains)
 start = time()
 my_problem = CspProblem(variables, domains3, constraints)
-sol = backtrack(my_problem, variable_heuristic=MOST_CONSTRAINED_VARIABLE, value_heuristic=LEAST_CONSTRAINING_VALUE)
+sol = backtrack(my_problem)
 elapsed = time() - start
 display_solution(sol)
 print "Took %d seconds to finish using n-ary constraints" % elapsed
