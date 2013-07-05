@@ -58,7 +58,8 @@ class BaseViewer(object):
 
     def handle_new_iteration(self, fringe):
         self.current_fringe = fringe
-        self.stats['max_fringe_size'] = max(self.stats['max_fringe_size'], len(fringe))
+        self.stats['max_fringe_size'] = max(self.stats['max_fringe_size'],
+                                            len(fringe))
 
         description = 'New iteration with %i elements in the fringe:\n%s'
         description = description % (len(fringe), str(fringe))
@@ -102,7 +103,8 @@ class BaseViewer(object):
             self.current_fringe = [node]
         self.solution_type = solution_type
 
-        description = 'Finished all of the runs of the inner algorithm returning %s.\nSolution type: %s'
+        description = 'Finished all of the runs of the inner algorithm' \
+                      ' returning %s.\nSolution type: %s'
         description = description % (node, solution_type)
 
         if node is not None and node.parent is not None:
@@ -139,7 +141,7 @@ class BaseViewer(object):
 
                 graph_nodes[node_id] = new_g_node
 
-            g_node =  graph_nodes[node_id]
+            g_node = graph_nodes[node_id]
 
             if expanded or chosen:
                 g_node.set_fillcolor(self.fringe_color)
