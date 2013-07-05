@@ -1,6 +1,5 @@
-from time import time
-
 from copy import deepcopy
+from time import time
 
 from simpleai.search import (
     backtrack, MOST_CONSTRAINED_VARIABLE, LEAST_CONSTRAINING_VALUE,
@@ -27,7 +26,8 @@ original_domains = deepcopy(domains)
 
 start = time()
 problem = CspProblem(variables, original_domains, original_constraints)
-result = backtrack(problem, variable_heuristic=MOST_CONSTRAINED_VARIABLE, value_heuristic=LEAST_CONSTRAINING_VALUE)
+result = backtrack(problem, variable_heuristic=MOST_CONSTRAINED_VARIABLE,
+                   value_heuristic=LEAST_CONSTRAINING_VALUE)
 elapsed = time() - start
 print result
 print "Took %d seconds to finish using n-ary constraints" % elapsed
