@@ -11,8 +11,8 @@ Classifiers implemented:
 import numpy
 from collections import defaultdict
 from simpleai.machine_learning.models import Classifier
-from simpleai.machine_learning.metrics import Counter, OnlineInformationGain, \
-                                              OnlineLogProbability
+from simpleai.machine_learning.metrics import (Counter, OnlineInformationGain,
+                                               OnlineLogProbability)
 
 try:
     import cPickle as pickle
@@ -95,9 +95,11 @@ class NaiveBayes(Classifier):
         # Frequency count of target classes
         self.C = OnlineLogProbability()
         # Frequency count of P(Fi|C):
-        self.Fi = defaultdict(lambda:  # For each class,
-                      defaultdict(lambda:  # For each attribute,
-                          OnlineLogProbability()))  # For each value, count it
+        self.Fi = defaultdict(
+            # For each class,
+            lambda: defaultdict(
+                # For each attribute,
+                lambda: OnlineLogProbability()))  # For each value, count it
 
         for example in self.dataset:
             class_ = self.target(example)
@@ -131,7 +133,7 @@ class NaiveBayes(Classifier):
             logprob = logprob - Z
         else:  # Something not at all seen in training, return best a priori
             logprob, best = max((p, class_) for class_, p
-                                            in self.C.iteritems())
+                                in self.C.iteritems())
         p = numpy.exp(logprob)
         assert 0.0 <= p and p <= 1.0
         return best, p
