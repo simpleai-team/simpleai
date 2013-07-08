@@ -165,6 +165,7 @@ def _search(problem, fringe, graph_search=False, depth_limit=None,
                     elif graph_replace_when_better:
                         other = memory[n.state]
                         if n < other:
+                            memory[n.state] = n
                             childs.append(n)
                             if other in fringe:
                                 fringe.remove(other)
