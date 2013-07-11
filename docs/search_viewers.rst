@@ -78,17 +78,8 @@ For more detailed information, you can access a log of all the past events
 clicking on the "Log" link. And also you can see statistics about the execution
 with the "Stats" link.
 
-The colors of the nodes on the graph have special meanings:
-
-* Blue border, white background: node that are currently part of the fringe
-  (waiting to be visited).  
-* Blue border, blue background: current node, being analyzed or expanded.
-* Orange border, white background: newly created nodes, after expanding a
-  parent node.
-* Black border, green background: the solution node (goal for traditional
-  search, or best node for local search).
-* Black border, white background: the rest of the nodes kept in memory, needed
-  to keep the search tree from the fringe to the initial node.
+More information about the viewer controls, and the graph reference, on the 
+"Help" link.
 
 The WebViewer can receive some configuration parameters (they are all optional,
 if you don't understand them just leave them with their default values):

@@ -71,6 +71,10 @@ div.content h2 {
     color: #DD4814;
 }
 
+div.content p {
+    margin: 20px 0 0 0;
+}
+
 div.text_tab {
     padding: 10px 10px 100px 150px;
 }
