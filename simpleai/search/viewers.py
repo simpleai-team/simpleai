@@ -34,6 +34,7 @@ class BaseViewer(object):
         self.stats = {
             'max_fringe_size': 0,
             'visited_nodes': 0,
+            'iterations': 0,
         }
 
         self.clear_nodes_data()
@@ -59,6 +60,7 @@ class BaseViewer(object):
     def handle_new_iteration(self, fringe):
         self.current_fringe = fringe
         self.stats['max_fringe_size'] = max(self.stats['max_fringe_size'], len(fringe))
+        self.stats['iterations'] += 1
 
         description = 'New iteration with %i elements in the fringe:\n%s'
         description = description % (len(fringe), str(fringe))
@@ -256,7 +258,7 @@ class ConsoleViewer(BaseViewer):
 
 
 class WebViewer(BaseViewer):
-    def __init__(self, host='127.0.0.1', port=8000):
+    def __init__(self, host='0.0.0.0', port=8000):
         super(WebViewer, self).__init__()
         self.host = host
         self.port = port
