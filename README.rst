@@ -30,7 +30,7 @@ And if you want to use the interactive search viewers, also install:
 
 .. code-block:: none
 
-    pip install pyparsing==1.5.7 pydot bottle
+    pip install pyparsing==1.5.7 pydot flask
 
 You will need to have pip installed on your system. On linux install the 
 python-pip package, on windows follow `this <http://stackoverflow.com/questions/4750806/how-to-install-pip-on-windows>`_.
