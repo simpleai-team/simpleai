@@ -95,5 +95,5 @@ Join us at the Simple AI `google group <http://groups.google.com/group/simpleai>
 Authors
 =======
 
-* Many people you can find on the `contributors section <https://github.com/simpleai-team/simpleai/graphs/contributors>`.
+* Many people you can find on the `contributors section <https://github.com/simpleai-team/simpleai/graphs/contributors>`_.
 * Special acknowledgements to `Machinalis <http://www.machinalis.com/>`_ for the time provided to work on this project. Machinalis also works on some other very interesting projects, like `Quepy <http://quepy.machinalis.com/>`_ and `more <https://github.com/machinalis>`_.
