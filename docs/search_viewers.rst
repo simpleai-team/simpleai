@@ -107,15 +107,15 @@ Example usage:
 ConsoleViewer
 -------------
 
-The ConsoleViewer is similar to the WebViewer, but without the graphical
-interface, but a terminal one.  By default it will stop on each event of the
-algorithm (new iteration, node expanded, ...), print some information about the
-event, and wait for your input. You can just press enter to continue to the
-next event or use any of the several commands available to get information
-about the execution. You can generate a PNG file with the current search tree,
-show statistics, and more. These commands are explained on the interactive
-prompt shown when you run the algorithm using the ConsoleViewer, so they won't
-be explained here.
+The ConsoleViewer is similar to the WebViewer but instead of the web graphical
+interface, it has a terminal based interface.  By default it will stop on each
+event of the algorithm (new iteration, node expanded, ...), print some
+information about the event, and wait for your input. You can just press enter
+to continue to the next event or use any of the several commands available to
+get information about the execution. You can generate a PNG file with the
+current search tree, show statistics, and more. These commands are explained on
+the interactive prompt shown when you run the algorithm using the
+ConsoleViewer, so they won't be explained here.
 
 You can also specify some configuration for the ConsoleViewer when creating it.
 It allows one parameter:
