@@ -1,4 +1,4 @@
 include README.rst
 include LICENSE.txt
 recursive-include simpleai *.py
-recursive-include simpleai *.html
+recursive-include simpleai/search/web_server_resources *.*
