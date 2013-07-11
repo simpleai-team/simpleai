@@ -119,16 +119,16 @@ Making a Problem Binary Constraint
 
 If you have a problem that has n-ary constraints you may wish to try to make it binary to take advantage of AC3. Depending on the problem backtracking might run faster.
 
-Once you have your constraints defined you can call ``mk_hidden_variables_representation`` with the constraint list as a parameter, this will return a new constraint list which adds hidden variables for n-ary and unary constraints and a new domain dictionary with the domain of the hidden variables (old data should remain the same). It will also return a new set of variables which you should also, with the constraint list and domain, pass to the ``CspProblem`` class.
+Once you have your constraints defined you can call ``convert_to_binary`` with the constraint list as a parameter, this will return a new constraint list which adds hidden variables for n-ary and unary constraints and a new domain dictionary with the domain of the hidden variables (old data should remain the same). It will also return a new set of variables which you should also, with the constraint list and domain, pass to the ``CspProblem`` class.
 
 The domains of these hidden variables is the product of the domains of the variables for that particular constraint, filter out those values that falsify the constraint. For more information please see "On the conversion between non-binary constraint satisfaction problems (Fahiem Bacchus, Peter van Beek)".
 
 
 .. code-block:: python
 
-    from simpleai.search import mk_hidden_variables_representation
+    from simpleai.search import convert_to_binary
 
-    variables, domains, constraints = mk_hidden_variables_representation(variables, domains, constraints)
+    variables, domains, constraints = convert_to_binary(variables, domains, constraints)
 
     my_problem = CspProblem(variables, domain, constraints)
     result = backtrack(my_problem)

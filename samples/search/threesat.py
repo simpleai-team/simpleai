@@ -2,7 +2,7 @@ from time import time
 
 from copy import deepcopy
 
-from simpleai.search import backtrack, CspProblem, mk_hidden_variable_representation
+from simpleai.search import backtrack, CspProblem, convert_to_binary
 
 variables = ('X1', 'X2', 'X3', 'X4', 'X5', 'X6')
 
@@ -27,7 +27,7 @@ print "Took %d seconds to finish using n-ary constraints" % elapsed
 
 
 start = time()
-variables, domains, constraints = mk_hidden_variable_representation(variables, domains, constraints)
+variables, domains, constraints = convert_to_binary(variables, domains, constraints)
 problem = CspProblem(variables, domains, constraints)
 result = backtrack(problem)
 elapsed = time() - start

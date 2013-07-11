@@ -201,7 +201,7 @@ def min_conflicts(problem, initial_assignment=None, iterations_limit=0):
     return assignment
 
 
-def mk_hidden_variable_representation(variables, domains, constraints):
+def convert_to_binary(variables, domains, constraints):
     """
     Returns new constraint list, all binary, using hidden variables.
 

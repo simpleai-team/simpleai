@@ -4,7 +4,7 @@ from copy import deepcopy
 
 from simpleai.search import (
     backtrack, MOST_CONSTRAINED_VARIABLE, LEAST_CONSTRAINING_VALUE,
-    mk_hidden_variable_representation, CspProblem)
+    convert_to_binary, CspProblem)
 
 variables = ('F', 'T', 'U', 'W', 'R', 'O', 'C_10', 'C_100', 'C_1000')
 
@@ -34,7 +34,7 @@ print "Took %d seconds to finish using n-ary constraints" % elapsed
 
 
 start = time()
-variables, domains, constraints = mk_hidden_variable_representation(variables, domains, constraints)
+variables, domains, constraints = convert_to_binary(variables, domains, constraints)
 problem = CspProblem(variables, domains, constraints)
 result = backtrack(problem, value_heuristic=LEAST_CONSTRAINING_VALUE)
 elapsed = time() - start
