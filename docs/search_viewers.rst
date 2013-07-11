@@ -31,8 +31,8 @@ expanded nodes.
 Basic usage
 -----------
 
-SimpleAI implements two execution viewers: the WebViewer, and the
-ConsoleViewer. From the code point of view, both viewers are used the same
+SimpleAI implements three execution viewers: the WebViewer, the ConsoleViewer
+and the BaseViewer. From the code point of view, both viewers are used the same
 way: you just need to give the search method an extra parameter called
 "viewer".
 
