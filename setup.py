@@ -12,7 +12,7 @@ setup(
     author_email = 'fisadev@gmail.com',
     url='http://github.com/simpleai-team/simpleai',
     packages=['simpleai', 'simpleai.search', 'simpleai.machine_learning'],
-    package_data={'simpleai.search': ['*.html']},
+    package_data={'simpleai.search': ['web_viewer_resources/*.*']},
     license='LICENSE.txt',
     classifiers = [
         'Intended Audience :: Developers',
