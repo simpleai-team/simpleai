@@ -16,7 +16,7 @@ domains = OrderedDict((v, range(1, 10)) for v in variables)
 def const_different(variables, values):
     return values[0] != values[1]  # expect the value of the neighbors to be different
 
-sodoku = \
+sudoku = \
 """
   3 2 6
 9  3 5  1
@@ -31,12 +31,12 @@ sodoku = \
 
 
 def parsepuzzle(puzzle):
-    sodoku_lines = map(lambda s: s.rstrip("\n"), StringIO(puzzle).readlines()[1:])
+    sudoku_lines = map(lambda s: s.rstrip("\n"), StringIO(puzzle).readlines()[1:])
     domains = {}
 
     for k, i in enumerate(uppercase[:9]):
         for j in xrange(1, 10):
-            line = sodoku_lines[k]
+            line = sudoku_lines[k]
             if len(line) <= (j - 1):
                 continue
             val = line[j - 1]
@@ -98,7 +98,7 @@ def display_solution(sol):
         print " ".join([str(sol["%s%d" % (i, j)]) for j in xrange(1, 10)])
 
 
-domains.update(parsepuzzle(sodoku))
+domains.update(parsepuzzle(sudoku))
 
 # -- Hand made binary constraints --
 constraints = mkconstraints()
