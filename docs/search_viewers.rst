@@ -54,46 +54,6 @@ Once you run your program and the search algorithm is called with the attached
 viewer, you will be able to interact with the execution on the way the viewer
 implements it.
 
-ConsoleViewer
--------------
-
-The ConsoleViewer, by default, will stop on each event of the algorithm (new
-iteration, node expanded, ...), print some information about the event, 
-and wait for your input. You can just press enter to continue to the next 
-event, or use any of the several commands available to get information about 
-the execution. You could generate a PNG file with the current search tree, show 
-statistics, and more. These commands are explained on the interactive prompt 
-shown when you run the algorithm using the ConsoleViewer, so they won't be 
-explained here.
-
-For more information about the graph, see the next section.
-
-You can also specify some configuration for the ConsoleViewer when creating it.
-It allows two parameters:
-
-* **interactive** (boolean, optional, default to True): You can disable all
-  interactions and let the algorithm run until the end. This is useful when you
-  want to use the viewer just to collect statistics to be analyzed after the
-  execution, and not to debug each step.
-* **output_enabled** (boolean, optional, default to True): You can disable all
-  output. This is useful when running a non-interactive viewer, to avoid
-  flooding the console output with the information of each event during the
-  execution.
-
-Example usage:
-
-.. code-block:: python
-
-    from simpleai.search import breadth_first
-    from simpleai.search.viewers import ConsoleViewer
-
-    # class HelloProblem..., my_problem = ... (steps from the previous sections about search problems)
-
-    my_viewer = ConsoleViewer(interactive=False, output_enabled=False)
-
-    result = breadth_first(my_problem, viewer=my_viewer)
-
-
 WebViewer
 ---------
 
@@ -108,14 +68,15 @@ server is up, to access the website open a web browser and navigate to `this
 address <http://localhost:8000/>`_.
 
 By default, you will see a welcome message, and you will be able to start
-running the algorithm by clicking on the "Next step" link. Similar to the
-ConsoleViewer, the execution will stop on each event of the algorithm (new
-iteration, node expanded, ...) and wait for you to click on the "Next step"
-link to run until the next event.  But on each step, you will see a graph
-showing the current search tree. Below the graph you will also have useful
-information about the last event (the information box is expanded when hovering
-with the mouse). And also, you can access a log of all the past events,
-clicking on the "Log" link.
+running the algorithm by clicking on the "Play" link. Once you click it, you
+will see the search graph updating itself in real time! You can pause the
+execution ("Pause" link), and also run step by step ("Step" link). Below the
+graph you have useful information regarding the last event (the information box
+is expanded when hovering with the mouse). 
+
+For more detailed information, you can access a log of all the past events
+clicking on the "Log" link. And also you can see statistics about the execution
+with the "Stats" link.
 
 The colors of the nodes on the graph have special meanings:
 
@@ -124,17 +85,17 @@ The colors of the nodes on the graph have special meanings:
 * Blue border, blue background: current node, being analyzed or expanded.
 * Orange border, white background: newly created nodes, after expanding a
   parent node.
+* Black border, green background: the solution node (goal for traditional
+  search, or best node for local search).
 * Black border, white background: the rest of the nodes kept in memory, needed
   to keep the search tree from the fringe to the initial node.
 
-Like the ConsoleViewer, the WebViewer can receive some configuration parameters
-(they are all optional, if you don't understand them just leave them with their
-default values):
+The WebViewer can receive some configuration parameters (they are all optional,
+if you don't understand them just leave them with their default values):
 
-* **host** (string, optional, default to '127.0.0.1'): by default, the website
-  will only allow connections coming from the same machine. If you want to use
-  the viewer website from a machine which isn't the one running your program,
-  then you can specify that using this parameter.
+* **host** (string, optional, default to '0.0.0.0'): by default, the website
+  will allow connections coming from any network address. If you want to
+  restrict that, then you can specify the allowed address using this parameter.
 * **port** (integer, optional, default to 8000): the port where the website
   will be listening.
 
@@ -147,25 +108,31 @@ Example usage:
 
     # class HelloProblem..., my_problem = ... (steps from the previous sections about search problems)
 
-    my_viewer = ConsoleViewer(host='0.0.0.0', port=9090)
+    my_viewer = WebViewer()
 
     result = breadth_first(my_problem, viewer=my_viewer)
 
 
-Statistics and Logs
--------------------
+ConsoleViewer
+-------------
 
-After running the algorithm, the viewer (Console or Web) will have some
-interesting statistics and logs, that may be useful to analyze:
+The ConsoleViewer is similar to the WebViewer, but without the graphical
+interface, but a terminal one.  By default it will stop on each event of the
+algorithm (new iteration, node expanded, ...), print some information about the
+event, and wait for your input. You can just press enter to continue to the
+next event or use any of the several commands available to get information
+about the execution. You can generate a PNG file with the current search tree,
+show statistics, and more. These commands are explained on the interactive
+prompt shown when you run the algorithm using the ConsoleViewer, so they won't
+be explained here.
 
-* **max_fringe_size**: the maximum reached size of the fringe.
-* **visited_nodes**: number of nodes that were visited.
-* **events**: a list of all the events ocurred during the algorithm execution.
-  Each event is a tuple with the following structure: (event_name,
-  event_description).
+You can also specify some configuration for the ConsoleViewer when creating it.
+It allows one parameter:
 
-You can access those statistics and logs as attributes of the viewer instance,
-after the algorithm finished, like this:
+* **interactive** (boolean, optional, default to True): You can disable all
+  interactions and let the algorithm run until the end.
+
+Example usage:
 
 .. code-block:: python
 
@@ -174,12 +141,61 @@ after the algorithm finished, like this:
 
     # class HelloProblem..., my_problem = ... (steps from the previous sections about search problems)
 
-    my_viewer = ConsoleViewer(interactive=False, output_enabled=False)
+    my_viewer = ConsoleViewer()
 
     result = breadth_first(my_problem, viewer=my_viewer)
 
-    print 'Max fringe size:', my_viewer.max_fringe_size
-    print 'Visited nodes:', my_viewer.visited_nodes
+
+BaseViewer
+----------
+
+This viewer is the base for the other two viewers, and is useful when you just
+want to run the algorithm and collect statics and logs, without any kind of
+interaction. It doesn't have a user interface, and won't stop until the
+algorithm has finished.
+
+Example usage:
+
+.. code-block:: python
+
+    from simpleai.search import breadth_first
+    from simpleai.search.viewers import BaseViewer
+
+    # class HelloProblem..., my_problem = ... (steps from the previous sections about search problems)
+
+    my_viewer = BaseViewer()
+
+    result = breadth_first(my_problem, viewer=my_viewer)
+
+
+Statistics and Logs
+-------------------
+
+After running the algorithm, the viewer (Web, Console or Base) will have some
+interesting statistics and logs, that may be useful to analyze:
+
+* The maximum reached size of the fringe.
+* The number of nodes that were visited.
+* The number of iterations performed.
+* A list of all the events ocurred during the algorithm execution. Each event
+  is a tuple with the following structure: (event_name, event_description).
+
+You can access those statistics and logs as attributes of the viewer instance,
+after the algorithm finished, like this:
+
+.. code-block:: python
+
+    from simpleai.search import breadth_first
+    from simpleai.search.viewers import BaseViewer
+
+    # class HelloProblem..., my_problem = ... (steps from the previous sections about search problems)
+
+    my_viewer = BaseViewer()
+
+    result = breadth_first(my_problem, viewer=my_viewer)
+
+    print 'Stats:'
+    print my_viewer.stats
 
     print 'Events:'
     print my_viewer.events
@@ -188,8 +204,86 @@ after the algorithm finished, like this:
 Creating your own execution viewer
 ----------------------------------
 
-You can also create your own execution viewer from scratch, or modifying
-(inheriting) the existing ones. But this is still experimental, and will be
-standarized on the future, so there is no current documentation on this topic.
+You can also create your own execution viewer, for example if you want to debug
+certain specific scenarios, or you want to generate extra statistics not
+included on the current viewers. To do this, you must create a new class
+inheritting from BaseViewer, and define a single method: 
 
-Still, you could use the ConsoleViewer as a start point.
+* **event**: this method receives a name and a list of optional parameters
+  called params. It doesn't needs to return anything, but is **really**
+  important that you don't forget to call the original ``event`` method using
+  the ``super`` function.
+
+That method will be called each time the algorithm raises an event. The
+``name`` parameter will receive the event name, and the ``params`` parameter
+will receive a list of extra objects related to the event. These are the
+possible events, and the extra information each one receives on ``params``:
+
++---------------+-------------------------------+----------------------------------+
+| Event name    | Params                        | Description                      |
++===============+===============================+==================================+
+| started       | []                            | Raised every time a new run      |
+|               |                               | is made. For single run          |
+|               |                               | algorithms, will be just one     |
+|               |                               | time. For algorithms with        |
+|               |                               | restarts or multiple runs,       |
+|               |                               | will be one for each run.        |
+|               |                               | Has no extra params.             |
++---------------+-------------------------------+----------------------------------+
+| new_iteration | [fringe]                      | Raised on each new iteration     |
+|               |                               | of the algorithm. The ``fringe`` |
+|               |                               | param will contain the list      |
+|               |                               | of nodes at the fringe when      |
+|               |                               | the iteration begins.            |
++---------------+-------------------------------+----------------------------------+
+| chosen_node   | [node, is_goal]               | Raised each time the             |
+|               |                               | algorithm picks a node from      |
+|               |                               | the fringe to be analyzed.       |
+|               |                               | The ``node`` param contains the  |
+|               |                               | chosen node, and the ``is_goal`` |
+|               |                               | param is a boolean.              |
++---------------+-------------------------------+----------------------------------+
+| expanded      | [nodes, successors]           | Raised each time a node or group |
+|               |                               | of nodes must be expanded (their |
+|               |                               | children are generated and added |
+|               |                               | to the fringe). The ``nodes`` is |
+|               |                               | a list of the expanded nodes,    |
+|               |                               | and the ``successors`` param is  |
+|               |                               | a list of lists, each one being  |
+|               |                               | the list of children of one of   |
+|               |                               | the expanded nodes.              |
++---------------+-------------------------------+----------------------------------+
+| finished      | [fringe, node, solution_type] | Raised when each run of the      |
+|               |                               | algorithm finishes (the same     |
+|               |                               | logic as the started event).     |
+|               |                               | The ``node`` param will          |
+|               |                               | contain the returned node        |
+|               |                               | or None when no solution was     |
+|               |                               | found. The ``solution_type``     |
+|               |                               | is a string describing the       |
+|               |                               | kind of solution returned.       |
++---------------+-------------------------------+----------------------------------+
+
+
+Also, if you need to include code on the initializer of your class
+(``__init__`` method), don't forget to call the original ``__init__`` using the
+``super`` function.
+
+Example of custom viewer:
+
+.. code-block:: python
+
+    from simpleai.search.viewers import BaseViewer
+
+    class MyOwnViewer(BaseViewer):
+        def __init__(self):
+            super(MyOwnViewer, self).__init__()
+            self.stats['iterations_with_lots_of_nodes'] = 0
+
+        def event(self, name, *params):
+            super(MyOwnViewer, self).event(name, *params)
+            if name == 'new_iteration':
+                fringe = params[0]
+                if len(fringe) > 100:
+                    self.stats['iterations_with_lots_of_nodes'] += 1
+                    print 'Wow! an iteration with more than 100 nodes on the fringe!'
