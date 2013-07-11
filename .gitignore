@@ -25,3 +25,9 @@ pip-log.txt
 
 # Vim tmps
 *.swp
+
+# Emacs backups
+*.*~
+# Idea files/directory
+.idea
+*.iml

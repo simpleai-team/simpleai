@@ -1,92 +1,117 @@
 # coding: utf-8
+from collections import namedtuple
 from os import path
 import sys
-from threading import Thread
+from tempfile import mkdtemp
 from time import sleep
+from threading import Thread
 
-HELP_TEXT = '''After each step, a prompt will be shown.
+
+Event = namedtuple('Event', 'name description')
+
+
+CONSOLE_HELP_TEXT = '''After each step, a prompt will be shown.
 On the prompt, you can just press Enter to continue to the next step.
-But you can also:
-* write h then Enter: get help.
-* write g PATH_TO_PNG_IMAGE then Enter: create png with graph of the current state.
-* write e then Enter: run non-interactively to the end of the algorithm.
-* write s then Enter: show statistics of the execution (max fringe size, visited nodes).
-* write q then Enter: quit program.'''
+But you can also have this commands:
+(write the command you want to use and then press Enter)
+* h: get help.
+* g PATH_TO_PNG_IMAGE: create png with graph of the current state.
+* e: run non-interactively to the end of the algorithm.
+* s: show statistics of the execution (max fringe size, visited nodes).
+* q: quit program.'''
 
 
-class ConsoleViewer(object):
-    def __init__(self, interactive=True, output_enabled=True,
-                 multiple_runs=False):
-        self.interactive = interactive
-        self.multiple_runs = multiple_runs
-        self.output_enabled = output_enabled
-
+class BaseViewer(object):
+    def __init__(self):
         self.successor_color = '#DD4814'
         self.fringe_color = '#20a0c0'
+        self.solution_color = '#adeba8'
         self.font_size = 11
 
-        self.clean()
-
-    def clean(self):
-        self.last_event = ''
-        self.last_event_description = ''
+        self.last_event = None
         self.events = []
 
-        self.max_fringe_size = 0
-        self.visited_nodes = 0
+        self.stats = {
+            'max_fringe_size': 0,
+            'visited_nodes': 0,
+            'iterations': 0,
+        }
 
+        self.clear_nodes_data()
+
+    def clear_nodes_data(self):
         self.current_fringe = []
         self.last_chosen = None
-        self.last_is_goal = False
         self.last_expandeds = []
         self.last_successors = []
 
-    def pause(self):
-        prompt = True
-        while prompt:
-            prompt = False
-            if self.interactive:
-                option = raw_input('> ').strip()
-                if option:
-                    if option == 'h':
-                        self.output(HELP_TEXT)
-                        prompt = True
-                    elif option == 'e':
-                        self.interactive = False
-                    elif option == 's':
-                        self.output('Statistics:')
-                        self.output('Max fringe size: %i' % self.max_fringe_size)
-                        self.output('Visited nodes: %i' % self.visited_nodes)
-                        prompt = True
-                    elif option == 'q':
-                        sys.exit()
-                    elif option.startswith('g ') and len(option) > 2:
-                        png_path = option[2:]
-                        self.create_graph(png_path)
-                        self.output('graph saved to %s' % png_path)
-                        prompt = True
-                    else:
-                        self.output('Incorrect command')
-                        self.output(HELP_TEXT)
-                        self.pause()
+    def event(self, name, *params):
+        getattr(self, 'handle_' + name)(*params)
 
-    def event(self, event, description):
-        self.last_event = event
-        self.last_event_description = description
-        self.events.append((event, description))
+    def log_event(self, name, description):
+        self.last_event = Event(name=name,
+                                description=description)
+        self.events.append(self.last_event)
 
-        self.output('EVENT: %s' % event)
-        self.output(description)
+    def handle_started(self):
+        self.clear_nodes_data()
+        self.log_event('started', 'Algorithm just started.')
 
-    def output(self, text):
-        if self.output_enabled:
-            print text
+    def handle_new_iteration(self, fringe):
+        self.current_fringe = fringe
+        self.stats['max_fringe_size'] = max(self.stats['max_fringe_size'], len(fringe))
+        self.stats['iterations'] += 1
 
-    def started(self):
-        self.event('started', HELP_TEXT)
-        self.pause()
+        description = 'New iteration with %i elements in the fringe:\n%s'
+        description = description % (len(fringe), str(fringe))
+        self.log_event('new_iteration', description)
 
-    def create_graph(self, png_path):
+    def handle_chosen_node(self, node, is_goal=None):
+        self.last_chosen = node
+        self.stats['visited_nodes'] += 1
+
+        goal_text = 'Is goal!' if is_goal else 'Not goal'
+        description = 'Chosen node: %s' % node
+        if is_goal is not None:
+            description += '\n' + goal_text
+        self.log_event('chosen_node', description)
+
+    def handle_expanded(self, nodes, successors):
+        self.last_expandeds, self.last_successors = nodes, successors
+
+        description = 'Expanded %s\nSuccessors: %s'
+        description = description % (nodes, successors)
+        self.log_event('expanded', description)
+
+    def handle_finished(self, fringe, node, solution_type):
+        self.clear_nodes_data()
+        self.solution_node = node
+        if node:
+            self.current_fringe = [node]
+        self.solution_type = solution_type
+
+        description = 'Finished algorithm returning %s.\nSolution type: %s'
+        description = description % (node, solution_type)
+
+        if node is not None and node.parent is not None:
+            description += '\nPath from initial to goal: %s' % str(node.path())
+        self.log_event('finished', description)
+
+    def handle_no_more_runs(self, node, solution_type):
+        self.clear_nodes_data()
+        self.solution_node = node
+        if node:
+            self.current_fringe = [node]
+        self.solution_type = solution_type
+
+        description = 'Finished all of the runs of the inner algorithm returning %s.\nSolution type: %s'
+        description = description % (node, solution_type)
+
+        if node is not None and node.parent is not None:
+            description += '\nPath from initial to goal: %s' % str(node.path())
+        self.log_event('no_more_runs', description)
+
+    def create_graph(self, image_format, image_path):
         from pydot import Dot, Edge, Node
 
         graph = Dot(graph_type='digraph')
@@ -96,7 +121,7 @@ class ConsoleViewer(object):
         done = set()
 
         def add_node(node, expanded=False, chosen=False, in_fringe=False,
-                     in_successors=False):
+                     in_successors=False, solution=False):
             node_id = id(node)
             if node_id not in graph_nodes:
                 label = node.state_representation()
@@ -126,6 +151,8 @@ class ConsoleViewer(object):
             if in_successors:
                 g_node.set_color(self.successor_color)
                 g_node.set_fontcolor(self.successor_color)
+            if solution:
+                g_node.set_fillcolor(self.solution_color)
 
             return g_node
 
@@ -147,10 +174,14 @@ class ConsoleViewer(object):
 
             graph_edges[id(node), id(parent)] = edge
 
-        if self.last_event == 'chosen_node':
+        if self.last_event.name == 'chosen_node':
             add_node(self.last_chosen, chosen=True)
 
-        if self.last_event == 'expanded':
+        if self.last_event.name == 'finished':
+            if self.solution_node:
+                add_node(self.solution_node, solution=True)
+
+        if self.last_event.name == 'expanded':
             for node, successors in zip(self.last_expandeds,
                                         self.last_successors):
                 add_node(node, expanded=True)
@@ -175,129 +206,93 @@ class ConsoleViewer(object):
         for node_id, parent_id in sorted(graph_edges.keys()):
             graph.add_edge(graph_edges[node_id, parent_id])
 
-        graph.write_png(png_path)
+        graph.write(image_path, format=image_format)
 
-    def new_iteration(self, fringe):
-        self.current_fringe = fringe
-        self.max_fringe_size = max(self.max_fringe_size, len(fringe))
 
-        description = 'New iteration with %i elements in the fringe:\n%s'
-        description = description % (len(fringe), str(fringe))
-        self.event('new_iteration', description)
+class ConsoleViewer(BaseViewer):
+    def __init__(self, interactive=True):
+        super(ConsoleViewer, self).__init__()
+        self.interactive = interactive
 
-        self.pause()
+    def event(self, name, *params):
+        if name == 'started':
+            self.output(CONSOLE_HELP_TEXT)
 
-    def chosen_node(self, node, is_goal=None):
-        self.last_chosen, self.last_is_goal = node, is_goal
-        self.visited_nodes += 1
+        super(ConsoleViewer, self).event(name, *params)
 
-        goal_text = 'Is goal!' if is_goal else 'Not goal'
-        description = 'Chosen node: %s' % node
-        if is_goal is not None:
-            description += '\n' + goal_text
-        self.event('chosen_node', description)
+        self.output('EVENT: %s' % self.last_event.name)
+        self.output(self.last_event.description)
 
         self.pause()
-
-    def expanded(self, nodes, successors):
-        self.last_expandeds, self.last_successors = nodes, successors
-
-        description = 'Expanded %s\nSuccessors: %s'
-        description = description % (nodes, successors)
-        self.event('expanded', description)
-
-        self.pause()
-
-    def finished(self, fringe, node, solution_type):
-        self.current_fringe = fringe
-        self.solution_node = node
-        self.solution_type = solution_type
-
-        if self.multiple_runs:
-            description = 'Finished one of the runs of the inner algorithm returning %s\nSolution type: %s'
-        else:
-            description = 'Finished algorithm returning %s\nSolution type: %s'
-        description = description % (node, solution_type)
-
-        if node is not None and node.parent is not None:
-            description += '\nPath from initial to goal: %s' % str(node.path())
-        self.event('finished', description)
-
-        self.pause()
-
-    def no_more_runs(self, node, solution_type):
-        self.solution_node = node
-        self.solution_type = solution_type
-
-        description = 'Finished all of the runs of the inner algorithm returning %s\nSolution type: %s'
-        description = description % (node, solution_type)
-
-        if node is not None and node.parent is not None:
-            description += '\nPath from initial to goal: %s' % str(node.path())
-        self.event('no_more_runs', description)
-
-        self.pause()
-
-
-class WebViewer(ConsoleViewer):
-    def __init__(self, host='127.0.0.1', port=8000):
-        super(WebViewer, self).__init__(interactive=True, output_enabled=False)
-        self.host = host
-        self.port = port
-        self.paused = True
-
-        web_template_path = path.join(path.dirname(__file__), 'web_viewer.html')
-        self.web_template = open(web_template_path).read()
-
-    def started(self):
-        self.event('started', 'Started running')
-        from bottle import route, run
-
-        route('/')(self.web_index)
-        route('/view/:status_type')(self.web_view)
-        route('/next/:status_type')(self.web_next)
-        route('/graph')(self.web_graph)
-
-        t = Thread(target=run, kwargs=dict(host=self.host, port=self.port))
-        t.daemon = True
-        t.start()
-
-        self.pause()
-
-    def web_index(self):
-        from bottle import redirect
-        return redirect('/view/graph')
-
-    def web_view(self, status_type='graph'):
-        from bottle import template
-        return template(self.web_template,
-                        max_fringe_size=self.max_fringe_size,
-                        visited_nodes=self.visited_nodes,
-                        last_event = self.last_event,
-                        last_event_description = self.last_event_description,
-                        multiple_runs=self.multiple_runs,
-                        events=self.events[:-1],
-                        status_type=status_type)
-
-    def web_graph(self):
-        from bottle import static_file
-        graph_name = 'graph.png'
-        self.create_graph(graph_name)
-        return static_file(graph_name, root='.')
-
-    def web_next(self, status_type='graph'):
-        from bottle import redirect
-
-        self.paused = False
-        while not self.paused:
-            sleep(0.1)
-
-        redirect('/view/' + status_type)
 
     def pause(self):
-        self.paused = True
-        while self.paused:
-            sleep(0.1)
+        prompt = True
+        while prompt and self.interactive:
+            prompt = False
+            option = raw_input('> ').strip()
+            if option:
+                if option == 'h':
+                    self.output(CONSOLE_HELP_TEXT)
+                    prompt = True
+                elif option == 'e':
+                    self.interactive = False
+                elif option == 's':
+                    self.output('Statistics:')
+                    for stat, value in self.stats.items():
+                        self.output('%s: %i' % (stat.replace('_', ' '), value))
+                    prompt = True
+                elif option == 'q':
+                    sys.exit()
+                elif option.startswith('g ') and len(option) > 2:
+                    png_path = option[2:]
+                    self.create_graph('png', png_path)
+                    self.output('graph saved to %s' % png_path)
+                    prompt = True
+                else:
+                    self.output('Incorrect command')
+                    self.output(CONSOLE_HELP_TEXT)
+                    self.pause()
 
     def output(self, text):
-        pass
+        print text
+
+
+class WebViewer(BaseViewer):
+    def __init__(self, host='0.0.0.0', port=8000):
+        super(WebViewer, self).__init__()
+        self.host = host
+        self.port = port
+        self.status = 'paused'
+        self.creating_graph = False
+        self.server_running = False
+
+        tmp_folder = mkdtemp(prefix='simpleai_web_server_')
+        self.graph_path = path.join(tmp_folder, 'graph.png')
+
+    def event(self, name, *params):
+        if name == 'started':
+            self.start_server()
+
+        super(WebViewer, self).event(name, *params)
+
+        self.creating_graph = True
+        self.create_graph(self.graph_path.split('.')[-1], self.graph_path)
+        self.creating_graph = False
+
+        if self.status == 'running_step':
+            self.status = 'paused'
+
+        while self.status == 'paused':
+            sleep(0.5)
+
+        sleep(0.5)
+
+    def start_server(self):
+        if not self.server_running:
+            from web_viewer_server import run_server
+
+            t = Thread(target=run_server, args=[self])
+            t.daemon = True
+            t.start()
+
+            self.server_running = True

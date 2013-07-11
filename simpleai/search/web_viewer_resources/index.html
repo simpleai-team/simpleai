@@ -1,0 +1,71 @@
+<html ng-app>
+  <head>
+    <link rel="stylesheet" type="text/css" href="/static/styles.css">
+    <script src="/static/angular.min.js"></script>
+    <script src="/static/jquery-2.0.2.min.js"></script>
+    <script src="/static/EventSource.js"></script>
+    <script src="/static/jquery.panzoom.min.js"></script>
+    <script src="/static/main.js"></script>
+  </head>
+  <body ng-controller="AlgorithmInfoCtrl">
+    <div class="top-bar">
+      <div class="title-bar">
+        <h1><a href="http://github.com/simpleai-team/simpleai" target="_blank">SimpleAI</a></h1>
+      </div>
+      <div class="nav-bar">
+        <ul>
+          <li><a href="#" onclick="controlAlgorithm('play')">Play</a></li>
+          <li><a href="#" onclick="controlAlgorithm('step')">Step</a></li>
+          <li><a href="#" onclick="controlAlgorithm('pause')">Pause</a></li>
+          <li><a href="#" onclick="controlAlgorithm('stop')">Stop running</a></li>
+          <li>|</li>
+          <li><a href="#" onclick="showTab('graph')">Graph</a></li>
+          <li><a href="#" onclick="showTab('log')">Log</a></li>
+          <li><a href="#" onclick="showTab('stats')">Stats</a></li>
+          <li><a href="#" onclick="showTab('help')">Help</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="content">
+      <div id="help" class="tab text_tab">
+        <h2>Welcome to the SimpleAI execution web viewer</h2>
+        <p>On the top bar you have links to control the execution of the algorithm, and links to switch between the graph view, the log view, the stats view, and this help view. You can also press following keys to control execution: [e] Play, [enter] Step, [p] Pause and [q] Stop running.</p>
+        <p>On the bottom bar you have information about the current step (hover with your mouse over it to see more details).</p>
+        <p>You can also zoom and pan on the graph view using your mouse wheel and buttons. To restore to the original zoom, click again on the "Graph" link.</p>
+        <p>The colors of the nodes on the graph have special meanings:</p>
+        <ul>
+          <li><p><strong>Blue border, white background:</strong> nodes that are currently part of the fringe (waiting to be visited).</p></li>
+          <li><p><strong>Blue border, blue background:</strong> current node, being analyzed or expanded.</p></li>
+          <li><p><strong>Orange border, white background:</strong> newly created nodes, after expanding a parent node.</p></li>
+          <li><p><strong>Black border, green background:</strong> the solution node (goal for traditional search, or best node for local search).</p></li>
+          <li><p><strong>Black border, white background:</strong> the rest of the nodes kept in memory, needed to keep the search tree from the fringe to the initial node.</p></li>
+        </ul>
+        <p>Happy debugging!</p>
+      </div>
+
+      <div id="graph" class="tab text_tab">
+        <img id="graph_image" src="/graph" />
+      </div>
+
+      <div id="log" class="tab text_tab">
+        <div ng-repeat="event in events">
+          <h2>{{event.name}}:</h2>
+          <p>{{event.description}}</p>
+        </div>
+      </div>
+
+      <div id="stats" class="tab text_tab">
+        <div ng-repeat="stat in stats">
+          <h2>{{stat.name}}:</h2>
+          <p>{{stat.value}}</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="bottom-bar">
+      <h2>{{last_event.name}}</h2>
+      <p>{{last_event.description}}</p>
+    </div>
+  </body>
+</html>
