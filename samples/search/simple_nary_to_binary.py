@@ -1,4 +1,4 @@
-from simpleai.search import backtrack, CspProblem, mk_hidden_variable_representation
+from simpleai.search import backtrack, CspProblem, convert_to_binary
 
 variables = ('A', 'B', 'C')
 
@@ -38,7 +38,7 @@ constraints = [
     (('A',), const_not_1)
 ]
 
-variables, domains, constraints = mk_hidden_variable_representation(variables, domains, constraints)
+variables, domains, constraints = convert_to_binary(variables, domains, constraints)
 problem = CspProblem(variables, domains, constraints)
 result = backtrack(problem)
 print result

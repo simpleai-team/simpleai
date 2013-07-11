@@ -7,4 +7,4 @@ from simpleai.search.local import (
 from simpleai.search.csp import (
     backtrack, min_conflicts, MOST_CONSTRAINED_VARIABLE,
     HIGHEST_DEGREE_VARIABLE, LEAST_CONSTRAINING_VALUE,
-    mk_hidden_variable_representation)
+    convert_to_binary)
