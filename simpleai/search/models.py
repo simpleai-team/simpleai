@@ -14,7 +14,7 @@ class SearchProblem(object):
        algorithm you will use.
        '''
 
-    def __init__(self, initial_state):
+    def __init__(self, initial_state=None):
         self.initial_state = initial_state
 
     def actions(self, state):
