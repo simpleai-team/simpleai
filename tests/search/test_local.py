@@ -1,7 +1,8 @@
 # coding=utf-8
 import unittest
 from tests.search.dummies import DummyProblem, GOAL, DummyGeneticProblem
-from simpleai.search.local import (beam, hill_climbing,
+from simpleai.search.local import (beam, beam_best_first,
+                                   hill_climbing,
                                    hill_climbing_stochastic,
                                    simulated_annealing,
                                    hill_climbing_random_restarts, genetic)
@@ -15,6 +16,10 @@ class TestLocalSearch(unittest.TestCase):
 
     def test_beam(self):
         result = beam(self.problem)
+        self.assertEquals(result.state, GOAL)
+
+    def test_beam_best_first(self):
+        result = beam_best_first(self.problem)
         self.assertEquals(result.state, GOAL)
 
     def test_hill_climbing(self):
