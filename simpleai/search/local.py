@@ -67,6 +67,7 @@ def beam_best_first(problem, beam_size=100, iterations_limit=0, viewer=None):
                          _first_expander,
                          iterations_limit=iterations_limit,
                          fringe_size=beam_size,
+                         random_initial_states=True,
                          stop_when_no_better=iterations_limit==0,
                          viewer=viewer)
 
