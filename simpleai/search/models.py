@@ -10,12 +10,8 @@ class SearchProblem(object):
        and each problem action (ie, a valid transformation to a configuracion)
        corresponds with an edge.
 
-       To use this class with a problem seen as a graph search you should at
-       least implement: `actions`, `result` and `is_goal`.
-       Optionally, it might be useful to also implement `cost`.
-
-       To use this class with a problem seen as an optimization over target
-       function you should at least implement: `actions`, `result` and `value`.
+       To use this class you should implement the methods required by the search
+       algorithm you will use.
        '''
 
     def __init__(self, initial_state):
