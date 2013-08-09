@@ -1,5 +1,4 @@
 # coding: utf-8
-from collections import namedtuple
 from os import path
 import sys
 from tempfile import mkdtemp
@@ -7,7 +6,13 @@ from time import sleep
 from threading import Thread
 
 
-Event = namedtuple('Event', 'name description')
+class Event(object):
+    def __init__(self, name, description):
+        self.name = name
+        self.description = description
+
+    def __str__(self):
+        return self.name
 
 
 CONSOLE_HELP_TEXT = '''After each step, a prompt will be shown.
