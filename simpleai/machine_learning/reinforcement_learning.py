@@ -3,6 +3,12 @@ from collections import defaultdict, Counter
 import math
 import random
 from .utils import argmax
+try:
+    import matplotlib.pyplot as plt
+    import numpy
+except:
+    plt = None  # lint:ok
+    numpy = None  # lint:ok
 
 
 def make_at_least_n_times(optimistic_reward, min_n):
@@ -48,6 +54,48 @@ def make_exponential_temperature(initial_temperature, alpha):
     return _function
 
 
+class PerformanceCounter(object):
+
+    def __init__(self, learners, names=None):
+        self.learners = learners
+        for i, learner in enumerate(learners):
+            self.update_set_reward(learner)
+            learner.accumulated_rewards = []
+            learner.known_states = []
+            learner.temperatures = []
+            if names is None:
+                learner.name = 'Learner %d' % i
+            else:
+                learner.name = names[i]
+
+    def update_set_reward(self, learner):
+        def set_reward(reward, terminal=False):
+            if terminal:
+                if len(learner.accumulated_rewards) > 0:
+                    learner.accumulated_rewards.append(learner.accumulated_rewards[-1] + reward)
+                else:
+                    learner.accumulated_rewards.append(reward)
+                learner.known_states.append(len(learner.Q))
+                learner.temperatures.append(learner.temperature_function(learner.trials))
+            learner.old_set_reward(reward, terminal)
+        learner.old_set_reward = learner.set_reward
+        learner.set_reward = set_reward
+
+    def _make_plot(self, ax, data_name):
+        for learner in self.learners:
+            ax.plot(numpy.arange(learner.trials), numpy.array(getattr(learner, data_name)), label=learner.name)
+        nice_name = data_name.replace('_', ' ').capitalize()
+        ax.set_title(nice_name)
+        ax.legend()
+
+    def show_statistics(self):
+        f, (ax1, ax2, ax3) = plt.subplots(3, 1, sharex=True)
+        self._make_plot(ax1, 'accumulated_rewards')
+        self._make_plot(ax2, 'known_states')
+        self._make_plot(ax3, 'temperatures')
+        plt.show()
+
+
 class QLearner(object):
 
     def __init__(self, exploration_function, discount_factor, temperature_function, Q=None):
@@ -63,7 +111,6 @@ class QLearner(object):
         self.temperature_function = temperature_function
         self.trials = 0
         self.last_reward = None
-        self.accumulated_rewards = [0]
 
     def update_state(self, percept):
         'Override this method if you need to clean perception'
@@ -72,11 +119,8 @@ class QLearner(object):
     def set_reward(self, reward, terminal=False):
         self.last_reward = reward
         if terminal:
+            self.trials += 1
             self.Q[self.last_state][self.last_action] = reward
-            if len(self.accumulated_rewards) > 0:
-                self.accumulated_rewards.append(self.accumulated_rewards[-1] + reward)
-            else:
-                self.accumulated_rewards.append(reward)
 
     def step(self, percept):
         s = self.last_state
@@ -84,8 +128,6 @@ class QLearner(object):
 
         state = self.update_state(percept)
         actions = self.actions(state)
-
-        self.trials += 1
 
         if len(actions) > 0:
             current_action = self.exploration_function(actions, self.Q[state],
