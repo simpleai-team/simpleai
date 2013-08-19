@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 from simpleai.machine_learning.reinforcement_learning import TD_QLearner, \
-                                                             boltzmann_exploration, make_exponential_temperature
+                                                             boltzmann_exploration, make_exponential_temperature, \
+                                                             PerformanceCounter
 import random
 
 
 class TicTacToePlayer(TD_QLearner):
 
     def __init__(self, play_with):
-        super(TicTacToePlayer, self).__init__(exploration_function=boltzmann_exploration, discount_factor=0.9,
+        super(TicTacToePlayer, self).__init__(exploration_function=boltzmann_exploration, discount_factor=0.4,
                                               temperature_function=make_exponential_temperature(1000000, 0.01))
         self.play_with = play_with
         self.other_play_with = 'X' if play_with == 'O' else 'O'
@@ -60,7 +61,7 @@ class TicTacToeGame(object):
 
     def play(self):
         self.current_state = self.initial_state
-        random.shuffle(self.players)
+        #random.shuffle(self.players)
         current, other = self.players
         while not self.game_over(self.current_state):
             action = current.step(self.current_state)
@@ -103,31 +104,18 @@ class TicTacToeGame(object):
         return 0
 
 
-def show_reward_evolution(*players):
-    import numpy
-    import pylab
-    trials = numpy.arange(len(players[0].accumulated_rewards))
-    for player in players:
-        pylab.plot(trials, numpy.array(player.accumulated_rewards), label=player.play_with)
-    pylab.legend()
-    pylab.xlabel('Trials')
-    pylab.ylabel(u'Accumulated reward')
-    pylab.title(u'Accumulated reward')
-    pylab.grid(True)
-    pylab.show()
-
-
 if __name__ == '__main__':
     a = TicTacToePlayer('X')
     b = RandomPlayer('O')
     c = HumanPlayer('O')
+    per = PerformanceCounter([a, b], ['QLearner', 'Random'])
     game = TicTacToeGame([a, b])
     ## train
     print ('Training, please wait...')
     game.players = [a, b]
-    for i in range(30000):
+    for i in range(2000):
         game.play()
-    show_reward_evolution(a, b)
+    per.show_statistics()
     #play again with a human...
     game.players = [a, c]
     print game.current_state
