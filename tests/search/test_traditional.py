@@ -44,7 +44,7 @@ class TestSearch(unittest.TestCase):
         result = astar(self.problem)
         self.assertEquals(result.state, GOAL)
 
-    def test_astar_graph_execution_ok(self):
+    def test_astar_graph_execution_with_repeated_states_chooses_better_state(self):
         result = astar(self.graph_problem, graph_search=True)
         self.assertEquals(result.state, self.graph_problem.goal)
 
