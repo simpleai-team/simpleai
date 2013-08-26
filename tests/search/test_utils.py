@@ -46,3 +46,13 @@ class TestBoundedPriorityQueue(unittest.TestCase):
         q = BoundedPriorityQueue(2)
         q.extend([DummyNode(1), DummyNode(1), DummyNode(1)])
         self.assertEquals(len(q), 2)
+
+    def test_remove(self):
+        q = BoundedPriorityQueue(2)
+        a = DummyNode(1)
+        b = DummyNode(2)
+        q.append(a)
+        q.append(b)
+        q.remove(a)
+        self.assertEquals(len(q), 1)
+        self.assertIs(q[0], b)
