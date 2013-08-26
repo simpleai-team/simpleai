@@ -1,6 +1,6 @@
 # coding=utf-8
 import unittest
-from tests.search.dummies import DummyProblem, GOAL
+from tests.search.dummies import DummyProblem, GOAL, DummyGraphProblem
 from simpleai.search.traditional import (breadth_first, depth_first,
                                          limited_depth_first,
                                          iterative_limited_depth_first,
@@ -11,6 +11,7 @@ class TestSearch(unittest.TestCase):
     def setUp(self):
         self.problem = DummyProblem()
         self.problem.initial_state = 'i'
+        self.graph_problem = DummyGraphProblem()
 
     def test_breadth_first(self):
         result = breadth_first(self.problem)
@@ -42,4 +43,8 @@ class TestSearch(unittest.TestCase):
     def test_astar(self):
         result = astar(self.problem)
         self.assertEquals(result.state, GOAL)
+
+    def test_astar_graph_execution_with_repeated_states_chooses_better_state(self):
+        result = astar(self.graph_problem, graph_search=True)
+        self.assertEquals(result.state, self.graph_problem.goal)
 
