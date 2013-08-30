@@ -1,5 +1,5 @@
 # coding=utf-8
-from simpleai.search.utils import FifoList, BoundedPriorityQueue
+from simpleai.search.utils import FifoList, BoundedPriorityQueue, LifoList
 from simpleai.search.models import (SearchNode, SearchNodeHeuristicOrdered,
                                     SearchNodeStarOrdered,
                                     SearchNodeCostOrdered)
@@ -28,7 +28,7 @@ def depth_first(problem, graph_search=False, viewer=None):
     SearchProblem.is_goal.
     '''
     return _search(problem,
-                   [],
+                   LifoList(),
                    graph_search=graph_search,
                    viewer=viewer)
 
@@ -43,7 +43,7 @@ def limited_depth_first(problem, depth_limit, graph_search=False, viewer=None):
     SearchProblem.is_goal.
     '''
     return _search(problem,
-                   [],
+                   LifoList(),
                    graph_search=graph_search,
                    depth_limit=depth_limit,
                    viewer=viewer)
