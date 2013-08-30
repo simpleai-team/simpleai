@@ -24,7 +24,7 @@ class TestViewer(BaseViewer):
                         for cu, (ex_state, ex_cost) in zip(current, expected)]):
                 current = ' '.join(['<{x.state}, {x.cost}>'.format(x=x) for x in current])
                 expected = ' '.join(['<{x[0]}, {x[1]}>'.format(x=x) for x in expected])
-                raise Exception('''Fringe not expected: {0}. Expected: {1}'''.format(current, expected))
+                raise Exception('''Fringe unexpected: {0}. Expected: {1}'''.format(current, expected))
 
 
 class TestSearch(unittest.TestCase):
