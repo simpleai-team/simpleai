@@ -138,7 +138,7 @@ def _search(problem, fringe, graph_search=False, depth_limit=None,
 
     while fringe:
         if viewer:
-            viewer.event('new_iteration', list(fringe))
+            viewer.event('new_iteration', fringe.sorted())
 
         node = fringe.pop()
 
@@ -176,4 +176,4 @@ def _search(problem, fringe, graph_search=False, depth_limit=None,
                 fringe.append(n)
 
     if viewer:
-        viewer.event('finished', fringe, None, 'goal not found')
+        viewer.event('finished', fringe.sorted(), None, 'goal not found')
