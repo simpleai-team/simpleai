@@ -6,12 +6,32 @@ from simpleai.search.traditional import (breadth_first, depth_first,
                                          iterative_limited_depth_first,
                                          uniform_cost, greedy, astar)
 
+from simpleai.search.viewers import BaseViewer
+
+
+class TestViewer(BaseViewer):
+
+    def __init__(self, expected_fringes):
+        super(TestViewer, self).__init__()
+        self.expected_fringes = expected_fringes
+
+    def event(self, name, *params):
+        super(TestViewer, self).event(name, *params)
+        if name == 'new_iteration':
+            expected = self.expected_fringes.pop(0)
+            current = params[0]
+            if not all([cu.state == ex_state and cu.cost == ex_cost
+                        for cu, (ex_state, ex_cost) in zip(current, expected)]):
+                current = ' '.join(['<{x.state}, {x.cost}>'.format(x=x) for x in current])
+                expected = ' '.join(['<{x[0]}, {x[1]}>'.format(x=x) for x in expected])
+                raise Exception('''Fringe not expected: {0}. Expected: {1}'''.format(current, expected))
+
 
 class TestSearch(unittest.TestCase):
     def setUp(self):
         self.problem = DummyProblem()
         self.problem.initial_state = 'i'
-        self.graph_problem = DummyGraphProblem()
+        self.graph_problem = DummyGraphProblem(DummyGraphProblem.consistent)
 
     def test_breadth_first(self):
         result = breadth_first(self.problem)
@@ -48,3 +68,8 @@ class TestSearch(unittest.TestCase):
         result = astar(self.graph_problem, graph_search=True)
         self.assertEquals(result.state, self.graph_problem.goal)
 
+    def test_astar_tree_inadmissible_heuristic(self):
+        v = TestViewer([[('s', 0)], [('l', 26), ('a', 15)], [('r', 42), ('a', 15), ('a', 36), ('s', 52)]])
+        self.graph_problem.heuristic_dict = DummyGraphProblem.inadmissible
+        result = astar(self.graph_problem, graph_search=False, viewer=v)
+        self.assertEquals(result.state, self.graph_problem.goal)
