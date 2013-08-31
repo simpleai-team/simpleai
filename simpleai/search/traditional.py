@@ -145,7 +145,7 @@ def _search(problem, fringe, graph_search=False, depth_limit=None,
         if problem.is_goal(node.state):
             if viewer:
                 viewer.event('chosen_node', node, True)
-                viewer.event('finished', fringe, node, 'goal found')
+                viewer.event('finished', fringe.sorted(), node, 'goal found')
             return node
         else:
             if viewer:
