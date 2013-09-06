@@ -76,7 +76,7 @@ def _find_conflicts(problem, assignment, variable=None, value=None):
     of specifying a new variable and value to add to the assignment before
     checking.
     '''
-    if variable and value:
+    if variable is not None and value is not None:
         assignment = deepcopy(assignment)
         assignment[variable] = value
 
