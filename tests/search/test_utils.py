@@ -1,7 +1,7 @@
 # coding=utf-8
 import unittest
 from tests.search.dummies import DummyNode
-from simpleai.search.utils import FifoList, BoundedPriorityQueue
+from simpleai.search.utils import FifoList, BoundedPriorityQueue, argmax, argmin
 
 
 class TestFifoList(unittest.TestCase):
@@ -56,3 +56,40 @@ class TestBoundedPriorityQueue(unittest.TestCase):
         q.remove(a)
         self.assertEquals(len(q), 1)
         self.assertIs(q[0], b)
+
+
+class TestArgMax(unittest.TestCase):
+    def setUp(self):
+        self.d = {'a': 3, 'b': 1, 'c': 3}
+
+    def test_return_max(self):
+        self.assertEquals('a', argmax(['a', 'b'], lambda x: self.d[x]))
+
+    def test_random_tie(self):
+        a = 0
+        for x in range(100):
+            if argmax(['a', 'b', 'c'], lambda x: self.d[x]) == 'a':
+                a += 1
+        self.assertTrue(25 < a < 75)
+
+    def test_empty_sequence(self):
+        self.assertRaises(ValueError, argmax, [], lambda x: x)
+
+
+class TestArgMin(unittest.TestCase):
+    def setUp(self):
+        self.d = {'a': 1, 'b': 1, 'c': 3}
+
+    def test_return_max(self):
+        self.assertEquals('b', argmin(['c', 'b'], lambda x: self.d[x]))
+
+    def test_random_tie(self):
+        a = 0
+        for x in range(100):
+            if argmin(['a', 'b', 'c'], lambda x: self.d[x]) == 'a':
+                a += 1
+        self.assertTrue(25 < a < 75)
+
+    def test_empty_sequence(self):
+        self.assertRaises(ValueError, argmin, [], lambda x: x)
+
