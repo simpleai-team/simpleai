@@ -63,3 +63,18 @@ class InverseTransformSampler(object):
         while i + 1 != len(self.probs) and target > self.probs[i]:
             i += 1
         return self.objects[i]
+
+
+def _generic_arg(iterable, function, better_function):
+    values = [function(x) for x in iterable]
+    better_value = better_function(values)
+    candidates = [x for x, value in zip(iterable, values) if value == better_value]
+    return random.choice(candidates)
+
+
+def argmin(iterable, function):
+    return _generic_arg(iterable, function, min)
+
+
+def argmax(iterable, function):
+    return _generic_arg(iterable, function, max)
