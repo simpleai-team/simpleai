@@ -61,11 +61,14 @@ class DummyGraphProblem(object):
             's': {'l': 26, 'a': 15},
             }
 
-    _consistent = {'r': 0, 'l': 10, 'a': 25, 's': 30}
+    consistent = {'r': 0, 'l': 15, 'a': 25, 's': 30}
+    inconsistent = {'r': 0, 'l': 10, 'a': 25, 's': 30}
+    inadmissible = {'r': 0, 'l': 15, 'a': 28, 's': 30}
 
-    def __init__(self):
+    def __init__(self, heuristic_dict=None):
         self.initial_state = 's'
         self.goal = 'r'
+        self.heuristic_dict = heuristic_dict
 
     def is_goal(self, state):
         return state == self.goal
@@ -82,7 +85,10 @@ class DummyGraphProblem(object):
         return self._map[state1][state2]
 
     def heuristic(self, state):
-        return self._consistent[state]
+        return self.heuristic_dict[state]
 
     def state_representation(self, state):
         return state
+
+    def action_representation(self, action):
+        return action
