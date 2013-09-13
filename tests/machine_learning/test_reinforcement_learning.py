@@ -16,7 +16,7 @@ class TestBoltzmann_exploration(unittest.TestCase):
             a = boltzmann_exploration(self.actions, self.utilities, 10000000, None)
             counter[a] += 1
         for a, c in counter.items():
-            self.assertTrue(25 <= c <= 40)
+            self.assertTrue(20 <= c <= 45)
 
     def test_low_randomness_in_cold(self):
         counter = Counter()
