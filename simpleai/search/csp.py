@@ -2,6 +2,7 @@
 import random
 from copy import deepcopy, copy
 from itertools import product
+from utils import argmin
 
 MOST_CONSTRAINED_VARIABLE = 'mcv'
 HIGHEST_DEGREE_VARIABLE = 'degree'
@@ -153,11 +154,9 @@ def _backtracking(problem, assignment, domains, variable_chooser, values_sorter,
 def _min_conflicts_value(problem, assignment, variable):
     '''
     Return the value generate the less number of conflicts.
+    In case of tie, a random value is selected among this values subset.
     '''
-    return _least_constraining_values_sorter(problem,
-                                             assignment,
-                                             variable,
-                                             problem.domains)[0]
+    return argmin(problem.domains[variable], lambda x: _count_conflicts(problem, assignment, variable, x))
 
 
 def min_conflicts(problem, initial_assignment=None, iterations_limit=0):

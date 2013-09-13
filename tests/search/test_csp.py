@@ -88,8 +88,9 @@ class TestCsp(unittest.TestCase):
 
     def test_backtrack(self):
         result = backtrack(self.problem)
-        self.assertEqual(result, {'A':2, 'B': 3, 'C': 1})
+        self.assertEqual(result, {'A': 2, 'B': 3, 'C': 1})
 
     def test_min_conflicts(self):
         result = min_conflicts(self.problem)
-        self.assertEqual(result, {'A':2, 'B': 3, 'C': 1})
+        c = _count_conflicts(self.problem, result)
+        self.assertEqual(c, 0)
