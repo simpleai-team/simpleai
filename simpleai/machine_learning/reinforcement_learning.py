@@ -2,7 +2,7 @@
 from collections import defaultdict, Counter
 import math
 import random
-from .utils import argmax
+from simpleai.search.utils import argmax
 try:
     import matplotlib.pyplot as plt
     import numpy
