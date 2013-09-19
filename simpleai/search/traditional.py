@@ -1,5 +1,5 @@
 # coding=utf-8
-from simpleai.search.utils import FifoList, BoundedPriorityQueue
+from simpleai.search.utils import FifoList, BoundedPriorityQueue, LifoList
 from simpleai.search.models import (SearchNode, SearchNodeHeuristicOrdered,
                                     SearchNodeStarOrdered,
                                     SearchNodeCostOrdered)
@@ -28,7 +28,7 @@ def depth_first(problem, graph_search=False, viewer=None):
     SearchProblem.is_goal.
     '''
     return _search(problem,
-                   [],
+                   LifoList(),
                    graph_search=graph_search,
                    viewer=viewer)
 
@@ -43,7 +43,7 @@ def limited_depth_first(problem, depth_limit, graph_search=False, viewer=None):
     SearchProblem.is_goal.
     '''
     return _search(problem,
-                   [],
+                   LifoList(),
                    graph_search=graph_search,
                    depth_limit=depth_limit,
                    viewer=viewer)
@@ -138,14 +138,14 @@ def _search(problem, fringe, graph_search=False, depth_limit=None,
 
     while fringe:
         if viewer:
-            viewer.event('new_iteration', list(fringe))
+            viewer.event('new_iteration', fringe.sorted())
 
         node = fringe.pop()
 
         if problem.is_goal(node.state):
             if viewer:
                 viewer.event('chosen_node', node, True)
-                viewer.event('finished', fringe, node, 'goal found')
+                viewer.event('finished', fringe.sorted(), node, 'goal found')
             return node
         else:
             if viewer:
@@ -176,4 +176,4 @@ def _search(problem, fringe, graph_search=False, depth_limit=None,
                 fringe.append(n)
 
     if viewer:
-        viewer.event('finished', fringe, None, 'goal not found')
+        viewer.event('finished', fringe.sorted(), None, 'goal not found')
