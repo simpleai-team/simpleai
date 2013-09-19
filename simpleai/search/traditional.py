@@ -1,5 +1,5 @@
 # coding=utf-8
-from simpleai.search.utils import FifoList, BoundedPriorityQueue
+from simpleai.search.utils import FifoList, BoundedPriorityQueue, LifoList
 from simpleai.search.models import (SearchNode, SearchNodeHeuristicOrdered,
                                     SearchNodeStarOrdered,
                                     SearchNodeCostOrdered)
@@ -28,7 +28,7 @@ def depth_first(problem, graph_search=False, viewer=None):
     SearchProblem.is_goal.
     '''
     return _search(problem,
-                   [],
+                   LifoList(),
                    graph_search=graph_search,
                    viewer=viewer)
 
@@ -43,7 +43,7 @@ def limited_depth_first(problem, depth_limit, graph_search=False, viewer=None):
     SearchProblem.is_goal.
     '''
     return _search(problem,
-                   [],
+                   LifoList(),
                    graph_search=graph_search,
                    depth_limit=depth_limit,
                    viewer=viewer)
@@ -130,50 +130,44 @@ def _search(problem, fringe, graph_search=False, depth_limit=None,
     if viewer:
         viewer.event('started')
 
-    memory = {}
+    memory = set()
     initial_node = node_factory(state=problem.initial_state,
                                 problem=problem)
     fringe.append(initial_node)
-    memory[problem.initial_state] = initial_node
 
     while fringe:
         if viewer:
-            viewer.event('new_iteration', list(fringe))
+            viewer.event('new_iteration', fringe.sorted())
 
         node = fringe.pop()
 
         if problem.is_goal(node.state):
             if viewer:
                 viewer.event('chosen_node', node, True)
-                viewer.event('finished', fringe, node, 'goal found')
+                viewer.event('finished', fringe.sorted(), node, 'goal found')
             return node
         else:
             if viewer:
                 viewer.event('chosen_node', node, False)
 
+        memory.add(node.state)
+
         if depth_limit is None or node.depth < depth_limit:
-            childs = []
             expanded = node.expand()
             if viewer:
                 viewer.event('expanded', [node], [expanded])
 
             for n in expanded:
                 if graph_search:
-                    if n.state not in memory:
-                        memory[n.state] = n
-                        childs.append(n)
-                    elif graph_replace_when_better:
-                        other = memory[n.state]
-                        if n < other:
-                            memory[n.state] = n
-                            childs.append(n)
-                            if other in fringe:
-                                fringe.remove(other)
+                    others = [x for x in fringe if x.state == n.state]
+                    assert len(others) in (0, 1)
+                    if n.state not in memory and len(others) == 0:
+                        fringe.append(n)
+                    elif graph_replace_when_better and len(others) > 0 and n < others[0]:
+                        fringe.remove(others[0])
+                        fringe.append(n)
                 else:
-                    childs.append(n)
-
-            for n in childs:
-                fringe.append(n)
+                    fringe.append(n)
 
     if viewer:
-        viewer.event('finished', fringe, None, 'goal not found')
+        viewer.event('finished', fringe.sorted(), None, 'goal not found')

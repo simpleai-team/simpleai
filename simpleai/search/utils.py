@@ -5,10 +5,20 @@ from itertools import izip
 import random
 
 
+class LifoList(deque):
+    '''List that pops from the end.'''
+
+    def sorted(self):
+        return list(self)[::-1]
+
+
 class FifoList(deque):
     '''List that pops from the beginning.'''
     def pop(self):
         return super(FifoList, self).popleft()
+
+    def sorted(self):
+        return list(self)
 
 
 class BoundedPriorityQueue(object):
@@ -41,6 +51,9 @@ class BoundedPriorityQueue(object):
     def remove(self, x):
         self.queue.remove(x)
 
+    def sorted(self):
+        return heapq.nsmallest(len(self.queue), self.queue)
+
 
 class InverseTransformSampler(object):
     def __init__(self, weights, objects):
@@ -63,3 +76,18 @@ class InverseTransformSampler(object):
         while i + 1 != len(self.probs) and target > self.probs[i]:
             i += 1
         return self.objects[i]
+
+
+def _generic_arg(iterable, function, better_function):
+    values = [function(x) for x in iterable]
+    better_value = better_function(values)
+    candidates = [x for x, value in zip(iterable, values) if value == better_value]
+    return random.choice(candidates)
+
+
+def argmin(iterable, function):
+    return _generic_arg(iterable, function, min)
+
+
+def argmax(iterable, function):
+    return _generic_arg(iterable, function, max)

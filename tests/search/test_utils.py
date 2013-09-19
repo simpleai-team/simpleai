@@ -1,7 +1,24 @@
 # coding=utf-8
 import unittest
 from tests.search.dummies import DummyNode
-from simpleai.search.utils import FifoList, BoundedPriorityQueue
+from simpleai.search.utils import FifoList, BoundedPriorityQueue, LifoList, argmax, argmin
+
+
+def sorted_equals_pop(l):
+    _sorted = l.sorted()
+    _sorted_by_pop = [l.pop() for x in range(len(l))]
+    return _sorted == _sorted_by_pop
+
+
+class TestLifoList(unittest.TestCase):
+    def setUp(self):
+        self.f = LifoList()
+        self.f.append(1)
+        self.f.append(2)
+        self.f.append(3)
+
+    def test_sorted_lifo(self):
+        self.assertTrue(sorted_equals_pop(self.f))
 
 
 class TestFifoList(unittest.TestCase):
@@ -14,6 +31,9 @@ class TestFifoList(unittest.TestCase):
     def test_pop_returns_first_element(self):
         self.assertEquals(self.f.pop(), 1)
         self.assertEquals(len(self.f), 2)
+
+    def test_sorted_fifo(self):
+        self.assertTrue(sorted_equals_pop(self.f))
 
 
 class TestBoundedPriorityQueue(unittest.TestCase):
@@ -56,3 +76,48 @@ class TestBoundedPriorityQueue(unittest.TestCase):
         q.remove(a)
         self.assertEquals(len(q), 1)
         self.assertIs(q[0], b)
+
+    def test_sorted_priority(self):
+        q = BoundedPriorityQueue()
+        q.append(DummyNode(3))
+        q.append(DummyNode(1))
+        q.append(DummyNode(2))
+        self.assertTrue(sorted_equals_pop(q))
+
+
+class TestArgMax(unittest.TestCase):
+    def setUp(self):
+        self.d = {'a': 3, 'b': 1, 'c': 3}
+
+    def test_return_max(self):
+        self.assertEquals('a', argmax(['a', 'b'], lambda x: self.d[x]))
+
+    def test_random_tie(self):
+        a = 0
+        for x in range(100):
+            if argmax(['a', 'b', 'c'], lambda x: self.d[x]) == 'a':
+                a += 1
+        self.assertTrue(25 < a < 75)
+
+    def test_empty_sequence(self):
+        self.assertRaises(ValueError, argmax, [], lambda x: x)
+
+
+class TestArgMin(unittest.TestCase):
+    def setUp(self):
+        self.d = {'a': 1, 'b': 1, 'c': 3}
+
+    def test_return_max(self):
+        self.assertEquals('b', argmin(['c', 'b'], lambda x: self.d[x]))
+
+    def test_random_tie(self):
+        a = 0
+        for x in range(100):
+            if argmin(['a', 'b', 'c'], lambda x: self.d[x]) == 'a':
+                a += 1
+        self.assertTrue(25 < a < 75)
+
+    def test_empty_sequence(self):
+        self.assertRaises(ValueError, argmin, [], lambda x: x)
+
+
