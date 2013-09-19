@@ -134,7 +134,6 @@ def _search(problem, fringe, graph_search=False, depth_limit=None,
     initial_node = node_factory(state=problem.initial_state,
                                 problem=problem)
     fringe.append(initial_node)
-    memory[problem.initial_state] = initial_node
 
     while fringe:
         if viewer:
@@ -151,6 +150,8 @@ def _search(problem, fringe, graph_search=False, depth_limit=None,
             if viewer:
                 viewer.event('chosen_node', node, False)
 
+        memory[node.state] = None
+
         if depth_limit is None or node.depth < depth_limit:
             childs = []
             expanded = node.expand()
@@ -159,16 +160,13 @@ def _search(problem, fringe, graph_search=False, depth_limit=None,
 
             for n in expanded:
                 if graph_search:
-                    if n.state not in memory:
-                        memory[n.state] = n
+                    others = [x for x in fringe if x.state == n.state]
+                    assert len(others) in (0, 1)
+                    if n.state not in memory and len(others) == 0:
                         childs.append(n)
-                    elif graph_replace_when_better:
-                        other = memory[n.state]
-                        if n < other:
-                            memory[n.state] = n
-                            childs.append(n)
-                            if other in fringe:
-                                fringe.remove(other)
+                    elif graph_replace_when_better and len(others) > 0 and n < others[0]:
+                        childs.append(n)
+                        fringe.remove(others[0])
                 else:
                     childs.append(n)
 
