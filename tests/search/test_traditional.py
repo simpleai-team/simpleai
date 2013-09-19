@@ -68,6 +68,24 @@ class TestSearch(unittest.TestCase):
         result = astar(self.graph_problem, graph_search=True)
         self.assertEquals(result.state, self.graph_problem.goal)
 
+    def test_astar_graph_doesnt_repeat_states_in_explore_set(self):
+        v = TestViewer([[('s', 0)], [('l', 26), ('a', 15)], [('a', 15), ('r', 42)], [('r', 42)]])
+        self.graph_problem.heuristic_dict = DummyGraphProblem.inconsistent
+        result = astar(self.graph_problem, graph_search=True, viewer=v)
+        self.assertEquals(result.state, self.graph_problem.goal)
+
+    def test_astar_graph_consistent_heuristic(self):
+        v = TestViewer([[('s', 0)], [('a', 15), ('l', 26)], [('l', 25)], [('r', 41)]])
+        self.graph_problem.heuristic_dict = DummyGraphProblem.consistent
+        result = astar(self.graph_problem, graph_search=True, viewer=v)
+        self.assertEquals(result.state, self.graph_problem.goal)
+
+    def test_astar_graph_inadmissible_heuristic(self):
+        v = TestViewer([[('s', 0)], [('l', 26), ('a', 15)], [('r', 42), ('a', 15)]])
+        self.graph_problem.heuristic_dict = DummyGraphProblem.inadmissible
+        result = astar(self.graph_problem, graph_search=True, viewer=v)
+        self.assertEquals(result.state, self.graph_problem.goal)
+
     def test_astar_tree_inadmissible_heuristic(self):
         v = TestViewer([[('s', 0)], [('l', 26), ('a', 15)], [('r', 42), ('a', 15), ('a', 36), ('s', 52)]])
         self.graph_problem.heuristic_dict = DummyGraphProblem.inadmissible
