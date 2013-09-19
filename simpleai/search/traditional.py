@@ -130,7 +130,7 @@ def _search(problem, fringe, graph_search=False, depth_limit=None,
     if viewer:
         viewer.event('started')
 
-    memory = {}
+    memory = set()
     initial_node = node_factory(state=problem.initial_state,
                                 problem=problem)
     fringe.append(initial_node)
@@ -150,7 +150,7 @@ def _search(problem, fringe, graph_search=False, depth_limit=None,
             if viewer:
                 viewer.event('chosen_node', node, False)
 
-        memory[node.state] = None
+        memory.add(node.state)
 
         if depth_limit is None or node.depth < depth_limit:
             expanded = node.expand()
