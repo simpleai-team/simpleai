@@ -150,7 +150,7 @@ class QLearner(object):
         pass
 
     def learning_rate(self, n):
-        return max(1, self.temperature_function(n))
+        return min(1, self.temperature_function(n))
 
     def update_rule(self, s, a, r, cs, ca):
         raise NotImplementedError
