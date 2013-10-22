@@ -96,25 +96,44 @@ class PerformanceCounter(object):
         plt.show()
 
 
+class RLProblem(object):
+
+    def actions(self, state):
+        '''Returns the actions available to perform from `state`.
+           The returned value is an iterable over actions.
+        '''
+        raise NotImplementedError()
+
+    def update_state(self, percept, agent):
+        'Override this method if you need to clean perception to a given agent'
+        return percept
+
+
+def inverse(n):
+    if n == 0:
+        return 1
+    return 1.0 / n
+
+
 class QLearner(object):
 
-    def __init__(self, exploration_function, discount_factor, temperature_function, Q=None):
-        if Q is None:
-            self.Q = defaultdict(lambda: defaultdict(lambda: 0))
-        else:
-            self.Q = Q
-        self.exploration_function = exploration_function
-        self.last_state = None
-        self.last_action = None
-        self.counter = defaultdict(lambda: Counter())
+    def __init__(self, problem, temperature_function=inverse,
+                 discount_factor=1,
+                 exploration_function=boltzmann_exploration,
+                 learning_rate=inverse):
+
+        self.Q = defaultdict(lambda: defaultdict(lambda: 0))
+        self.problem = problem
         self.discount_factor = discount_factor
         self.temperature_function = temperature_function
-        self.trials = 0
-        self.last_reward = None
+        self.exploration_function = exploration_function
+        self.learning_rate = learning_rate
 
-    def update_state(self, percept):
-        'Override this method if you need to clean perception'
-        return percept
+        self.last_state = None
+        self.last_action = None
+        self.last_reward = None
+        self.counter = defaultdict(lambda: Counter())
+        self.trials = 0
 
     def set_reward(self, reward, terminal=False):
         self.last_reward = reward
@@ -126,12 +145,13 @@ class QLearner(object):
         s = self.last_state
         a = self.last_action
 
-        state = self.update_state(percept)
-        actions = self.actions(state)
+        state = self.problem.update_state(percept, self)
+        actions = self.problem.actions(state)
 
         if len(actions) > 0:
             current_action = self.exploration_function(actions, self.Q[state],
-                                                       self.temperature_function(self.trials), self.counter[state])
+                                                               self.temperature_function(self.trials),
+                                                               self.counter[state])
         else:
             current_action = None
 
@@ -143,27 +163,18 @@ class QLearner(object):
         self.last_action = current_action
         return current_action
 
-    def actions(self, state):
-        '''Returns the actions available to perform from `state`.
-           The returned value is an iterable over actions.
-        '''
-        pass
-
-    def learning_rate(self, n):
-        return min(1, self.temperature_function(n))
-
     def update_rule(self, s, a, r, cs, ca):
         raise NotImplementedError
 
 
-class TD_QLearner(QLearner):
+class TDQLearner(QLearner):
 
     def update_rule(self, s, a, r, cs, ca):
         lr = self.learning_rate(self.counter[s][a])
         self.Q[s][a] += lr * (r + self.discount_factor * max(self.Q[cs].values()) - self.Q[s][a])
 
 
-class SARSA_Learner(QLearner):
+class SARSALearner(QLearner):
 
     def update_rule(self, s, a, r, cs, ca):
         lr = self.learning_rate(self.counter[s][a])

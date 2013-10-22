@@ -1,22 +1,11 @@
 # -*- coding: utf-8 -*-
-from simpleai.machine_learning.reinforcement_learning import TD_QLearner, \
-                                                             boltzmann_exploration, make_exponential_temperature, \
+from simpleai.machine_learning.reinforcement_learning import TDQLearner, RLProblem, \
+                                                             make_exponential_temperature, \
                                                              PerformanceCounter
 import random
 
 
-class TicTacToePlayer(TD_QLearner):
-
-    def __init__(self, play_with):
-        super(TicTacToePlayer, self).__init__(exploration_function=boltzmann_exploration, discount_factor=0.4,
-                                              temperature_function=make_exponential_temperature(1000000, 0.01))
-        self.play_with = play_with
-        self.other_play_with = 'X' if play_with == 'O' else 'O'
-
-    def update_state(self, percept):
-        state = percept.replace(self.play_with, '1')
-        state = state.replace(self.other_play_with, '2')
-        return state.replace('\n', '')
+class TicTacToeProblem(RLProblem):
 
     def actions(self, state):
         'actions are index where we can make a move'
@@ -25,6 +14,21 @@ class TicTacToePlayer(TD_QLearner):
             if char == '_':
                 actions.append(index)
         return actions
+
+    def update_state(self, percept, agent):
+        state = percept.replace(agent.play_with, '1')
+        state = state.replace(agent.other_play_with, '2')
+        return state.replace('\n', '')
+
+
+class TicTacToePlayer(TDQLearner):
+
+    def __init__(self, play_with):
+        super(TicTacToePlayer, self).__init__(TicTacToeProblem(),
+                                              temperature_function=make_exponential_temperature(1000000, 0.01),
+                                              discount_factor=0.4)
+        self.play_with = play_with
+        self.other_play_with = 'X' if play_with == 'O' else 'O'
 
 
 class HumanPlayer(TicTacToePlayer):
@@ -49,7 +53,7 @@ class HumanPlayer(TicTacToePlayer):
 class RandomPlayer(TicTacToePlayer):
 
     def step(self, perception):
-        return random.choice(self.actions(self.update_state(perception)))
+        return random.choice(self.problem.actions(self.problem.update_state(perception, self)))
 
 
 class TicTacToeGame(object):
