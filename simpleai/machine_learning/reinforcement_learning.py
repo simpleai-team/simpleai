@@ -141,7 +141,7 @@ class QLearner(object):
             self.trials += 1
             self.Q[self.last_state][self.last_action] = reward
 
-    def step(self, percept):
+    def program(self, percept):
         s = self.last_state
         a = self.last_action
 
@@ -150,12 +150,12 @@ class QLearner(object):
 
         if len(actions) > 0:
             current_action = self.exploration_function(actions, self.Q[state],
-                                                               self.temperature_function(self.trials),
-                                                               self.counter[state])
+                                                       self.temperature_function(self.trials),
+                                                       self.counter[state])
         else:
             current_action = None
 
-        if s is not None:
+        if s is not None and current_action:
             self.counter[s][a] += 1
             self.update_rule(s, a, self.last_reward, state, current_action)
 
