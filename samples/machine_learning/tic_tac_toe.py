@@ -3,6 +3,7 @@ from simpleai.machine_learning.reinforcement_learning import TDQLearner, RLProbl
                                                              make_exponential_temperature, \
                                                              PerformanceCounter
 import random
+from simpleai.environments import RLEnvironment
 
 
 class TicTacToeProblem(RLProblem):
@@ -36,7 +37,7 @@ class HumanPlayer(TicTacToePlayer):
     def set_reward(self, reward, terminal=False):
         print ('reward:', reward)
 
-    def step(self, perception):
+    def program(self, perception):
         print ('Current board:')
         rows = perception.split()
         s = ['+-+-+-+-+', '| |0|1|2|', '+-+-+-+-+']
@@ -52,56 +53,36 @@ class HumanPlayer(TicTacToePlayer):
 
 class RandomPlayer(TicTacToePlayer):
 
-    def step(self, perception):
-        return random.choice(self.problem.actions(self.problem.update_state(perception, self)))
+    def program(self, perception):
+        try:
+            return random.choice(self.problem.actions(self.problem.update_state(perception, self)))
+        except:
+            return None
 
 
-class TicTacToeGame(object):
+class TicTacToeGame(RLEnvironment):
 
-    def __init__(self, players):
-        self.initial_state = '___\n___\n___'
-        self.players = players
-        self.current_state = self.initial_state
+    def __init__(self, agents):
+        super(TicTacToeGame, self).__init__(agents, '___\n___\n___')
 
-    def play(self):
-        self.current_state = self.initial_state
-        #random.shuffle(self.players)
-        current, other = self.players
-        while not self.game_over(self.current_state):
-            action = current.step(self.current_state)
-            self.current_state = self.update_state(self.current_state, action, current)
-            other_reward = self.score(self.current_state, other)
-            terminal = self.game_over(self.current_state)
-            other.set_reward(other_reward, terminal)
+    def do_action(self, state, action, agent):
+        if action is not None:
+            s = state.replace('\n', '')
+            s = s[:action] + agent.play_with + s[action + 1:]
+            return '\n'.join([s[0:3], s[3:6], s[6:9]])
+        return state
 
-            current, other = other, current
+    def is_completed(self, state):
+        return not ('_' in state and all([self.make_reward(state, x) == 0 for x in self.agents]))
 
-        other_reward = self.score(self.current_state, other)
-        other.set_reward(other_reward, True)
-
-        if other_reward == 1:
-            return other.play_with
-        elif other_reward == -1:
-            return current.play_with
-        else:
-            return 'Tie!'
-
-    def update_state(self, state, action, player):
-        s = state.replace('\n', '')
-        s = s[:action] + player.play_with + s[action + 1:]
-        return '\n'.join([s[0:3], s[3:6], s[6:9]])
-
-    def game_over(self, state):
-        return not ('_' in state and all([self.score(state, x) == 0 for x in self.players]))
-
-    def score(self, state, player):
+    def make_reward(self, state, agent):
         rows = state.split()
         columns = [''.join(x) for x in zip(*rows)]
         diagonals = [rows[0][0] + rows[1][1] + rows[2][2], rows[0][2] + rows[1][1] + rows[2][0]]
         to_check = rows + columns + diagonals
         for x in to_check:
             if all([c == x[0] for c in x]) and x[0] != '_':
-                if x[0] == player.play_with:
+                if x[0] == agent.play_with:
                     return 1
                 else:
                     return -1
@@ -114,13 +95,12 @@ if __name__ == '__main__':
     c = HumanPlayer('O')
     per = PerformanceCounter([a, b], ['QLearner', 'Random'])
     game = TicTacToeGame([a, b])
-    ## train
-    print ('Training, please wait...')
-    game.players = [a, b]
-    for i in range(2000):
-        game.play()
+    print ('Training with a random player, please wait...')
+    game.agents = [a, b]
+    for i in range(3000):
+        game.run()
     per.show_statistics()
-    #play again with a human...
-    game.players = [a, c]
-    print game.current_state
-    print ('And the winner is...' + game.play())
+    game.agents = [a, c]
+    print ('Do you like to play?')
+    game.run()
+    print game.state
