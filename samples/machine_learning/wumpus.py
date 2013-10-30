@@ -64,12 +64,10 @@ class WumpusViewer(object):
         frame = Frame(root)
         frame.pack()
 
-        self.iniciar = Button(frame, text="Iniciar", command=self.iniciar)
-        self.iniciar.pack(side=LEFT)
-        self.detener = Button(frame, text="Detener", command=self.detener)
-        self.detener.pack(side=LEFT)
-        self.paso = Button(frame, text="Paso", command=self.step)
-        self.paso.pack(side=LEFT)
+        self.start = Button(frame, text="Start", command=self.start)
+        self.start.pack(side=LEFT)
+        self.stop = Button(frame, text="Stop", command=self.stop)
+        self.stop.pack(side=LEFT)
 
         root.mainloop()
 
@@ -86,12 +84,12 @@ class WumpusViewer(object):
         else:
             self.environment.step(viewer=self)
 
-    def iniciar(self):
+    def start(self):
         self.timer = PerpetualTimer(0.5, self.step)
         self.timer.start()
         self.environment.state = self.environment.initial_state
 
-    def detener(self):
+    def stop(self):
         self.timer.cancel()
 
     def event(self, state1, action, state2, agent):
