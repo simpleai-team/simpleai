@@ -133,7 +133,7 @@ class WumpusEnvironment(RLEnvironment):
     def is_completed(self, state):
         return state in self.rewards.keys()
 
-    def make_reward(self, state, agent):
+    def reward(self, state, agent):
         return self.rewards.get(state, -0.08)
 
 

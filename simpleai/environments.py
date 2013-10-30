@@ -48,8 +48,8 @@ class RLEnvironment(Environment):
     def step(self, viewer=None):
         super(RLEnvironment, self).step(viewer)
         for agent in self.agents:
-            agent.set_reward(self.make_reward(self.state, agent), self.is_completed(self.state))
+            agent.set_reward(self.reward(self.state, agent), self.is_completed(self.state))
 
-    def make_reward(self, state, agent):
+    def reward(self, state, agent):
         raise NotImplementedError()
 

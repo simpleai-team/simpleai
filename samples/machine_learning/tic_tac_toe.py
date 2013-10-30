@@ -73,9 +73,9 @@ class TicTacToeGame(RLEnvironment):
         return state
 
     def is_completed(self, state):
-        return not ('_' in state and all([self.make_reward(state, x) == 0 for x in self.agents]))
+        return not ('_' in state and all([self.reward(state, x) == 0 for x in self.agents]))
 
-    def make_reward(self, state, agent):
+    def reward(self, state, agent):
         rows = state.split()
         columns = [''.join(x) for x in zip(*rows)]
         diagonals = [rows[0][0] + rows[1][1] + rows[2][2], rows[0][2] + rows[1][1] + rows[2][0]]
