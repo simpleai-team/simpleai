@@ -3,6 +3,7 @@ from collections import defaultdict, Counter
 import math
 import random
 from simpleai.search.utils import argmax
+import pickle
 try:
     import matplotlib.pyplot as plt
     import numpy
@@ -83,7 +84,8 @@ class PerformanceCounter(object):
 
     def _make_plot(self, ax, data_name):
         for learner in self.learners:
-            ax.plot(numpy.arange(learner.trials), numpy.array(getattr(learner, data_name)), label=learner.name)
+            data = numpy.array(getattr(learner, data_name))
+            ax.plot(numpy.arange(len(data)), data, label=learner.name)
         nice_name = data_name.replace('_', ' ').capitalize()
         ax.set_title(nice_name)
         ax.legend()
@@ -115,6 +117,10 @@ def inverse(n):
     return 1.0 / n
 
 
+def state_default():
+    return defaultdict(int)
+
+
 class QLearner(object):
 
     def __init__(self, problem, temperature_function=inverse,
@@ -122,7 +128,7 @@ class QLearner(object):
                  exploration_function=boltzmann_exploration,
                  learning_rate=inverse):
 
-        self.Q = defaultdict(lambda: defaultdict(lambda: 0))
+        self.Q = defaultdict(state_default)
         self.problem = problem
         self.discount_factor = discount_factor
         self.temperature_function = temperature_function
@@ -132,7 +138,7 @@ class QLearner(object):
         self.last_state = None
         self.last_action = None
         self.last_reward = None
-        self.counter = defaultdict(lambda: Counter())
+        self.counter = defaultdict(Counter)
         self.trials = 0
 
     def set_reward(self, reward, terminal=False):
@@ -166,6 +172,16 @@ class QLearner(object):
     def update_rule(self, s, a, r, cs, ca):
         raise NotImplementedError
 
+    def dump(self, path):
+        self.temperature_function = inverse
+        with open(path, 'wb') as f:
+            pickle.dump(self, f)
+
+    @classmethod
+    def load(self, path):
+        with open(path, 'rb') as f:
+            return pickle.load(f)
+
 
 class TDQLearner(QLearner):
 
@@ -179,3 +195,4 @@ class SARSALearner(QLearner):
     def update_rule(self, s, a, r, cs, ca):
         lr = self.learning_rate(self.counter[s][a])
         self.Q[s][a] += lr * (r + self.discount_factor * self.Q[cs][ca] - self.Q[s][a])
+
