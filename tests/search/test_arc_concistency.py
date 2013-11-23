@@ -3,49 +3,30 @@ import unittest
 
 from operator import itemgetter
 
-from simpleai.search.arc import constraint_wrapper, neighbors, all_arcs, revise, arc_consistency_3
+from simpleai.search.arc import all_arcs, revise, arc_consistency_3
 
 first = itemgetter(0)
 
 
-class TestNeighborsAndArcs(unittest.TestCase):
+class TestAllArcs(unittest.TestCase):
 
     def setUp(self):
-        unit = self.unit = lambda vars_, values: False
-        self.constraints = [(('A1', 'B2'), unit),
-                            (('A1', 'C2'), unit),
-                            (('D2', 'A1'), unit),
-                            (('D2', 'C1'), unit),
-                            (('E2', 'A1'), unit)]
-
-    def test_neighbors(self):
-        variables = map(lambda t: first(first(t)), neighbors('A1', self.constraints, 'B2'))
-        self.assertEqual(set(variables), set(['C2', 'D2', 'E2']))
+        constraint = lambda variables, values: False
+        self.constraints = [(('A', 'B'), constraint),
+                            (('A', 'C'), constraint),
+                            (('C', 'A'), constraint),
+                            (('B', 'C'), constraint)]
 
     def test_all_arcs(self):
         # does not check that the constraint function is well created
-        variables = map(first, list(all_arcs(self.constraints)))
-        arcs = [('A1', 'B2'),
-                ('B2', 'A1'),
-                ('A1', 'C2'),
-                ('C2', 'A1'),
-                ('D2', 'A1'),
-                ('A1', 'D2'),
-                ('D2', 'C1'),
-                ('C1', 'D2'),
-                ('E2', 'A1'),
-                ('A1', 'E2')]
-        self.assertEqual(variables, arcs)
-
-    def test_constraint_wrapper(self):
-        constraint = (('X', 'Y'), lambda vars_, values: values[0] ** 2 == values[1])
-        wrapped = constraint_wrapper(*constraint)
-        self.assertTrue(wrapped(('Y', 'X'), (25, 5)))
-
-    def test_constraint_wrapper_raises_error(self):
-        constraint = (('X', 'Y'), lambda vars_, values: values[0] ** 2 == values[1])
-        wrapped = constraint_wrapper(*constraint)
-        self.assertRaises(ValueError, wrapped, ('Y', 'Z'), (25, 5))
+        arcs_result = all_arcs(self.constraints)
+        arcs_expected = [('A', 'B'),
+                         ('B', 'A'),
+                         ('A', 'C'),
+                         ('C', 'A'),
+                         ('B', 'C'),
+                         ('C', 'B')]
+        self.assertEqual(arcs_result, arcs_expected)
 
 
 class TestReviseDomain(unittest.TestCase):
