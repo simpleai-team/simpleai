@@ -26,8 +26,8 @@ def revise(domains, arc, constraints):
 
     modified = False
 
-    for x_value in domains[x]:
-        for neighbors, constraint in related_constraints:
+    for neighbors, constraint in related_constraints:
+        for x_value in domains[x]:
             constraint_results = (_call_constraint({x: x_value, y: y_value},
                                                    neighbors, constraint)
                                   for y_value in domains[y])
