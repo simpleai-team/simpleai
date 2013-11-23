@@ -1,4 +1,4 @@
-from collections import deque
+# coding: utf-8
 from operator import itemgetter
 
 
@@ -97,51 +97,34 @@ def revise(domains, variables, constraint):
 
 def all_arcs(constraints):
     """
-    For each constraint ((X, Y), const) adds ((Y, X), wrapped(const)).
-
-    For why it's wrapped please see constraint_wrapper.
+    For each constraint ((X, Y), const) adds:
+        ((X, Y), const)
+        ((Y, X), const)
     """
+    arcs = set()
 
-    seen = set()
-    seen_add = seen.add
     for vars_, const in constraints:
-        try:
+        if len(vars_) == 2:
             x, y = vars_
-        except ValueError:
-            continue
+            map(arcs.add, ((x, y), (y, x)))
 
-        # arcs
-        fwd = (x, y)
-        bck = (y, x)
-
-        wrapped = constraint_wrapper(vars_, const)
-
-        if not fwd in seen:
-            yield (fwd, wrapped)
-
-        if not bck in seen:
-            yield (bck, wrapped)
-
-        map(seen_add, (fwd, bck))
+    return arcs
 
 
 def arc_consistency_3(domains, constraints):
     """
     Makes a CSP problem arc consistent.
 
-    Assumes that the constraints are symmetrical, that is:
-       constraint(x, y) == constraint(y, x).
-
     Ignores any constraint that is not binary.
     """
-    arcs = deque(all_arcs(constraints))
+    arcs = list(all_arcs(constraints))
+    pending_arcs = set(arcs)
 
-    while arcs:
-        variables, func = arcs.popleft()
-        xi, xj = variables
-        if revise(domains, variables, func):
-            if len(domains[xi]) == 0:
+    while pending_arcs:
+        x, y = pending_arcs.pop()
+        if revise(domains, (x, y), constraints):
+            if len(domains[x]) == 0:
                 return False
-            for arc in neighbors(xi, constraints, xj):
-                arcs.append(arc)
+            pending_arcs = pending_arcs.union((x2, y2) for x2, y2 in arcs
+                                              if y2 == x)
     return True
