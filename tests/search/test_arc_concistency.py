@@ -11,21 +11,23 @@ first = itemgetter(0)
 class TestAllArcs(unittest.TestCase):
 
     def setUp(self):
-        constraint = lambda variables, values: False
-        self.constraints = [(('A', 'B'), constraint),
-                            (('A', 'C'), constraint),
-                            (('C', 'A'), constraint),
-                            (('B', 'C'), constraint)]
+        self.constraint = lambda variables, values: False
 
-    def test_all_arcs(self):
-        # does not check that the constraint function is well created
-        arcs_result = all_arcs(self.constraints)
-        arcs_expected = [('A', 'B'),
-                         ('B', 'A'),
-                         ('A', 'C'),
-                         ('C', 'A'),
-                         ('B', 'C'),
-                         ('C', 'B')]
+    def test_adds_pairs_in_both_directions(self):
+        constraints = [(('A', 'B'), self.constraint)]
+
+        arcs_result = all_arcs(constraints)
+        arcs_expected = set([('A', 'B'),
+                             ('B', 'A')])
+
+        self.assertEqual(arcs_result, arcs_expected)
+
+    def test_constraints_with_more_than_2_neighbors_arent_added(self):
+        constraints = [(('A', 'B', 'C'), self.constraint)]
+
+        arcs_result = all_arcs(constraints)
+        arcs_expected = set()
+
         self.assertEqual(arcs_result, arcs_expected)
 
 
