@@ -5,7 +5,7 @@ from operator import itemgetter
 
 from simpleai.search.arc import constraint_wrapper, neighbors, all_arcs, revise, arc_consistency_3
 
-fst = itemgetter(0)
+first = itemgetter(0)
 
 
 class TestNeighborsAndArcs(unittest.TestCase):
@@ -19,12 +19,12 @@ class TestNeighborsAndArcs(unittest.TestCase):
                             (('E2', 'A1'), unit)]
 
     def test_neighbors(self):
-        variables = map(lambda t: fst(fst(t)), neighbors('A1', self.constraints, 'B2'))
+        variables = map(lambda t: first(first(t)), neighbors('A1', self.constraints, 'B2'))
         self.assertEqual(set(variables), set(['C2', 'D2', 'E2']))
 
     def test_all_arcs(self):
         # does not check that the constraint function is well created
-        variables = map(fst, list(all_arcs(self.constraints)))
+        variables = map(first, list(all_arcs(self.constraints)))
         arcs = [('A1', 'B2'),
                 ('B2', 'A1'),
                 ('A1', 'C2'),
