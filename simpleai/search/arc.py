@@ -1,6 +1,8 @@
 # coding: utf-8
 from operator import itemgetter
 
+from csp import _call_constraint
+
 
 # The first 3 functions are exported for testing purposes.
 __all__ = ['all_arcs', 'revise', 'arc_consistency_3']
@@ -8,27 +10,33 @@ __all__ = ['all_arcs', 'revise', 'arc_consistency_3']
 fst = itemgetter(0)
 
 
-def revise(domains, variables, constraint):
+def revise(domains, arc, constraints):
     """
-    Given variables X_i, X_j = variables, removes the values from X_i's domain that
-    do not meet the constraint between X_i and X_j.
+    Given the arc X, Y (variables), removes the values from X's domain that
+    do not meet the constraint between X and Y.
 
-    That is, given x in X_i's domain, x will be removed from the domain, if
-    there is no value y in X_j's domain that makes constraint(x,y) True.
-
-    ``constraint`` is a callable from the constraint list.
+    That is, given x1 in X's domain, x1 will be removed from the domain, if
+    there is no value y in Y's domain that makes constraint(X,Y) True, for
+    those constraints affecting X and Y.
     """
-    xi, xj = variables
-    di = domains[xi]  # domain of variable X_i
-    dj = domains[xj]  # domain of variable X_j
-    revised = False
+    x, y = arc
+    related_constraints = [(neighbors, constraint)
+                           for neighbors, constraint in constraints
+                           if set(arc) == set(neighbors)]
 
-    for x in di:
-        if not any(constraint(variables, (x, y))  # constraint is a callable
-                   for y in dj):
-            di.remove(x)
-            revised = True
-    return revised
+    modified = False
+
+    for x_value in domains[x]:
+        for neighbors, constraint in related_constraints:
+            constraint_results = (_call_constraint({x: x_value, y: y_value},
+                                                   neighbors, constraint)
+                                  for y_value in domains[y])
+
+            if not any(constraint_results):
+                domains[x].remove(x_value)
+                modified = True
+
+    return modified
 
 
 def all_arcs(constraints):
