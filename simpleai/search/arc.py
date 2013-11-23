@@ -3,37 +3,9 @@ from operator import itemgetter
 
 
 # The first 3 functions are exported for testing purposes.
-__all__ = ['constraint_wrapper', 'neighbors', 'all_arcs', 'revise', 'arc_consistency_3']
+__all__ = ['neighbors', 'all_arcs', 'revise', 'arc_consistency_3']
 
 fst = itemgetter(0)
-
-
-def constraint_wrapper(vars_, constraint):
-    '''
-    Returns a callable that switches the values argument of @constraint
-    acording to the varibles passed to the wrapper returned.
-
-    @constraint is a callable representing the constraint between @vars_.
-
-    Say @vars_ have (X_i, X_j) because we assume the constraint to be
-    symmetrical, that is constraint must apply to (X_j, X_i) we need
-    to be able to call constraint with the values swapped, according to
-    how the variables of the constraint are.
-    '''
-
-    if getattr(constraint, 'no_wrap', False):  # constraints made for hidden variables shouldn't be wrapped.
-        return constraint
-
-    X_i, X_j = vars_
-
-    def wrapper(variables, values):
-        if variables == (X_i, X_j):
-            return constraint(variables, values)
-        elif variables == (X_j, X_i):
-            return constraint(variables, (values[1], values[0]))
-        else:
-            raise ValueError("This constraint does not work with %s", ", ".join(vars_))
-    return wrapper
 
 
 def neighbors(xi, constraints, exclude):
