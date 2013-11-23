@@ -62,18 +62,43 @@ class TestReviseDomain(unittest.TestCase):
 
 
 class TestAC3(unittest.TestCase):
+    def ac3(self, domain_x, domain_y):
+        domains = {'x': domain_x, 'y': domain_y}
+        constraints = [(('x', 'y'), is_square)]
 
-    def set_domains(self):
-        self.domains = {'X': [1, 2, 3, 4, 5],
-                        'Y': [1, 4, 9, 16, 20]}
+        return arc_consistency_3(domains, constraints), domains
 
-    def set_constraints(self):
-        self.constraints = [(('X', 'Y'), lambda variables, values: values[0] ** 2 == values[1])]
+    def test_values_available_for_all_returns_true(self):
+        result, domains = self.ac3([1, 2, 3], [1, 4, 9])
+        self.assertTrue(result)
 
-    def setUp(self):
-        self.set_domains()
-        self.set_constraints()
+    def test_if_variable_has_no_domain_left_returns_false(self):
+        result, domains = self.ac3([1, 2, 3], [2, 3, 6])
+        self.assertFalse(result)
 
-    def test_ac3(self):
-        self.assertTrue(arc_consistency_3(self.domains, self.constraints))
-        self.assertEqual(self.domains, {'X': [1, 2, 3, 4], 'Y': [1, 4, 9, 16]})
+    def test_chained_revise_calls_remove_non_obvious_problems(self):
+        # if x, y, z must be all different, with domains [1], [2], [2] you
+        # can't find a solution, but it requires several chained calls to
+        # revise:
+        # revise(x, y) -> ok!                      [1] [2] [2]
+        # revise(x, z) -> ok!                      [1] [2] [2]
+        # revise(y, z) -> fail, remove 2 from y    [1] [] [2]
+        #    and re-revise x, y ...
+        # revise(x, y) -> fail, remove 1 from x    [] [] [2]
+        #    and re-revise ...
+        # at the end, there are no possible values in any domain [] [] []
+
+        domains = {'x': [1,],
+                   'y': [2.],
+                   'z': [2,]}
+        different = lambda variables, values: len(set(values)) == len(variables)
+        constraints = [(('x', 'y'), different),
+                       (('x', 'z'), different),
+                       (('y', 'z'), different)]
+
+        result = arc_consistency_3(domains, constraints)
+
+        self.assertFalse(result)
+        self.assertEquals(domains['x'], [])
+        self.assertEquals(domains['y'], [])
+        self.assertEquals(domains['z'], [])
