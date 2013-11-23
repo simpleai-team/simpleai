@@ -31,10 +31,13 @@ class TestAllArcs(unittest.TestCase):
         self.assertEqual(arcs_result, arcs_expected)
 
 
+def is_square(variables, values):
+    return values[0] ** 2 == values[1]
+
+
 class TestReviseDomain(unittest.TestCase):
-    def revise_with_domains(self, domain_x, domain_y, duplicate_constraints=False):
+    def revise(self, domain_x, domain_y, duplicate_constraints=False):
         domains = {'x': domain_x, 'y': domain_y}
-        is_square = lambda variables, values: values[0] ** 2 == values[1]
         constraints = [(('x', 'y'), is_square)]
         if duplicate_constraints:
             constraints = constraints * 2
@@ -42,18 +45,18 @@ class TestReviseDomain(unittest.TestCase):
         return revise(domains, ('x', 'y'), constraints), domains
 
     def test_if_all_values_have_possible_match_the_domain_is_untouched(self):
-        result, domains = self.revise_with_domains([1, 2, 3], [1, 4, 9])
+        result, domains = self.revise([1, 2, 3], [1, 4, 9])
         self.assertFalse(result)
         self.assertEquals(domains['x'], [1, 2, 3])
 
     def test_if_a_value_has_no_possible_match_remove_it_from_domain(self):
-        result, domains = self.revise_with_domains([1, 2, 3], [1, 4])
+        result, domains = self.revise([1, 2, 3], [1, 4])
         self.assertTrue(result)
         self.assertEquals(domains['x'], [1, 2])
 
     def test_if_multiple_constraints_dont_fail_removing_twice(self):
         # there was a bug when two constraints tried to remove the same value
-        result, domains = self.revise_with_domains([1, 2, 3], [1, 4], True)
+        result, domains = self.revise([1, 2, 3], [1, 4], True)
         self.assertTrue(result)
         self.assertEquals(domains['x'], [1, 2])
 
