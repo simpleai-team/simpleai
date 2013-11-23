@@ -138,7 +138,7 @@ def _backtracking(problem, assignment, domains, variable_chooser, values_sorter,
             new_domains = deepcopy(domains)
             new_domains[variable] = [value]
 
-            if (not inference) or (inference and arc_consistency_3(new_domains, problem.constraints)):
+            if not inference or arc_consistency_3(new_domains, problem.constraints):
                 result = _backtracking(problem,
                                        new_assignment,
                                        new_domains,
