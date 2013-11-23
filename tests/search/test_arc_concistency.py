@@ -32,28 +32,30 @@ class TestAllArcs(unittest.TestCase):
 
 
 class TestReviseDomain(unittest.TestCase):
+    def revise_with_domains(self, domain_x, domain_y, duplicate_constraints=False):
+        domains = {'x': domain_x, 'y': domain_y}
+        is_square = lambda variables, values: values[0] ** 2 == values[1]
+        constraints = [(('x', 'y'), is_square)]
+        if duplicate_constraints:
+            constraints = constraints * 2
 
-    def set_domains(self):
-        self.domains = {'X': [1, 2, 3, 4, 5],
-                        'Y': [1, 4, 9, 16, 20]}
+        return revise(domains, ('x', 'y'), constraints), domains
 
-    def setUp(self):
-        self.set_domains()
-        const = lambda variables, values: values[0] ** 2 == values[1]
-        self.constraint = constraint_wrapper(('X', 'Y'), const)
+    def test_if_all_values_have_possible_match_the_domain_is_untouched(self):
+        result, domains = self.revise_with_domains([1, 2, 3], [1, 4, 9])
+        self.assertFalse(result)
+        self.assertEquals(domains['x'], [1, 2, 3])
 
-    def tearDown(self):
-        self.set_domains()
+    def test_if_a_value_has_no_possible_match_remove_it_from_domain(self):
+        result, domains = self.revise_with_domains([1, 2, 3], [1, 4])
+        self.assertTrue(result)
+        self.assertEquals(domains['x'], [1, 2])
 
-    def test_revise_X(self):
-        self.assertTrue(revise(self.domains, ('X', 'Y'), self.constraint))
-        self.assertEqual(self.domains['X'], [1, 2, 3, 4])
-        self.assertEqual(self.domains['Y'], [1, 4, 9, 16, 20])
-
-    def test_revise_Y(self):
-        self.assertTrue(revise(self.domains, ('Y', 'X'), self.constraint))
-        self.assertEqual(self.domains['X'], [1, 2, 3, 4, 5])
-        self.assertEqual(self.domains['Y'], [1, 4, 9, 16])
+    def test_if_multiple_constraints_dont_fail_removing_twice(self):
+        # there was a bug when two constraints tried to remove the same value
+        result, domains = self.revise_with_domains([1, 2, 3], [1, 4], True)
+        self.assertTrue(result)
+        self.assertEquals(domains['x'], [1, 2])
 
 
 class TestAC3(unittest.TestCase):
