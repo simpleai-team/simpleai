@@ -37,7 +37,7 @@ class TestReviseDomain(unittest.TestCase):
 
     def setUp(self):
         self.set_domains()
-        const = lambda vars_, values: values[0] ** 2 == values[1]
+        const = lambda variables, values: values[0] ** 2 == values[1]
         self.constraint = constraint_wrapper(('X', 'Y'), const)
 
     def tearDown(self):
@@ -61,7 +61,7 @@ class TestAC3(unittest.TestCase):
                         'Y': [1, 4, 9, 16, 20]}
 
     def set_constraints(self):
-        self.constraints = [(('X', 'Y'), lambda vars_, values: values[0] ** 2 == values[1])]
+        self.constraints = [(('X', 'Y'), lambda variables, values: values[0] ** 2 == values[1])]
 
     def setUp(self):
         self.set_domains()
