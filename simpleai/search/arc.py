@@ -39,9 +39,9 @@ def all_arcs(constraints):
     """
     arcs = set()
 
-    for vars_, const in constraints:
-        if len(vars_) == 2:
-            x, y = vars_
+    for neighbors, constraint in constraints:
+        if len(neighbors) == 2:
+            x, y = neighbors
             map(arcs.add, ((x, y), (y, x)))
 
     return arcs
