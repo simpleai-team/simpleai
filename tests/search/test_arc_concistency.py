@@ -89,7 +89,7 @@ class TestAC3(unittest.TestCase):
         # at the end, there are no possible values in any domain [] [] []
 
         domains = {'x': [1,],
-                   'y': [2.],
+                   'y': [2,],
                    'z': [2,]}
         different = lambda variables, values: len(set(values)) == len(variables)
         constraints = [(('x', 'y'), different),
