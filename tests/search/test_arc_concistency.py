@@ -36,35 +36,35 @@ def is_square(variables, values):
 
 
 class TestReviseDomain(unittest.TestCase):
-    def revise(self, domain_x, domain_y, duplicate_constraints=False):
-        domains = {'x': domain_x, 'y': domain_y}
-        constraints = [(('x', 'y'), is_square)]
+    def revise(self, domain_a, domain_b, duplicate_constraints=False):
+        domains = {'A': domain_a, 'B': domain_b}
+        constraints = [(('A', 'B'), is_square)]
         if duplicate_constraints:
             constraints = constraints * 2
 
-        return revise(domains, ('x', 'y'), constraints), domains
+        return revise(domains, ('A', 'B'), constraints), domains
 
     def test_if_all_values_have_possible_match_the_domain_is_untouched(self):
         result, domains = self.revise([1, 2, 3], [1, 4, 9])
         self.assertFalse(result)
-        self.assertEquals(domains['x'], [1, 2, 3])
+        self.assertEquals(domains['A'], [1, 2, 3])
 
     def test_if_a_value_has_no_possible_match_remove_it_from_domain(self):
         result, domains = self.revise([1, 2, 3], [1, 4])
         self.assertTrue(result)
-        self.assertEquals(domains['x'], [1, 2])
+        self.assertEquals(domains['A'], [1, 2])
 
     def test_if_multiple_constraints_dont_fail_removing_twice(self):
         # there was a bug when two constraints tried to remove the same value
         result, domains = self.revise([1, 2, 3], [1, 4], True)
         self.assertTrue(result)
-        self.assertEquals(domains['x'], [1, 2])
+        self.assertEquals(domains['A'], [1, 2])
 
 
 class TestAC3(unittest.TestCase):
-    def ac3(self, domain_x, domain_y):
-        domains = {'x': domain_x, 'y': domain_y}
-        constraints = [(('x', 'y'), is_square)]
+    def ac3(self, domain_a, domain_b):
+        domains = {'A': domain_a, 'B': domain_b}
+        constraints = [(('A', 'B'), is_square)]
 
         return arc_consistency_3(domains, constraints), domains
 
@@ -77,28 +77,28 @@ class TestAC3(unittest.TestCase):
         self.assertFalse(result)
 
     def test_chained_revise_calls_remove_non_obvious_problems(self):
-        # if x, y, z must be all different, with domains [1], [2], [2] you
+        # if A, B, C must be all different, with domains [1], [2], [2] you
         # can't find a solution, but it requires several chained calls to
         # revise:
-        # revise(x, y) -> ok!                      [1] [2] [2]
-        # revise(x, z) -> ok!                      [1] [2] [2]
-        # revise(y, z) -> fail, remove 2 from y    [1] [] [2]
-        #    and re-revise x, y ...
-        # revise(x, y) -> fail, remove 1 from x    [] [] [2]
+        # revise(A, B) -> ok!                      [1] [2] [2]
+        # revise(A, C) -> ok!                      [1] [2] [2]
+        # revise(B, C) -> fail, remove 2 from B    [1] [] [2]
+        #    and re-revise A, B ...
+        # revise(A, B) -> fail, remove 1 from A    [] [] [2]
         #    and re-revise ...
         # at the end, there are no possible values in any domain [] [] []
 
-        domains = {'x': [1,],
-                   'y': [2,],
-                   'z': [2,]}
+        domains = {'A': [1,],
+                   'B': [2,],
+                   'C': [2,]}
         different = lambda variables, values: len(set(values)) == len(variables)
-        constraints = [(('x', 'y'), different),
-                       (('x', 'z'), different),
-                       (('y', 'z'), different)]
+        constraints = [(('A', 'B'), different),
+                       (('A', 'C'), different),
+                       (('B', 'C'), different)]
 
         result = arc_consistency_3(domains, constraints)
 
         self.assertFalse(result)
-        self.assertEquals(domains['x'], [])
-        self.assertEquals(domains['y'], [])
-        self.assertEquals(domains['z'], [])
+        self.assertEquals(domains['A'], [])
+        self.assertEquals(domains['B'], [])
+        self.assertEquals(domains['C'], [])
