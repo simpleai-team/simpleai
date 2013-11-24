@@ -71,6 +71,12 @@ def _count_conflicts(problem, assignment, variable=None, value=None):
     return len(_find_conflicts(problem, assignment, variable, value))
 
 
+def _call_constraint(assignment, neighbors, constraint):
+    variables, values = zip(*[(n, assignment[n])
+                              for n in neighbors])
+    return constraint(variables, values)
+
+
 def _find_conflicts(problem, assignment, variable=None, value=None):
     '''
     Find violated constraints on a given assignment, with the possibility
@@ -85,9 +91,7 @@ def _find_conflicts(problem, assignment, variable=None, value=None):
     for neighbors, constraint in problem.constraints:
         # if all the neighbors on the constraint have values, check if conflict
         if all(n in assignment for n in neighbors):
-            variables, values = zip(*[(n, assignment[n])
-                                      for n in neighbors])
-            if not constraint(variables, values):
+            if not _call_constraint(assignment, neighbors, constraint):
                 conflicts.append((neighbors, constraint))
 
     return conflicts
@@ -138,7 +142,7 @@ def _backtracking(problem, assignment, domains, variable_chooser, values_sorter,
             new_domains = deepcopy(domains)
             new_domains[variable] = [value]
 
-            if (not inference) or (inference and arc_consistency_3(new_domains, problem.constraints)):
+            if not inference or arc_consistency_3(new_domains, problem.constraints):
                 result = _backtracking(problem,
                                        new_assignment,
                                        new_domains,
