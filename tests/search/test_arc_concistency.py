@@ -77,20 +77,20 @@ class TestAC3(unittest.TestCase):
         self.assertFalse(result)
 
     def test_chained_revise_calls_remove_non_obvious_problems(self):
-        # if A, B, C must be all different, with domains [1], [2], [2] you
+        # if A, B, C must be all different, with domains [1, 1], [1, 2], [2, 2] you
         # can't find a solution, but it requires several chained calls to
         # revise:
-        # revise(A, B) -> ok!                      [1] [2] [2]
-        # revise(A, C) -> ok!                      [1] [2] [2]
-        # revise(B, C) -> fail, remove 2 from B    [1] [] [2]
-        #    and re-revise A, B ...
-        # revise(A, B) -> fail, remove 1 from A    [] [] [2]
+        # revise(A, B) -> ok!                      [1, 1] [1, 2] [2, 2]
+        # revise(A, C) -> ok!                      [1, 1] [1, 2] [2, 2]
+        # revise(B, C) -> fail, remove 2 from B    [1, 1] [1] [2, 2]
+        #    and re-revise A, B and C, B
+        # revise(A, B) -> fail, remove 1 from A    [] [1] [2, 2]
         #    and re-revise ...
-        # at the end, there are no possible values in any domain [] [] []
+        # here A has no more values, ac3 returns a failure
 
-        domains = {'A': [1,],
-                   'B': [2,],
-                   'C': [2,]}
+        domains = {'A': [1, 1],
+                   'B': [1, 2],
+                   'C': [2, 2]}
         different = lambda variables, values: len(set(values)) == len(variables)
         constraints = [(('A', 'B'), different),
                        (('A', 'C'), different),
@@ -99,6 +99,3 @@ class TestAC3(unittest.TestCase):
         result = arc_consistency_3(domains, constraints)
 
         self.assertFalse(result)
-        self.assertEquals(domains['A'], [])
-        self.assertEquals(domains['B'], [])
-        self.assertEquals(domains['C'], [])
