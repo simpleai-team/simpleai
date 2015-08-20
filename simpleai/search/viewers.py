@@ -31,7 +31,7 @@ class BaseViewer(object):
         self.successor_color = '#DD4814'
         self.fringe_color = '#20a0c0'
         self.solution_color = '#adeba8'
-        self.font_size = 11
+        self.font_size = "11"
 
         self.last_event = None
         self.events = []
@@ -152,7 +152,8 @@ class BaseViewer(object):
                 g_node.set_fillcolor(self.fringe_color)
             if in_fringe:
                 g_node.set_color(self.fringe_color)
-                g_node.set_penwidth(3)
+                # TODO find a way to do this in the new graphviz version:
+                # g_node.set_penwidth(3)
             if in_successors:
                 g_node.set_color(self.successor_color)
                 g_node.set_fontcolor(self.successor_color)
