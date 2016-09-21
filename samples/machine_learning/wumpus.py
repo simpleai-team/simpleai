@@ -4,8 +4,11 @@ from simpleai.machine_learning.reinforcement_learning import TDQLearner, \
                                                              PerformanceCounter, \
                                                              RLProblem
 from simpleai.environments import RLEnvironment
-from Tkinter import *
 import threading
+try:
+    from Tkinter import *
+except ImportError:
+    from tkinter import *
 
 
 class PerpetualTimer(threading._Timer):
