@@ -124,7 +124,7 @@ def _backtracking(problem, assignment, domains, variable_chooser, values_sorter,
     '''
     Internal recursive backtracking algorithm.
     '''
-    from arc import arc_consistency_3
+    from simpleai.search.arc import arc_consistency_3
     if len(assignment) == len(problem.variables):
         return assignment
 
