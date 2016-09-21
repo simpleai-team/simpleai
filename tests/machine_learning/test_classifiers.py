@@ -205,9 +205,9 @@ class CorpusXor(object):
         n = 100
 
         dataset = []
-        for i in xrange(n):
+        for i in range(n):
             # Pseudo random generation of bits
-            bits = [(((i + j) * 1223) % (n + 1)) % 2 for j in xrange(k)]
+            bits = [(((i + j) * 1223) % (n + 1)) % 2 for j in range(k)]
             bits.append(sum(bits) % 2)
             dataset.append(bits)
 
@@ -226,7 +226,7 @@ class CorpusPrimes(object):
                     # patched in Dtree Pseudo (with modifing the pseudocode).
 
         dataset = []
-        for i in xrange(size):
+        for i in range(size):
             dataset.append([
                 i % 2 == 0,
                 i % 3 == 0,

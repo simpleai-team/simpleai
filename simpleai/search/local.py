@@ -290,7 +290,7 @@ def _local_search(problem, fringe_expander, iterations_limit=0, fringe_size=1,
 
     fringe = BoundedPriorityQueue(fringe_size)
     if random_initial_states:
-        for _ in xrange(fringe_size):
+        for _ in range(fringe_size):
             s = problem.generate_random_state()
             fringe.append(SearchNodeValueOrdered(state=s, problem=problem))
     else:

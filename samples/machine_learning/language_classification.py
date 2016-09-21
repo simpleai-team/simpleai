@@ -85,7 +85,7 @@ print("Corpus has {} examples".format(N))
 
 # Choose test set, either 10% or 10000 examples, whatever is less
 M = min(N / 10, 10000)
-testindexes = set(random.sample(xrange(N), M))
+testindexes = set(random.sample(range(N), M))
 print("Keeping {} examples for testing".format(M))
 
 problem = LanguageClassificationProblem()

@@ -165,7 +165,7 @@ class VectorDataClassificationProblem(ClassificationProblem):
             self.target_index = N + self.target_index
         if self.target_index < 0 or N <= self.target_index:
             raise ValueError("Target index is out of range")
-        for i in xrange(N):
+        for i in range(N):
             if i == self.target_index:
                 continue
             attribute = VectorIndexAttribute(i, "data at index {}".format(i))

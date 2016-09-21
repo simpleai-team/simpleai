@@ -100,7 +100,7 @@ def main():
 
     # Choose test set, either 10% or 10000 examples, whatever is less
     M = min(N / 10, 1000)
-    testindexes = set(random.sample(xrange(N), M))
+    testindexes = set(random.sample(range(N), M))
 
     corpus = ProConsCorpus(input_files, lambda i: i not in testindexes)
     test = ProConsCorpus(input_files, lambda i: i in testindexes)

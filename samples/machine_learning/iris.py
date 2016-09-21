@@ -53,7 +53,7 @@ def main():
     N = 0
     for _ in open(IRIS_PATH):
         N += 1
-    testindexes = set(random.sample(xrange(N), N / 10))
+    testindexes = set(random.sample(range(N), N / 10))
 
     dataset = IrisDataset(IRIS_PATH, lambda i: i not in testindexes)
     testset = IrisDataset(IRIS_PATH, lambda i: i in testindexes)
