@@ -134,7 +134,7 @@ class ClassificationProblem(object):
 
     def __setstate__(self, d):
         # For pickle-ability
-        for name, value in d.iteritems():
+        for name, value in list(d.items()):
             setattr(self, name, value)
         self._load_self_attributes(self.attributes)
 

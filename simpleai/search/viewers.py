@@ -244,7 +244,7 @@ class ConsoleViewer(BaseViewer):
                     self.interactive = False
                 elif option == 's':
                     self.output('Statistics:')
-                    for stat, value in self.stats.items():
+                    for stat, value in list(self.stats.items()):
                         self.output('%s: %i' % (stat.replace('_', ' '), value))
                     prompt = True
                 elif option == 'q':

@@ -58,7 +58,7 @@ class ProConsCorpus(object):
 
     def __iter__(self):
         i = 0
-        for category, filename in self.input_files.items():
+        for category, filename in list(self.input_files.items()):
             for line in open(filename):
                 line = self._clean_line(line)
                 if self.accept_criteria(i):
@@ -93,7 +93,7 @@ def main():
 
     # line count
     N = 0
-    for _, filename in input_files.items():
+    for _, filename in list(input_files.items()):
         for _ in open(filename):
             N += 1
     print("Corpus has {} examples".format(N))

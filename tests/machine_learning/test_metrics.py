@@ -51,7 +51,7 @@ class TestOnlineInformationGain(unittest.TestCase):
     def test_starts_in_zero(self):
         gain = OnlineInformationGain(lambda x: None, lambda x: None)
         self.assertEqual(gain.get_gain(), 0)
-        self.assertEqual(gain.get_target_class_counts().items(), [])
+        self.assertEqual(list(gain.get_target_class_counts().items()), [])
         self.assertEqual(gain.get_branches(), [])
 
     def test_no_gain(self):

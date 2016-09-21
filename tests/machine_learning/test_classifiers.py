@@ -135,7 +135,7 @@ class BaseTestDtree_Pseudo(BaseTestClassifier):
         while nodes:
             node = nodes.pop()
             self.assertNotEqual(self.target, node.attribute)
-            nodes.extend(node.branches.values())
+            nodes.extend(list(node.branches.values()))
 
 
 class BaseTestDtree_LargeData(BaseTestDtree_Pseudo):
@@ -156,7 +156,7 @@ class BaseTestDtree_LargeData(BaseTestDtree_Pseudo):
         while nodes:
             node = nodes.pop()
             self.assertNotEqual(node.result, None)
-            nodes.extend(node.branches.values())
+            nodes.extend(list(node.branches.values()))
 
 
 class BaseTestDtree_Queued(BaseTestDtree_LargeData):

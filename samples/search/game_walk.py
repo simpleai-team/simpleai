@@ -48,7 +48,7 @@ class GameWalkPuzzle(SearchProblem):
 
     def actions(self, state):
         actions = []
-        for action in COSTS.keys():
+        for action in list(COSTS.keys()):
             newx, newy = self.result(state, action)
             if self.board[newy][newx] != "#":
                 actions.append(action)

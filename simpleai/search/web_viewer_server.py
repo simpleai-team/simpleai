@@ -53,7 +53,7 @@ def run_server(viewer):
 
                     data = {}
                     data['stats'] = [{'name': stat.replace('_', ' '), 'value': value}
-                                     for stat, value in viewer.stats.items()]
+                                     for stat, value in list(viewer.stats.items())]
 
                     for event in viewer.events[announced:news_limit]:
                         data['event'] = event.__dict__
