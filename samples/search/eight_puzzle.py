@@ -120,6 +120,6 @@ result = astar(EigthPuzzleProblem(INITIAL))
 # result = astar(EigthPuzzleProblem(INITIAL), viewer=WebViewer())
 
 for action, state in result.path():
-    print 'Move number', action
-    print state
+    print('Move number', action)
+    print(state)
 

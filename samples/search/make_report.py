@@ -10,7 +10,7 @@ cfg = parser.parse_args()
 from simpleai.search import breadth_first, astar, beam, simulated_annealing
 
 
-print "Running algorithms and writting report.html..."
+print("Running algorithms and writting report.html...")
 report(infile=cfg.dotfile,
        algorithms=[
             breadth_first,

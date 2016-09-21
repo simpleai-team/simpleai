@@ -27,5 +27,5 @@ class HelloProblem(SearchProblem):
 problem = HelloProblem(initial_state='')
 result = astar(problem)
 
-print result.state
-print result.path()
+print(result.state)
+print(result.path())

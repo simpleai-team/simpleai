@@ -52,4 +52,4 @@ class MissionersProblem(SearchProblem):
 problem = MissionersProblem()
 
 result = astar(problem)
-print result.path()
+print(result.path())

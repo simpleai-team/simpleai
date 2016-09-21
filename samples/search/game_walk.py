@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+from __future__ import print_function
+
 import math
 from simpleai.search import SearchProblem, astar
 
@@ -35,8 +37,8 @@ class GameWalkPuzzle(SearchProblem):
     def __init__(self, board):
         self.board = board
         self.goal = (0, 0)
-        for y in xrange(len(self.board)):
-            for x in xrange(len(self.board[y])):
+        for y in range(len(self.board)):
+            for x in range(len(self.board[y])):
                 if self.board[y][x].lower() == "o":
                     self.initial = (x, y)
                 elif self.board[y][x].lower() == "x":
@@ -84,17 +86,17 @@ def main():
     result = astar(problem, graph_search=True)
     path = [x[1] for x in result.path()]
 
-    for y in xrange(len(MAP)):
-        for x in xrange(len(MAP[y])):
+    for y in range(len(MAP)):
+        for x in range(len(MAP[y])):
             if (x, y) == problem.initial:
-                print "o",
+                print("o", end='')
             elif (x, y) == problem.goal:
-                print "x",
+                print("x", end='')
             elif (x, y) in path:
-                print "·",
+                print("·", end='')
             else:
-                print MAP[y][x],
-        print
+                print(MAP[y][x], end='')
+        print()
 
 
 if __name__ == "__main__":
