@@ -33,7 +33,7 @@ class BaseTestClassifier(object):
         if self.classifier is None:
             raise NotImplementedError("Choose a classifier")
         self.setup_dataset()
-        N = len(self.corpus) / 10
+        N = int(len(self.corpus) / 10)
         self.test_set = []
         i = 1
         while len(self.test_set) != N:
