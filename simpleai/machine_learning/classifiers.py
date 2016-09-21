@@ -185,7 +185,7 @@ class KNearestNeighbors(Classifier):
         iterator.
         """
 
-        if not filepath or not isinstance(filepath, basestring):
+        if not filepath or not isinstance(filepath, str):
             raise ValueError("Invalid filepath")
 
         with open(filepath, "w") as filehandler:

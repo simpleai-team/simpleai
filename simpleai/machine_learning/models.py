@@ -58,7 +58,7 @@ class Classifier(object):
         Pickles the tree and saves it into `filepath`
         """
 
-        if not filepath or not isinstance(filepath, basestring):
+        if not filepath or not isinstance(filepath, str):
             raise ValueError("Invalid filepath")
 
         # Removes dataset so is not saved in the pickle
