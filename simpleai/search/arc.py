@@ -50,7 +50,7 @@ def all_arcs(constraints):
     for neighbors, constraint in constraints:
         if len(neighbors) == 2:
             x, y = neighbors
-            map(arcs.add, ((x, y), (y, x)))
+            list(map(arcs.add, ((x, y), (y, x))))
 
     return arcs
 
