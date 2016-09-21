@@ -8,7 +8,7 @@ from simpleai.search import (
 
 variables = ('F', 'T', 'U', 'W', 'R', 'O', 'C_10', 'C_100', 'C_1000')
 
-domains = dict((v, range(1, 10)) for v in variables)
+domains = dict((v, list(range(1, 10))) for v in variables)
 
 
 def const_different(variables, values):

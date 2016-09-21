@@ -15,7 +15,7 @@ from simpleai.search import CspProblem, backtrack, convert_to_binary
 
 variables = ["%s%d" % (i, j) for i in uppercase[:9] for j in range(1, 10)]
 
-domains = OrderedDict((v, range(1, 10)) for v in variables)
+domains = OrderedDict((v, list(range(1, 10))) for v in variables)
 
 
 def const_different(variables, values):
