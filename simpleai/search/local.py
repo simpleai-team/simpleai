@@ -15,7 +15,7 @@ def _all_expander(fringe, iteration, viewer):
     if viewer:
         viewer.event('expanded', list(fringe), expanded_neighbors)
 
-    map(fringe.extend, expanded_neighbors)
+    list(map(fringe.extend, expanded_neighbors))
 
 
 def beam(problem, beam_size=100, iterations_limit=0, viewer=None):
