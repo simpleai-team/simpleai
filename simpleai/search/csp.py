@@ -2,7 +2,7 @@
 import random
 from copy import deepcopy, copy
 from itertools import product
-from utils import argmin
+from simpleai.search.utils import argmin
 
 MOST_CONSTRAINED_VARIABLE = 'mcv'
 HIGHEST_DEGREE_VARIABLE = 'degree'

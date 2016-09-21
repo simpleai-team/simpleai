@@ -1,7 +1,7 @@
 # coding: utf-8
 from operator import itemgetter
 
-from csp import _call_constraint
+from simpleai.search.csp import _call_constraint
 
 
 # The first 3 functions are exported for testing purposes.
