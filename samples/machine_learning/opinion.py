@@ -65,7 +65,7 @@ class ProConsCorpus(object):
                     yield Opinion(line, category)
                 i += 1
                 if i % 1000 == 0:
-                    print "\tReaded {} examples".format(i)
+                    print("\tReaded {} examples".format(i))
 
 
 class OpinionProblem(ClassificationProblem):
@@ -96,7 +96,7 @@ def main():
     for _, filename in input_files.items():
         for _ in open(filename):
             N += 1
-    print "Corpus has {} examples".format(N)
+    print("Corpus has {} examples".format(N))
 
     # Choose test set, either 10% or 10000 examples, whatever is less
     M = min(N / 10, 1000)
@@ -104,14 +104,14 @@ def main():
 
     corpus = ProConsCorpus(input_files, lambda i: i not in testindexes)
     test = ProConsCorpus(input_files, lambda i: i in testindexes)
-    print "Corpuses created"
+    print("Corpuses created")
 
     problem = OpinionProblem(corpus)
     classifier = NaiveBayes(corpus, problem)
-    print "Classifier created"
+    print("Classifier created")
 
     p = precision(classifier, test)
-    print "Precision = {}".format(p)
+    print("Precision = {}".format(p))
 
 if __name__ == "__main__":
     main()

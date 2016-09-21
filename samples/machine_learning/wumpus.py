@@ -93,7 +93,7 @@ class WumpusViewer(object):
         self.timer.cancel()
 
     def event(self, state1, action, state2, agent):
-        print 'action: %s state: %s' % (action, str(state2))
+        print('action: %s state: %s' % (action, str(state2)))
         x, y, have_gold = state2
         if have_gold and self.gold:
             self.w.delete(self.gold)
@@ -150,7 +150,7 @@ if __name__ == '__main__':
 
     p = PerformanceCounter([agent], ['Q-learner Agent'])
 
-    print 'Training...'
+    print('Training...')
     for i in range(10000):
         game.run()
 

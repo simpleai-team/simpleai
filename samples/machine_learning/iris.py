@@ -67,11 +67,11 @@ def main():
         "Decision Tree": DecisionTreeLearner_Queued,
     }
 
-    print "Precision:\n"
+    print("Precision:\n")
     for name, method in classifiers.iteritems():
         classifier = method(dataset, problem)
         p = precision(classifier, testset)
-        print "{:>20} = {:.2}".format(name, p)
+        print("{:>20} = {:.2}".format(name, p))
 
 
 if __name__ == "__main__":
