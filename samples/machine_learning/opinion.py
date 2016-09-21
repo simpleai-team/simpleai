@@ -10,6 +10,8 @@ precisely http://www.cs.uic.edu/~liub/FBS/pros-cons.rar
 It should be placed in a folder called corpus in the same location of this file.
 """
 
+from __future__ import print_function
+
 import os
 import re
 import codecs

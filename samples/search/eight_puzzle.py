@@ -20,6 +20,8 @@ will become (in lists):
 
 '''
 
+from __future__ import print_function
+
 from simpleai.search import astar, SearchProblem
 from simpleai.search.viewers import WebViewer
 

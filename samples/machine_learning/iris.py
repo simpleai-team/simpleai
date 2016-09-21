@@ -9,6 +9,8 @@ from here: http://archive.ics.uci.edu/ml/datasets/Iris
 It has to be placed in the corpus folder.
 """
 
+from __future__ import print_function
+
 import os
 import math
 import random

@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 from simpleai.search import CspProblem, backtrack, min_conflicts, MOST_CONSTRAINED_VARIABLE, HIGHEST_DEGREE_VARIABLE, LEAST_CONSTRAINING_VALUE
 
 variables = ('WA', 'NT', 'SA', 'Q', 'NSW', 'V', 'T')

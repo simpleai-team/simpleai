@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 from time import time
 from itertools import combinations
 from collections import OrderedDict

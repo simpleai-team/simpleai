@@ -1,4 +1,7 @@
 # coding: utf-8
+
+from __future__ import print_function
+
 import json
 from os import path, _exit
 from time import sleep

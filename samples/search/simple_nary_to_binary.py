@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 from simpleai.search import backtrack, CspProblem, convert_to_binary
 
 variables = ('A', 'B', 'C')

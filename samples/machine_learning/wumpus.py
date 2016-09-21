@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+
+from __future__ import print_function
+
 from simpleai.machine_learning.reinforcement_learning import TDQLearner, \
                                                              make_exponential_temperature, \
                                                              PerformanceCounter, \

@@ -18,6 +18,7 @@ and then change the input files variable to point them... it'll be faster.
     See http://www.statmt.org/europarl/ for more information.
 """
 
+from __future__ import print_function
 
 # CHANGE INPUT FILES HERE:
 input_files = [("english", "europarl-v7.es-en.en"),
