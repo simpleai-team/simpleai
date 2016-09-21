@@ -61,7 +61,7 @@ class BaseTestClassifier(object):
         try:
             self.assertGreaterEqual(this_prec, mock_prec)
         except:
-            print self.corpus
+            print(self.corpus)
 
     def test_tolerates_empty_attributes(self):
         self.problem.attributes = []

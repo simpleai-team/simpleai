@@ -260,7 +260,7 @@ class ConsoleViewer(BaseViewer):
                     self.pause()
 
     def output(self, text):
-        print text
+        print(text)
 
 
 class WebViewer(BaseViewer):
