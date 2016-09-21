@@ -188,7 +188,7 @@ class KNearestNeighbors(Classifier):
         if not filepath or not isinstance(filepath, str):
             raise ValueError("Invalid filepath")
 
-        with open(filepath, "w") as filehandler:
+        with open(filepath, "wb") as filehandler:
             pickle.dump(self, filehandler)
 
 

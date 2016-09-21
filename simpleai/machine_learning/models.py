@@ -63,7 +63,7 @@ class Classifier(object):
 
         # Removes dataset so is not saved in the pickle
         self.dataset = None
-        with open(filepath, "w") as filehandler:
+        with open(filepath, "wb") as filehandler:
             pickle.dump(self, filehandler)
 
     def distance(self, a, b):
@@ -77,7 +77,7 @@ class Classifier(object):
         """
         Loads a pickled version of the classifier saved in `filepath`
         """
-        with open(filepath) as filehandler:
+        with open(filepath, "rb") as filehandler:
             classifier = pickle.load(filehandler)
 
         if not isinstance(classifier, Classifier):
