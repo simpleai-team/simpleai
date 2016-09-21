@@ -29,8 +29,8 @@ class TestFifoList(unittest.TestCase):
         self.f.append(3)
 
     def test_pop_returns_first_element(self):
-        self.assertEquals(self.f.pop(), 1)
-        self.assertEquals(len(self.f), 2)
+        self.assertEqual(self.f.pop(), 1)
+        self.assertEqual(len(self.f), 2)
 
     def test_sorted_fifo(self):
         self.assertTrue(sorted_equals_pop(self.f))
@@ -41,31 +41,31 @@ class TestBoundedPriorityQueue(unittest.TestCase):
         q = BoundedPriorityQueue()
         q.append(DummyNode(1))
         q.append(DummyNode(1))
-        self.assertEquals(len(q), 2)
+        self.assertEqual(len(q), 2)
 
     def test_extend_works(self):
         q = BoundedPriorityQueue()
         q.extend([DummyNode(1), DummyNode(1)])
-        self.assertEquals(len(q), 2)
+        self.assertEqual(len(q), 2)
 
     def test_pop_works_with_order(self):
         q = BoundedPriorityQueue()
         q.append(DummyNode(3))
         q.append(DummyNode(1))
         q.append(DummyNode(2))
-        self.assertEquals(q.pop().value, 1)
+        self.assertEqual(q.pop().value, 1)
 
     def test_limit_works_on_append(self):
         q = BoundedPriorityQueue(2)
         q.append(DummyNode(1))
         q.append(DummyNode(1))
         q.append(DummyNode(1))
-        self.assertEquals(len(q), 2)
+        self.assertEqual(len(q), 2)
 
     def test_limit_works_on_extend(self):
         q = BoundedPriorityQueue(2)
         q.extend([DummyNode(1), DummyNode(1), DummyNode(1)])
-        self.assertEquals(len(q), 2)
+        self.assertEqual(len(q), 2)
 
     def test_remove(self):
         q = BoundedPriorityQueue(2)
@@ -74,7 +74,7 @@ class TestBoundedPriorityQueue(unittest.TestCase):
         q.append(a)
         q.append(b)
         q.remove(a)
-        self.assertEquals(len(q), 1)
+        self.assertEqual(len(q), 1)
         self.assertIs(q[0], b)
 
     def test_sorted_priority(self):
@@ -90,7 +90,7 @@ class TestArgMax(unittest.TestCase):
         self.d = {'a': 3, 'b': 1, 'c': 3}
 
     def test_return_max(self):
-        self.assertEquals('a', argmax(['a', 'b'], lambda x: self.d[x]))
+        self.assertEqual('a', argmax(['a', 'b'], lambda x: self.d[x]))
 
     def test_random_tie(self):
         a = 0
@@ -108,7 +108,7 @@ class TestArgMin(unittest.TestCase):
         self.d = {'a': 1, 'b': 1, 'c': 3}
 
     def test_return_max(self):
-        self.assertEquals('b', argmin(['c', 'b'], lambda x: self.d[x]))
+        self.assertEqual('b', argmin(['c', 'b'], lambda x: self.d[x]))
 
     def test_random_tie(self):
         a = 0

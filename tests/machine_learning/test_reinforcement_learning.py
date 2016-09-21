@@ -48,7 +48,7 @@ class Testat_least_n_times_exploration(unittest.TestCase):
         c['b'] = 6
         c['c'] = 5
         action = self.function(self.actions, self.utilities, 0, c)
-        self.assertEquals(action, 'a')
+        self.assertEqual(action, 'a')
 
     def test_selection_with_higher_n(self):
         c = Counter()
@@ -56,4 +56,4 @@ class Testat_least_n_times_exploration(unittest.TestCase):
         c['b'] = 6
         c['c'] = 5
         action = self.function(self.actions, self.utilities, 0, c)
-        self.assertEquals(action, 'c')
+        self.assertEqual(action, 'c')

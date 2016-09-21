@@ -15,20 +15,20 @@ class TestSearchNode(unittest.TestCase):
         self.childs = self.node.expand()
 
     def test_expand_creates_node_for_each_action(self):
-        self.assertEquals(len(self.childs), 3)
+        self.assertEqual(len(self.childs), 3)
 
     def test_successors_have_correct_values(self):
         child = self.childs[0]
-        self.assertEquals(child.state, 'ia')
+        self.assertEqual(child.state, 'ia')
         self.assertIs(child.parent, self.node)
-        self.assertEquals(child.action, 'a')
-        self.assertEquals(child.cost, 1)
+        self.assertEqual(child.action, 'a')
+        self.assertEqual(child.cost, 1)
         self.assertIs(child.problem, self.problem)
-        self.assertEquals(child.depth, 1)
+        self.assertEqual(child.depth, 1)
 
     def test_successors_dont_have_parent_when_local_search(self):
         childs = self.node.expand(local_search=True)
-        self.assertEquals(childs[0].parent, None)
+        self.assertEqual(childs[0].parent, None)
 
     def test_path(self):
         n1 = SearchNode(problem=self.problem, state='i')
@@ -37,7 +37,7 @@ class TestSearchNode(unittest.TestCase):
 
         path = [(None, 'i'), ('a', 'ia'), ('b', 'iab')]
 
-        self.assertEquals(n3.path(), path)
+        self.assertEqual(n3.path(), path)
 
     def test_equals(self):
         n1 = SearchNode(problem=self.problem, state='i')
