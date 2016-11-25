@@ -402,8 +402,10 @@ class DecisionTreeLearner_LargeData(DecisionTreeLearner_Queued):
             for leaf, gains in list(old_leaves.items()):
                 winner = max(gains, key=lambda gain: gain.get_gain())
                 counts = winner.get_target_class_counts()
+                # WARNING not really sure why this needed to be change
+                # to >= from just >, fixing errors in python 3
                 branches = [(v, c) for v, c in winner.get_branches()
-                            if c.total > self.minsample]
+                            if c.total >= self.minsample]
 
                 # Base case exception
                 if leaf is self.root:
