@@ -11,6 +11,7 @@ import tempfile
 import unittest
 from collections import defaultdict
 
+import numpy as np
 
 from simpleai.machine_learning import evaluation
 from simpleai.machine_learning.models import VectorDataClassificationProblem
@@ -185,7 +186,7 @@ class CorpusIris(object):
             file_data = filehandler.read()
 
         for line in file_data.split("\n"):
-            line_data = [round(float(x)) for x in line.split()]
+            line_data = [np.rint(float(x)) for x in line.split()]
             if line_data:
                 dataset.append(line_data)
 
