@@ -20,6 +20,7 @@ setup(
         'Natural Language :: English',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
+        'Programming Language :: Python :: 3',
         'Topic :: Scientific/Engineering :: Artificial Intelligence',
     ],
 )
