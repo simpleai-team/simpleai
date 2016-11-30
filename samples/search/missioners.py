@@ -1,4 +1,7 @@
 # coding=utf-8
+
+from __future__ import print_function
+
 from simpleai.search import SearchProblem, astar
 
 
@@ -52,4 +55,4 @@ class MissionersProblem(SearchProblem):
 problem = MissionersProblem()
 
 result = astar(problem)
-print result.path()
+print(result.path())

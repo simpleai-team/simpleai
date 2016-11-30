@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 from simpleai.search import backtrack, CspProblem, convert_to_binary
 
 variables = ('A', 'B', 'C')
@@ -41,5 +43,5 @@ constraints = [
 variables, domains, constraints = convert_to_binary(variables, domains, constraints)
 problem = CspProblem(variables, domains, constraints)
 result = backtrack(problem)
-print result
+print(result)
 # result, {'A':2, 'B': 3, 'C': 1})

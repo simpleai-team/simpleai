@@ -2,7 +2,7 @@
 import random
 from copy import deepcopy, copy
 from itertools import product
-from utils import argmin
+from simpleai.search.utils import argmin
 
 MOST_CONSTRAINED_VARIABLE = 'mcv'
 HIGHEST_DEGREE_VARIABLE = 'degree'
@@ -124,7 +124,7 @@ def _backtracking(problem, assignment, domains, variable_chooser, values_sorter,
     '''
     Internal recursive backtracking algorithm.
     '''
-    from arc import arc_consistency_3
+    from simpleai.search.arc import arc_consistency_3
     if len(assignment) == len(problem.variables):
         return assignment
 

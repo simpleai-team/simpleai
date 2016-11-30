@@ -1,4 +1,7 @@
 # coding: utf-8
+
+from __future__ import print_function
+
 import json
 from os import path, _exit
 from time import sleep
@@ -53,7 +56,7 @@ def run_server(viewer):
 
                     data = {}
                     data['stats'] = [{'name': stat.replace('_', ' '), 'value': value}
-                                     for stat, value in viewer.stats.items()]
+                                     for stat, value in list(viewer.stats.items())]
 
                     for event in viewer.events[announced:news_limit]:
                         data['event'] = event.__dict__
@@ -65,14 +68,14 @@ def run_server(viewer):
 
 
     try:
-        print 'Starting the WebViewer, access it from your web browser, navigating to the address:'
-        print 'http://localhost:%i' % viewer.port
-        print 'To stop the WebViewer, use the "Stop running" link (on the viewer site, from the browser)'
+        print('Starting the WebViewer, access it from your web browser, navigating to the address:')
+        print('http://localhost:%i' % viewer.port)
+        print('To stop the WebViewer, use the "Stop running" link (on the viewer site, from the browser)')
 
         app.run(host=viewer.host, port=viewer.port, threaded=True)
     except Exception as err:
-        print 'Failed to start the WebViewer. Error:'
-        print err
+        print('Failed to start the WebViewer. Error:')
+        print(err)
         stop_server()
 
 

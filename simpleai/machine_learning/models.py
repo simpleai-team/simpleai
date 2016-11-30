@@ -58,12 +58,12 @@ class Classifier(object):
         Pickles the tree and saves it into `filepath`
         """
 
-        if not filepath or not isinstance(filepath, basestring):
+        if not filepath or not isinstance(filepath, str):
             raise ValueError("Invalid filepath")
 
         # Removes dataset so is not saved in the pickle
         self.dataset = None
-        with open(filepath, "w") as filehandler:
+        with open(filepath, "wb") as filehandler:
             pickle.dump(self, filehandler)
 
     def distance(self, a, b):
@@ -77,7 +77,7 @@ class Classifier(object):
         """
         Loads a pickled version of the classifier saved in `filepath`
         """
-        with open(filepath) as filehandler:
+        with open(filepath, "rb") as filehandler:
             classifier = pickle.load(filehandler)
 
         if not isinstance(classifier, Classifier):
@@ -134,7 +134,7 @@ class ClassificationProblem(object):
 
     def __setstate__(self, d):
         # For pickle-ability
-        for name, value in d.iteritems():
+        for name, value in list(d.items()):
             setattr(self, name, value)
         self._load_self_attributes(self.attributes)
 
@@ -165,7 +165,7 @@ class VectorDataClassificationProblem(ClassificationProblem):
             self.target_index = N + self.target_index
         if self.target_index < 0 or N <= self.target_index:
             raise ValueError("Target index is out of range")
-        for i in xrange(N):
+        for i in range(N):
             if i == self.target_index:
                 continue
             attribute = VectorIndexAttribute(i, "data at index {}".format(i))

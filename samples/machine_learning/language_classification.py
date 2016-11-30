@@ -18,6 +18,7 @@ and then change the input files variable to point them... it'll be faster.
     See http://www.statmt.org/europarl/ for more information.
 """
 
+from __future__ import print_function
 
 # CHANGE INPUT FILES HERE:
 input_files = [("english", "europarl-v7.es-en.en"),
@@ -64,7 +65,7 @@ class OnlineCorpusReader(object):
         self.accept_criteria = accept_criteria
 
     def __iter__(self):
-        print "Iterating corpus from the start..."
+        print("Iterating corpus from the start...")
         i = 0
         for language, filename in self.input_files:
             for text in open(filename):
@@ -72,38 +73,38 @@ class OnlineCorpusReader(object):
                     yield Sentence(language, text.lower())
                 i += 1
                 if i % 10000 == 0:
-                    print "\tReaded {} examples".format(i)
+                    print("\tReaded {} examples".format(i))
 
 
-print "Counting examples"
+print("Counting examples")
 # line count
 N = 0
 for _, filename in input_files:
     for _ in open(filename):
         N += 1
-print "Corpus has {} examples".format(N)
+print("Corpus has {} examples".format(N))
 
 # Choose test set, either 10% or 10000 examples, whatever is less
 M = min(N / 10, 10000)
-testindexes = set(random.sample(xrange(N), M))
-print "Keeping {} examples for testing".format(M)
+testindexes = set(random.sample(range(N), M))
+print("Keeping {} examples for testing".format(M))
 
 problem = LanguageClassificationProblem()
 train = OnlineCorpusReader(input_files, lambda i: i not in testindexes)
 test = OnlineCorpusReader(input_files, lambda i: i in testindexes)
 
 
-print "Training Naive Bayes..."
+print("Training Naive Bayes...")
 classifier = NaiveBayes(train, problem)
-print "Testing..."
+print("Testing...")
 p = precision(classifier, test)
-print "Precision Naive Bayes = {}".format(p)
+print("Precision Naive Bayes = {}".format(p))
 
 
-print "Training Decision Tree (large data)..."
+print("Training Decision Tree (large data)...")
 classifier = DecisionTreeLearner_LargeData(train, problem, minsample=500)
-print "Final tree:"
-print tree_to_str(classifier.root)
-print "Testing..."
+print("Final tree:")
+print(tree_to_str(classifier.root))
+print("Testing...")
 p = precision(classifier, test)
-print "Precision Decision Tree = {}".format(p)
+print("Precision Decision Tree = {}".format(p))

@@ -1,15 +1,23 @@
+from __future__ import print_function
+
 from time import time
-from StringIO import StringIO
-from string import uppercase
 from itertools import combinations
 from collections import OrderedDict
 from copy import deepcopy
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
+try:
+    from string import uppercase
+except ImportError:
+    from string import ascii_uppercase as uppercase
 
 from simpleai.search import CspProblem, backtrack, convert_to_binary
 
-variables = ["%s%d" % (i, j) for i in uppercase[:9] for j in xrange(1, 10)]
+variables = ["%s%d" % (i, j) for i in uppercase[:9] for j in range(1, 10)]
 
-domains = OrderedDict((v, range(1, 10)) for v in variables)
+domains = OrderedDict((v, list(range(1, 10))) for v in variables)
 
 
 def const_different(variables, values):
@@ -30,11 +38,11 @@ sudoku = \
 
 
 def parsepuzzle(puzzle):
-    sudoku_lines = map(lambda s: s.rstrip("\n"), StringIO(puzzle).readlines()[1:])
+    sudoku_lines = list(map(lambda s: s.rstrip("\n"), StringIO(puzzle).readlines()[1:]))
     domains = {}
 
     for k, i in enumerate(uppercase[:9]):
-        for j in xrange(1, 10):
+        for j in range(1, 10):
             line = sudoku_lines[k]
             if len(line) <= (j - 1):
                 continue
@@ -52,12 +60,12 @@ def mkconstraints():
     """
     constraints = []
 
-    for j in xrange(1, 10):
+    for j in range(1, 10):
         vars = ["%s%d" % (i, j) for i in uppercase[:9]]
         constraints.extend((c, const_different) for c in combinations(vars, 2))
 
     for i in uppercase[:9]:
-        vars = ["%s%d" % (i, j) for j in xrange(1, 10)]
+        vars = ["%s%d" % (i, j) for j in range(1, 10)]
         constraints.extend((c, const_different) for c in combinations(vars, 2))
 
     for b0 in ['ABC', 'DEF', 'GHI']:
@@ -76,12 +84,12 @@ def mknaryconstraints():
 
     constraints = []
 
-    for j in xrange(1, 10):
+    for j in range(1, 10):
         vars_ = ["%s%d" % (i, j) for i in uppercase[:9]]
         constraints.append((vars_, alldiff))
 
     for i in uppercase[:9]:
-        vars_ = ["%s%d" % (i, j) for j in xrange(1, 10)]
+        vars_ = ["%s%d" % (i, j) for j in range(1, 10)]
         constraints.append((vars_, alldiff))
 
     for b0 in ['ABC', 'DEF', 'GHI']:
@@ -94,7 +102,7 @@ def mknaryconstraints():
 
 def display_solution(sol):
     for i in uppercase[:9]:
-        print " ".join([str(sol["%s%d" % (i, j)]) for j in xrange(1, 10)])
+        print(" ".join([str(sol["%s%d" % (i, j)]) for j in range(1, 10)]))
 
 
 domains.update(parsepuzzle(sudoku))
@@ -107,7 +115,7 @@ my_problem = CspProblem(variables, domains0, constraints)
 sol = backtrack(my_problem)
 elapsed = time() - start
 display_solution(sol)
-print "Took %d seconds to finish using binary constraints" % elapsed  # because of AC3 should be quick
+print("Took %d seconds to finish using binary constraints" % elapsed)  # because of AC3 should be quick
 
 
 # -- N-ary constraints made binary using hidden variables --
@@ -118,7 +126,7 @@ my_problem = CspProblem(variables1, domains1, constraints)
 sol = backtrack(my_problem)
 elapsed = time() - start
 display_solution(sol)
-print "Took %d seconds to finish using binary constraints (hidden variables)" % elapsed
+print("Took %d seconds to finish using binary constraints (hidden variables)" % elapsed)
 
 
 # -- N-ary constraints --
@@ -129,4 +137,4 @@ my_problem = CspProblem(variables, domains3, constraints)
 sol = backtrack(my_problem)
 elapsed = time() - start
 display_solution(sol)
-print "Took %d seconds to finish using n-ary constraints" % elapsed
+print("Took %d seconds to finish using n-ary constraints" % elapsed)

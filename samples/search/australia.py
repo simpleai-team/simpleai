@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 from simpleai.search import CspProblem, backtrack, min_conflicts, MOST_CONSTRAINED_VARIABLE, HIGHEST_DEGREE_VARIABLE, LEAST_CONSTRAINING_VALUE
 
 variables = ('WA', 'NT', 'SA', 'Q', 'NSW', 'V', 'T')
@@ -21,10 +23,10 @@ constraints = [
 
 my_problem = CspProblem(variables, domains, constraints)
 
-print backtrack(my_problem)
-print backtrack(my_problem, variable_heuristic=MOST_CONSTRAINED_VARIABLE)
-print backtrack(my_problem, variable_heuristic=HIGHEST_DEGREE_VARIABLE)
-print backtrack(my_problem, value_heuristic=LEAST_CONSTRAINING_VALUE)
-print backtrack(my_problem, variable_heuristic=MOST_CONSTRAINED_VARIABLE, value_heuristic=LEAST_CONSTRAINING_VALUE)
-print backtrack(my_problem, variable_heuristic=HIGHEST_DEGREE_VARIABLE, value_heuristic=LEAST_CONSTRAINING_VALUE)
-print min_conflicts(my_problem)
+print(backtrack(my_problem))
+print(backtrack(my_problem, variable_heuristic=MOST_CONSTRAINED_VARIABLE))
+print(backtrack(my_problem, variable_heuristic=HIGHEST_DEGREE_VARIABLE))
+print(backtrack(my_problem, value_heuristic=LEAST_CONSTRAINING_VALUE))
+print(backtrack(my_problem, variable_heuristic=MOST_CONSTRAINED_VARIABLE, value_heuristic=LEAST_CONSTRAINING_VALUE))
+print(backtrack(my_problem, variable_heuristic=HIGHEST_DEGREE_VARIABLE, value_heuristic=LEAST_CONSTRAINING_VALUE))
+print(min_conflicts(my_problem))

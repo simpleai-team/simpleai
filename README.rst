@@ -77,8 +77,8 @@ This problem tries to create the string "HELLO WORLD" using the A* algorithm:
     problem = HelloProblem(initial_state='')
     result = astar(problem)
 
-    print result.state
-    print result.path()
+    print(result.state)
+    print(result.path())
 
 
 More detailed documentation

@@ -20,6 +20,8 @@ will become (in lists):
 
 '''
 
+from __future__ import print_function
+
 from simpleai.search import astar, SearchProblem
 from simpleai.search.viewers import WebViewer
 
@@ -120,6 +122,6 @@ result = astar(EigthPuzzleProblem(INITIAL))
 # result = astar(EigthPuzzleProblem(INITIAL), viewer=WebViewer())
 
 for action, state in result.path():
-    print 'Move number', action
-    print state
+    print('Move number', action)
+    print(state)
 

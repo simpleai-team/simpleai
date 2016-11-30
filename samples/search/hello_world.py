@@ -1,4 +1,7 @@
 # coding=utf-8
+
+from __future__ import print_function
+
 from simpleai.search import SearchProblem, astar
 
 GOAL = 'HELLO WORLD'
@@ -27,5 +30,5 @@ class HelloProblem(SearchProblem):
 problem = HelloProblem(initial_state='')
 result = astar(problem)
 
-print result.state
-print result.path()
+print(result.state)
+print(result.path())

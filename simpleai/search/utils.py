@@ -1,8 +1,11 @@
 # coding=utf-8
 import heapq
 from collections import deque
-from itertools import izip
 import random
+try:
+    from itertools import izip
+except ImportError:
+    izip = zip
 
 
 class LifoList(deque):

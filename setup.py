@@ -5,7 +5,7 @@ from distutils.core import setup
 
 setup(
     name='simpleai',
-    version='0.7.11',
+    version='0.8',
     description=u'An implementation of AI algorithms based on aima-python',
     long_description=open('README.rst').read(),
     author=u'Juan Pedro Fisanotti',
@@ -20,6 +20,7 @@ setup(
         'Natural Language :: English',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
+        'Programming Language :: Python :: 3',
         'Topic :: Scientific/Engineering :: Artificial Intelligence',
     ],
 )
