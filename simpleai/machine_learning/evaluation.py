@@ -52,7 +52,8 @@ def kfold(dataset, problem, method, k=10):
         classifier = method(train, problem)
         for data in test:
             trials += 1
-            if classifier.classify(data)[0] == problem.target(data):
+            result = classifier.classify(data)
+            if result is not None and result[0] == problem.target(data):
                 positive += 1
 
     return float(positive) / float(trials)
