@@ -16,23 +16,23 @@ class TestLocalSearch(unittest.TestCase):
 
     def test_beam(self):
         result = beam(self.problem)
-        self.assertEquals(result.state, GOAL)
+        self.assertEqual(result.state, GOAL)
 
     def test_beam_best_first(self):
         result = beam_best_first(self.problem)
-        self.assertEquals(result.state, GOAL)
+        self.assertEqual(result.state, GOAL)
 
     def test_hill_climbing(self):
         result = hill_climbing(self.problem)
-        self.assertEquals(result.state, GOAL)
+        self.assertEqual(result.state, GOAL)
 
     def test_hill_climbing_stochastic(self):
         result = hill_climbing_stochastic(self.problem)
-        self.assertEquals(result.state, GOAL)
+        self.assertEqual(result.state, GOAL)
 
     def test_hill_climbing_random_restarts(self):
         result = hill_climbing_random_restarts(self.problem, restarts_limit=2)
-        self.assertEquals(result.state, GOAL)
+        self.assertEqual(result.state, GOAL)
 
     def test_simulated_annealing(self):
         # give the problem an actions function that always
@@ -48,7 +48,7 @@ class TestLocalSearch(unittest.TestCase):
                 return []
         self.problem.actions = dummy_actions
         result = simulated_annealing(self.problem)
-        self.assertEquals(result.state, GOAL)
+        self.assertEqual(result.state, GOAL)
 
 
 class TestGeneticSearch(unittest.TestCase):

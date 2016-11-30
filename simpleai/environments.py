@@ -10,7 +10,7 @@ class Environment(object):
 
     def run(self, steps=10000, viewer=None):
         self.state = self.initial_state
-        for step in xrange(steps):
+        for step in range(steps):
             if self.is_completed(self.state):
                 return
             self.step(viewer=viewer)

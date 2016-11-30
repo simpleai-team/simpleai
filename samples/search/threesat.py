@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 from time import time
 
 from copy import deepcopy
@@ -22,8 +24,8 @@ start = time()
 problem = CspProblem(variables, original_domains, original_constraints)
 result = backtrack(problem)
 elapsed = time() - start
-print result
-print "Took %d seconds to finish using n-ary constraints" % elapsed
+print(result)
+print("Took %d seconds to finish using n-ary constraints" % elapsed)
 
 
 start = time()
@@ -31,5 +33,5 @@ variables, domains, constraints = convert_to_binary(variables, domains, constrai
 problem = CspProblem(variables, domains, constraints)
 result = backtrack(problem)
 elapsed = time() - start
-print result
-print "Took %d seconds to finish using binary constraints" % elapsed
+print(result)
+print("Took %d seconds to finish using binary constraints" % elapsed)

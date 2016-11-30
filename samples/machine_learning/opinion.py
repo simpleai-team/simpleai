@@ -10,6 +10,8 @@ precisely http://www.cs.uic.edu/~liub/FBS/pros-cons.rar
 It should be placed in a folder called corpus in the same location of this file.
 """
 
+from __future__ import print_function
+
 import os
 import re
 import codecs
@@ -58,14 +60,14 @@ class ProConsCorpus(object):
 
     def __iter__(self):
         i = 0
-        for category, filename in self.input_files.items():
+        for category, filename in list(self.input_files.items()):
             for line in open(filename):
                 line = self._clean_line(line)
                 if self.accept_criteria(i):
                     yield Opinion(line, category)
                 i += 1
                 if i % 1000 == 0:
-                    print "\tReaded {} examples".format(i)
+                    print("\tReaded {} examples".format(i))
 
 
 class OpinionProblem(ClassificationProblem):
@@ -93,25 +95,25 @@ def main():
 
     # line count
     N = 0
-    for _, filename in input_files.items():
+    for _, filename in list(input_files.items()):
         for _ in open(filename):
             N += 1
-    print "Corpus has {} examples".format(N)
+    print("Corpus has {} examples".format(N))
 
     # Choose test set, either 10% or 10000 examples, whatever is less
     M = min(N / 10, 1000)
-    testindexes = set(random.sample(xrange(N), M))
+    testindexes = set(random.sample(range(N), M))
 
     corpus = ProConsCorpus(input_files, lambda i: i not in testindexes)
     test = ProConsCorpus(input_files, lambda i: i in testindexes)
-    print "Corpuses created"
+    print("Corpuses created")
 
     problem = OpinionProblem(corpus)
     classifier = NaiveBayes(corpus, problem)
-    print "Classifier created"
+    print("Classifier created")
 
     p = precision(classifier, test)
-    print "Precision = {}".format(p)
+    print("Precision = {}".format(p))
 
 if __name__ == "__main__":
     main()

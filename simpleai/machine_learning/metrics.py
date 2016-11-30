@@ -29,7 +29,7 @@ class Counter(defaultdict):
 class OnlineEntropy(Counter):
     def get_entropy(self):
         s = 0.0
-        for count in self.itervalues():
+        for count in list(self.values()):
             p = count / float(self.total)
             s += p * math.log(p, 2)
         return -s
@@ -50,12 +50,12 @@ class OnlineInformationGain(object):
         return self.H
 
     def get_branches(self):
-        return self.G.items()
+        return list(self.G.items())
 
     def get_gain(self):
         H1 = self.H.get_entropy()
         H2 = 0.0
-        for G in self.G.itervalues():
+        for G in list(self.G.values()):
             w = G.total / float(self.H.total)
             H2 += w * G.get_entropy()
         return H1 - H2
@@ -75,7 +75,7 @@ class OnlineLogProbability(object):
         if x not in self:
             raise KeyError(x)
         if self._logtotal is None:
-            self._logtotal = numpy.log(sum(self.d.itervalues()))
+            self._logtotal = numpy.log(sum(self.d.values()))
         return numpy.log(self.d[x]) - self._logtotal
 
     def __contains__(self, x):

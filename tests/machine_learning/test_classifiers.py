@@ -11,6 +11,7 @@ import tempfile
 import unittest
 from collections import defaultdict
 
+import numpy as np
 
 from simpleai.machine_learning import evaluation
 from simpleai.machine_learning.models import VectorDataClassificationProblem
@@ -33,7 +34,7 @@ class BaseTestClassifier(object):
         if self.classifier is None:
             raise NotImplementedError("Choose a classifier")
         self.setup_dataset()
-        N = len(self.corpus) / 10
+        N = int(len(self.corpus) / 10)
         self.test_set = []
         i = 1
         while len(self.test_set) != N:
@@ -61,7 +62,7 @@ class BaseTestClassifier(object):
         try:
             self.assertGreaterEqual(this_prec, mock_prec)
         except:
-            print self.corpus
+            print(self.corpus)
 
     def test_tolerates_empty_attributes(self):
         self.problem.attributes = []
@@ -135,7 +136,7 @@ class BaseTestDtree_Pseudo(BaseTestClassifier):
         while nodes:
             node = nodes.pop()
             self.assertNotEqual(self.target, node.attribute)
-            nodes.extend(node.branches.values())
+            nodes.extend(list(node.branches.values()))
 
 
 class BaseTestDtree_LargeData(BaseTestDtree_Pseudo):
@@ -156,7 +157,7 @@ class BaseTestDtree_LargeData(BaseTestDtree_Pseudo):
         while nodes:
             node = nodes.pop()
             self.assertNotEqual(node.result, None)
-            nodes.extend(node.branches.values())
+            nodes.extend(list(node.branches.values()))
 
 
 class BaseTestDtree_Queued(BaseTestDtree_LargeData):
@@ -185,7 +186,7 @@ class CorpusIris(object):
             file_data = filehandler.read()
 
         for line in file_data.split("\n"):
-            line_data = [round(float(x)) for x in line.split()]
+            line_data = [np.rint(float(x)) for x in line.split()]
             if line_data:
                 dataset.append(line_data)
 
@@ -205,9 +206,9 @@ class CorpusXor(object):
         n = 100
 
         dataset = []
-        for i in xrange(n):
+        for i in range(n):
             # Pseudo random generation of bits
-            bits = [(((i + j) * 1223) % (n + 1)) % 2 for j in xrange(k)]
+            bits = [(((i + j) * 1223) % (n + 1)) % 2 for j in range(k)]
             bits.append(sum(bits) % 2)
             dataset.append(bits)
 
@@ -226,7 +227,7 @@ class CorpusPrimes(object):
                     # patched in Dtree Pseudo (with modifing the pseudocode).
 
         dataset = []
-        for i in xrange(size):
+        for i in range(size):
             dataset.append([
                 i % 2 == 0,
                 i % 3 == 0,

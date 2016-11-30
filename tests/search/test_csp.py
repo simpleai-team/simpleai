@@ -50,11 +50,11 @@ class TestCsp(unittest.TestCase):
 
     def test_most_constrained_variable_chooser(self):
         variable = _most_constrained_variable_chooser(self.problem, self.variables, self.domains)
-        self.assertEquals(variable, 'C')
+        self.assertEqual(variable, 'C')
 
     def test_highest_degree_variable_chooser(self):
         variable = _highest_degree_variable_chooser(self.problem, self.variables, self.domains)
-        self.assertEquals(variable, 'A')
+        self.assertEqual(variable, 'A')
 
     def test_find_conflicts(self):
         assignment = {'A': 1, 'B': 1, 'C': 3}
@@ -79,12 +79,12 @@ class TestCsp(unittest.TestCase):
     def test_least_constraining_values_sorter(self):
         assignment = {'A': 1, 'B': 1}
         values = _least_constraining_values_sorter(self.problem, assignment, 'C', self.domains)
-        self.assertEquals(values, [2, 1])
+        self.assertEqual(values, [2, 1])
 
     def test_min_conflicts_value(self):
         assignment = {'A': 1, 'B': 1}
         value = _min_conflicts_value(self.problem, assignment, 'C')
-        self.assertEquals(value, 2)
+        self.assertEqual(value, 2)
 
     def test_backtrack(self):
         result = backtrack(self.problem)

@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+
+from __future__ import print_function
+
 from simpleai.machine_learning.reinforcement_learning import TDQLearner, RLProblem, \
                                                              make_exponential_temperature, \
                                                              PerformanceCounter
@@ -35,17 +38,17 @@ class TicTacToePlayer(TDQLearner):
 class HumanPlayer(TicTacToePlayer):
 
     def set_reward(self, reward, terminal=False):
-        print ('reward:', reward)
+        print(('reward:', reward))
 
     def program(self, perception):
-        print ('Current board:')
+        print('Current board:')
         rows = perception.split()
         s = ['+-+-+-+-+', '| |0|1|2|', '+-+-+-+-+']
         for i, row in enumerate(rows):
             row = row.replace('_', ' ')
             s.append('|%d|' % i + '|'.join(list(row)) + '|')
             s.append('+-+-+-+-+')
-        print (('\n'.join(s)))
+        print(('\n'.join(s)))
         a = input('Make your move (r, c):')
         r, c = a
         return r * 3 + c
@@ -94,7 +97,7 @@ if __name__ == '__main__':
     b = RandomPlayer('O')
     c = HumanPlayer('O')
     game = TicTacToeGame([a, b])
-    print ('Training with a random player, please wait...')
+    print('Training with a random player, please wait...')
     game.agents = [a, b]
     for i in range(3000):
         game.run()
@@ -111,6 +114,6 @@ if __name__ == '__main__':
     per.show_statistics()
 
     game.agents = [a, c]
-    print ('Do you like to play?')
+    print('Do you like to play?')
     game.run()
-    print game.state
+    print(game.state)

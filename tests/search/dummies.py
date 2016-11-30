@@ -75,7 +75,7 @@ class DummyGraphProblem(object):
 
     def actions(self, state):
         "returns state's neighbors"
-        return self._map[state].keys()
+        return list(self._map[state].keys())
 
     def result(self, state, action):
         'returns the action because it indicates the next city'

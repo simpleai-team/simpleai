@@ -1,4 +1,7 @@
 # coding: utf-8
+
+from __future__ import print_function
+
 from os import path
 import sys
 from tempfile import mkdtemp
@@ -235,7 +238,7 @@ class ConsoleViewer(BaseViewer):
         prompt = True
         while prompt and self.interactive:
             prompt = False
-            option = raw_input('> ').strip()
+            option = input('> ').strip()
             if option:
                 if option == 'h':
                     self.output(CONSOLE_HELP_TEXT)
@@ -244,7 +247,7 @@ class ConsoleViewer(BaseViewer):
                     self.interactive = False
                 elif option == 's':
                     self.output('Statistics:')
-                    for stat, value in self.stats.items():
+                    for stat, value in list(self.stats.items()):
                         self.output('%s: %i' % (stat.replace('_', ' '), value))
                     prompt = True
                 elif option == 'q':
@@ -260,7 +263,7 @@ class ConsoleViewer(BaseViewer):
                     self.pause()
 
     def output(self, text):
-        print text
+        print(text)
 
 
 class WebViewer(BaseViewer):
@@ -295,7 +298,7 @@ class WebViewer(BaseViewer):
 
     def start_server(self):
         if not self.server_running:
-            from web_viewer_server import run_server
+            from simpleai.search.web_viewer_server import run_server
 
             t = Thread(target=run_server, args=[self])
             t.daemon = True

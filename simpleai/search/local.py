@@ -15,7 +15,7 @@ def _all_expander(fringe, iteration, viewer):
     if viewer:
         viewer.event('expanded', list(fringe), expanded_neighbors)
 
-    map(fringe.extend, expanded_neighbors)
+    list(map(fringe.extend, expanded_neighbors))
 
 
 def beam(problem, beam_size=100, iterations_limit=0, viewer=None):
@@ -290,7 +290,7 @@ def _local_search(problem, fringe_expander, iterations_limit=0, fringe_size=1,
 
     fringe = BoundedPriorityQueue(fringe_size)
     if random_initial_states:
-        for _ in xrange(fringe_size):
+        for _ in range(fringe_size):
             s = problem.generate_random_state()
             fringe.append(SearchNodeValueOrdered(state=s, problem=problem))
     else:

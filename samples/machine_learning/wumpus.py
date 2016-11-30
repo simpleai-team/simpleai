@@ -1,11 +1,17 @@
 # -*- coding: utf-8 -*-
+
+from __future__ import print_function
+
 from simpleai.machine_learning.reinforcement_learning import TDQLearner, \
                                                              make_exponential_temperature, \
                                                              PerformanceCounter, \
                                                              RLProblem
 from simpleai.environments import RLEnvironment
-from Tkinter import *
 import threading
+try:
+    from Tkinter import *
+except ImportError:
+    from tkinter import *
 
 
 class PerpetualTimer(threading._Timer):
@@ -93,7 +99,7 @@ class WumpusViewer(object):
         self.timer.cancel()
 
     def event(self, state1, action, state2, agent):
-        print 'action: %s state: %s' % (action, str(state2))
+        print('action: %s state: %s' % (action, str(state2)))
         x, y, have_gold = state2
         if have_gold and self.gold:
             self.w.delete(self.gold)
@@ -129,7 +135,7 @@ class WumpusEnvironment(RLEnvironment):
         return state
 
     def is_completed(self, state):
-        return state in self.rewards.keys()
+        return state in list(self.rewards.keys())
 
     def reward(self, state, agent):
         return self.rewards.get(state, -0.08)
@@ -150,7 +156,7 @@ if __name__ == '__main__':
 
     p = PerformanceCounter([agent], ['Q-learner Agent'])
 
-    print 'Training...'
+    print('Training...')
     for i in range(10000):
         game.run()
 

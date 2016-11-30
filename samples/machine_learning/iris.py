@@ -9,6 +9,8 @@ from here: http://archive.ics.uci.edu/ml/datasets/Iris
 It has to be placed in the corpus folder.
 """
 
+from __future__ import print_function
+
 import os
 import math
 import random
@@ -53,7 +55,7 @@ def main():
     N = 0
     for _ in open(IRIS_PATH):
         N += 1
-    testindexes = set(random.sample(xrange(N), N / 10))
+    testindexes = set(random.sample(range(N), N / 10))
 
     dataset = IrisDataset(IRIS_PATH, lambda i: i not in testindexes)
     testset = IrisDataset(IRIS_PATH, lambda i: i in testindexes)
@@ -67,11 +69,11 @@ def main():
         "Decision Tree": DecisionTreeLearner_Queued,
     }
 
-    print "Precision:\n"
-    for name, method in classifiers.iteritems():
+    print("Precision:\n")
+    for name, method in list(classifiers.items()):
         classifier = method(dataset, problem)
         p = precision(classifier, testset)
-        print "{:>20} = {:.2}".format(name, p)
+        print("{:>20} = {:.2}".format(name, p))
 
 
 if __name__ == "__main__":

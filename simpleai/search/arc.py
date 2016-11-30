@@ -1,7 +1,7 @@
 # coding: utf-8
 from operator import itemgetter
 
-from csp import _call_constraint
+from simpleai.search.csp import _call_constraint
 
 
 # The first 3 functions are exported for testing purposes.
@@ -50,7 +50,7 @@ def all_arcs(constraints):
     for neighbors, constraint in constraints:
         if len(neighbors) == 2:
             x, y = neighbors
-            map(arcs.add, ((x, y), (y, x)))
+            list(map(arcs.add, ((x, y), (y, x))))
 
     return arcs
 

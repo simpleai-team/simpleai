@@ -47,18 +47,18 @@ class TestReviseDomain(unittest.TestCase):
     def test_if_all_values_have_possible_match_the_domain_is_untouched(self):
         result, domains = self.revise([1, 2, 3], [1, 4, 9])
         self.assertFalse(result)
-        self.assertEquals(domains['A'], [1, 2, 3])
+        self.assertEqual(domains['A'], [1, 2, 3])
 
     def test_if_a_value_has_no_possible_match_remove_it_from_domain(self):
         result, domains = self.revise([1, 2, 3], [1, 4])
         self.assertTrue(result)
-        self.assertEquals(domains['A'], [1, 2])
+        self.assertEqual(domains['A'], [1, 2])
 
     def test_if_multiple_constraints_dont_fail_removing_twice(self):
         # there was a bug when two constraints tried to remove the same value
         result, domains = self.revise([1, 2, 3], [1, 4], True)
         self.assertTrue(result)
-        self.assertEquals(domains['A'], [1, 2])
+        self.assertEqual(domains['A'], [1, 2])
 
 
 class TestAC3(unittest.TestCase):
