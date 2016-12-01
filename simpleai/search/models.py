@@ -128,6 +128,9 @@ class SearchNode(object):
     def __eq__(self, other):
         return isinstance(other, SearchNode) and self.state == other.state
 
+    def __hash__(self):
+        return hash(self.state)
+
     def state_representation(self):
         return self.problem.state_representation(self.state)
 
