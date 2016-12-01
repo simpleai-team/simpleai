@@ -7,7 +7,7 @@ class SearchProblem(object):
        In this class, the search space is meant to be represented implicitly as
        a graph.
        Each state corresponds with a problem state (ie, a valid configuration)
-       and each problem action (ie, a valid transformation to a configuracion)
+       and each problem action (ie, a valid transformation to a configuration)
        corresponds with an edge.
 
        To use this class you should implement the methods required by the search
