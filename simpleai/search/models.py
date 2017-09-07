@@ -137,6 +137,15 @@ class SearchNode(object):
     def __repr__(self):
         return 'Node <%s>' % self.state_representation().replace('\n', ' ')
 
+    def __hash__(self):
+        return hash((
+            self.state,
+            self.parent,
+            self.action,
+            self.cost,
+            self.depth,
+        ))
+
 
 class SearchNodeCostOrdered(SearchNode):
     def __lt__(self, other):
