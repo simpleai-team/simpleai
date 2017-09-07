@@ -185,7 +185,7 @@ def _create_simulated_annealing_expander(schedule):
         if neighbors:
             succ = random.choice(neighbors)
             delta_e = succ.value - current.value
-            if delta_e > 0 or random.random() < math.exp(delta_e / T):
+            if delta_e > 0 or random.random() < math.exp(- delta_e / T):
                 fringe.pop()
                 fringe.append(succ)
 
