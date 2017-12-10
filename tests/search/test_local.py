@@ -4,6 +4,7 @@ from tests.search.dummies import DummyProblem, GOAL, DummyGeneticProblem
 from simpleai.search.local import (beam, beam_best_first,
                                    hill_climbing,
                                    hill_climbing_stochastic,
+                                   hill_climbing_weighted_stochastic,
                                    simulated_annealing,
                                    hill_climbing_random_restarts, genetic)
 from simpleai.search.models import SearchNode
@@ -28,6 +29,10 @@ class TestLocalSearch(unittest.TestCase):
 
     def test_hill_climbing_stochastic(self):
         result = hill_climbing_stochastic(self.problem)
+        self.assertEqual(result.state, GOAL)
+
+    def test_hill_climbing_weighted_stochastic(self):
+        result = hill_climbing_weighted_stochastic(self.problem)
         self.assertEqual(result.state, GOAL)
 
     def test_hill_climbing_random_restarts(self):
