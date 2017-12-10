@@ -109,6 +109,52 @@ def _random_best_expander(fringe, iteration, viewer):
         fringe.append(chosen)
 
 
+def _random_weighed_best_expander(fringe, iteration, viewer):
+    '''
+    Expander that expands one randomly chosen nodes (weighted on its value) on the fringe that
+    is better than the current (first) node.
+    '''
+    current = fringe[0]
+    neighbors = current.expand(local_search=True)
+    if viewer:
+        viewer.event('expanded', [current], [neighbors])
+
+    betters = [n for n in neighbors
+               if n.value > current.value]
+
+    def weighted_choice_sub(weights):
+        rnd = random.random() * sum(weights)
+        for i, w in enumerate(weights):
+            rnd -= w
+            if rnd < 0:
+                return i
+
+    if betters:
+        chosen_idx = weighted_choice_sub(map(lambda n: n.value, betters))
+        chosen = betters[chosen_idx]
+        if viewer:
+            viewer.event('chosen_node', chosen)
+        fringe.append(chosen)
+
+
+def hill_climbing_weighted_stochastic(problem, iterations_limit=0, viewer=None):
+    '''
+    Weighted Stochastic hill climbing.
+
+    If iterations_limit is specified, the algorithm will end after that
+    number of iterations. Else, it will continue until it can't find a
+    better node than the current one.
+    Requires: SearchProblem.actions, SearchProblem.result, and
+    SearchProblem.value.
+    '''
+    return _local_search(problem,
+                         _random_weighed_best_expander,
+                         iterations_limit=iterations_limit,
+                         fringe_size=1,
+                         stop_when_no_better=iterations_limit==0,
+                         viewer=viewer)
+
+
 def hill_climbing_stochastic(problem, iterations_limit=0, viewer=None):
     '''
     Stochastic hill climbing.
