@@ -1,4 +1,4 @@
-Simple AI
+Simple - AI
 =========
 
 Project home: http://github.com/simpleai-team/simpleai
