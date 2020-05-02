@@ -1,11 +1,16 @@
 # coding=utf-8
 import heapq
+import itertools
 from collections import deque
 import random
 try:
     from itertools import izip
 except ImportError:
     izip = zip
+
+
+def flatten(l):
+    return list(itertools.chain.from_iterable([(i if isinstance(i, list) else [i]) for i in l]))
 
 
 class LifoList(deque):
@@ -27,6 +32,7 @@ class FifoList(deque):
 class BoundedPriorityQueue(object):
     def __init__(self, limit=None, *args):
         self.limit = limit
+        self.item_set = set()
         self.queue = list()
 
     def __getitem__(self, val):
@@ -36,9 +42,11 @@ class BoundedPriorityQueue(object):
         return len(self.queue)
 
     def append(self, x):
-        heapq.heappush(self.queue, x)
-        if self.limit and len(self.queue) > self.limit:
-            self.queue.remove(heapq.nlargest(1, self.queue)[0])
+        if x not in self.item_set:
+            self.item_set.add(x)
+            heapq.heappush(self.queue, x)
+            if self.limit and len(self.queue) > self.limit:
+                self.queue.remove(heapq.nlargest(1, self.queue)[0])
 
     def pop(self):
         return heapq.heappop(self.queue)

@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from distutils.core import setup
+from setuptools import setup
 
 setup(
     name='simpleai',
-    version='0.8.1',
+    version='0.8.1.6',
     description=u'An implementation of AI algorithms based on aima-python',
     long_description=open('README.rst').read(),
     author=u'Juan Pedro Fisanotti',

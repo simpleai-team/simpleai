@@ -1,8 +1,9 @@
 # coding=utf-8
-from simpleai.search.utils import BoundedPriorityQueue, InverseTransformSampler
+from simpleai.search.utils import BoundedPriorityQueue, InverseTransformSampler, flatten
 from simpleai.search.models import SearchNodeValueOrdered
 import math
 import random
+import numpy as np
 
 
 def _all_expander(fringe, iteration, viewer):
@@ -15,7 +16,7 @@ def _all_expander(fringe, iteration, viewer):
     if viewer:
         viewer.event('expanded', list(fringe), expanded_neighbors)
 
-    list(map(fringe.extend, expanded_neighbors))
+    list(map(fringe.extend, [set(flatten(expanded_neighbors))]))  # extra [] is hotfix
 
 
 def beam(problem, beam_size=100, iterations_limit=0, viewer=None):
@@ -130,7 +131,13 @@ def _random_weighed_best_expander(fringe, iteration, viewer):
                 return i
 
     if betters:
-        chosen_idx = weighted_choice_sub(map(lambda n: n.value, betters))
+        vals = np.array([n.value for n in betters])
+        # min-max scaler
+        if not all((vals - vals.mean()) < 1e-5):
+            norm_vals = (vals - vals.min()) / (vals.max() - vals.min())
+        else:
+            norm_vals = np.ones_like(vals)
+        chosen_idx = weighted_choice_sub(norm_vals)
         chosen = betters[chosen_idx]
         if viewer:
             viewer.event('chosen_node', chosen)
