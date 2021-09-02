@@ -23,14 +23,14 @@ Installation
 
 Just get it:
 
-.. code-block:: none
+.. code-block::
 
     pip install simpleai
 
 
 And if you want to use the interactive search viewers, also install:
 
-.. code-block:: none
+.. code-block::
 
     pip install pydot flask
 
