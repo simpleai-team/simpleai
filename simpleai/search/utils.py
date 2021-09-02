@@ -39,6 +39,7 @@ class BoundedPriorityQueue(object):
         heapq.heappush(self.queue, x)
         if self.limit and len(self.queue) > self.limit:
             self.queue.remove(heapq.nlargest(1, self.queue)[0])
+            heapq.heapify(self.queue)
 
     def pop(self):
         return heapq.heappop(self.queue)
@@ -48,11 +49,11 @@ class BoundedPriorityQueue(object):
             self.append(x)
 
     def clear(self):
-        for x in self:
-            self.queue.remove(x)
+        self.queue.clear()
 
     def remove(self, x):
         self.queue.remove(x)
+        heapq.heapify(self.queue)
 
     def sorted(self):
         return heapq.nsmallest(len(self.queue), self.queue)
