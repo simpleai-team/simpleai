@@ -17,6 +17,7 @@ At this moment, the implementation includes:
 * Machine Learning
     * Statistical Classification 
 
+
 Installation
 ============
 
@@ -26,16 +27,19 @@ Just get it:
 
     pip install simpleai
 
+
 And if you want to use the interactive search viewers, also install:
 
 .. code-block:: none
 
     pip install pydot flask
 
+
 You will need to have pip installed on your system. On linux install the 
 python-pip package, on windows follow `this <http://stackoverflow.com/questions/4750806/how-to-install-pip-on-windows>`_.
 Also, if you are on linux and not working with a virtualenv, remember to use
 ``sudo`` for both commands (``sudo pip install ...``).
+
 
 Examples
 ========
@@ -85,6 +89,7 @@ More detailed documentation
 ===========================
 
 You can read the docs online `here <http://simpleai.readthedocs.org/en/latest/>`_. Or for offline access, you can clone the project code repository and read them from the ``docs`` folder.
+
 
 Help and discussion
 ===================
