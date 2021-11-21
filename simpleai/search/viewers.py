@@ -193,7 +193,7 @@ class WebViewer(BaseViewer):
         while self.status == 'paused':
             sleep(0.5)
 
-        sleep(0.5)
+        sleep(0.1)
 
     def update_graph_data(self):
         """
