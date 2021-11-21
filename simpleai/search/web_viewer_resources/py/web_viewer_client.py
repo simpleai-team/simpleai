@@ -89,6 +89,7 @@ class WebViewerClient:
         event_html = self.event_as_html(event)
         self.last_event_display.html(event_html)
         self.log_display.append(event_html)
+        window.render()
 
     def register_stats(self, stats):
         """
