@@ -1,213 +1,137 @@
-var treeData = [
-    {
-        "children": [
-            {
-                "children": [
-                    {
-                        "children": [
-                            {
-                                "children": [
-                                    {
-                                        "children": [
-                                            {
-                                                "children": [],
-                                                "name": "((3, 7, 1), (8, 0, 2), (4, 6, 5))",
-                                                "new_child": true,
-                                                "tooltip": "\nCost: 5\nHeuristic: 12"
-                                            },
-                                            {
-                                                "children": [],
-                                                "name": "((0, 3, 1), (8, 7, 2), (4, 6, 5))",
-                                                "new_child": true,
-                                                "tooltip": "\nCost: 5\nHeuristic: 12"
-                                            },
-                                            {
-                                                "children": [],
-                                                "name": "((3, 1, 0), (8, 7, 2), (4, 6, 5))",
-                                                "new_child": true,
-                                                "tooltip": "\nCost: 5\nHeuristic: 10"
-                                            }
-                                        ],
-                                        "expanded": true,
-                                        "in_fringe": true,
-                                        "name": "((3, 0, 1), (8, 7, 2), (4, 6, 5))",
-                                        "tooltip": "\nCost: 4\nHeuristic: 11"
-                                    },
-                                    {
-                                        "children": [],
-                                        "in_fringe": true,
-                                        "name": "((3, 7, 1), (0, 8, 2), (4, 6, 5))",
-                                        "tooltip": "\nCost: 4\nHeuristic: 11"
-                                    },
-                                    {
-                                        "children": [],
-                                        "in_fringe": true,
-                                        "name": "((3, 7, 1), (8, 6, 2), (4, 0, 5))",
-                                        "tooltip": "\nCost: 4\nHeuristic: 13"
-                                    }
-                                ],
-                                "name": "((3, 7, 1), (8, 0, 2), (4, 6, 5))",
-                                "tooltip": "\nCost: 3\nHeuristic: 12"
-                            },
-                            {
-                                "children": [],
-                                "in_fringe": true,
-                                "name": "((3, 7, 1), (8, 2, 5), (4, 6, 0))",
-                                "tooltip": "\nCost: 3\nHeuristic: 12"
-                            }
-                        ],
-                        "name": "((3, 7, 1), (8, 2, 0), (4, 6, 5))",
-                        "tooltip": "\nCost: 2\nHeuristic: 13"
-                    }
-                ],
-                "name": "((3, 7, 0), (8, 2, 1), (4, 6, 5))",
-                "tooltip": "\nCost: 1\nHeuristic: 14"
-            },
-            {
-                "children": [
-                    {
-                        "children": [
-                            {
-                                "children": [
-                                    {
-                                        "children": [
-                                            {
-                                                "children": [
-                                                    {
-                                                        "children": [],
-                                                        "in_fringe": true,
-                                                        "name": "((3, 2, 7), (4, 1, 0), (6, 8, 5))",
-                                                        "tooltip": "\nCost: 6\nHeuristic: 9"
-                                                    },
-                                                    {
-                                                        "children": [
-                                                            {
-                                                                "children": [],
-                                                                "in_fringe": true,
-                                                                "name": "((0, 2, 7), (3, 4, 1), (6, 8, 5))",
-                                                                "tooltip": "\nCost: 7\nHeuristic: 8"
-                                                            },
-                                                            {
-                                                                "children": [],
-                                                                "in_fringe": true,
-                                                                "name": "((3, 2, 7), (6, 4, 1), (0, 8, 5))",
-                                                                "tooltip": "\nCost: 7\nHeuristic: 10"
-                                                            }
-                                                        ],
-                                                        "name": "((3, 2, 7), (0, 4, 1), (6, 8, 5))",
-                                                        "tooltip": "\nCost: 6\nHeuristic: 9"
-                                                    },
-                                                    {
-                                                        "children": [],
-                                                        "in_fringe": true,
-                                                        "name": "((3, 0, 7), (4, 2, 1), (6, 8, 5))",
-                                                        "tooltip": "\nCost: 6\nHeuristic: 11"
-                                                    }
-                                                ],
-                                                "name": "((3, 2, 7), (4, 0, 1), (6, 8, 5))",
-                                                "tooltip": "\nCost: 5\nHeuristic: 10"
-                                            },
-                                            {
-                                                "children": [],
-                                                "in_fringe": true,
-                                                "name": "((3, 2, 7), (4, 8, 1), (6, 5, 0))",
-                                                "tooltip": "\nCost: 5\nHeuristic: 12"
-                                            }
-                                        ],
-                                        "name": "((3, 2, 7), (4, 8, 1), (6, 0, 5))",
-                                        "tooltip": "\nCost: 4\nHeuristic: 11"
-                                    }
-                                ],
-                                "name": "((3, 2, 7), (4, 8, 1), (0, 6, 5))",
-                                "tooltip": "\nCost: 3\nHeuristic: 12"
-                            },
-                            {
-                                "children": [
-                                    {
-                                        "children": [],
-                                        "in_fringe": true,
-                                        "name": "((2, 0, 7), (3, 8, 1), (4, 6, 5))",
-                                        "tooltip": "\nCost: 4\nHeuristic: 13"
-                                    }
-                                ],
-                                "name": "((0, 2, 7), (3, 8, 1), (4, 6, 5))",
-                                "tooltip": "\nCost: 3\nHeuristic: 12"
-                            }
-                        ],
-                        "name": "((3, 2, 7), (0, 8, 1), (4, 6, 5))",
-                        "tooltip": "\nCost: 2\nHeuristic: 13"
-                    },
-                    {
-                        "children": [
-                            {
-                                "children": [
-                                    {
-                                        "children": [
-                                            {
-                                                "children": [],
-                                                "in_fringe": true,
-                                                "name": "((3, 1, 2), (8, 0, 7), (4, 6, 5))",
-                                                "tooltip": "\nCost: 5\nHeuristic: 10"
-                                            },
-                                            {
-                                                "children": [],
-                                                "in_fringe": true,
-                                                "name": "((0, 3, 2), (8, 1, 7), (4, 6, 5))",
-                                                "tooltip": "\nCost: 5\nHeuristic: 12"
-                                            }
-                                        ],
-                                        "name": "((3, 0, 2), (8, 1, 7), (4, 6, 5))",
-                                        "tooltip": "\nCost: 4\nHeuristic: 11"
-                                    }
-                                ],
-                                "name": "((3, 2, 0), (8, 1, 7), (4, 6, 5))",
-                                "tooltip": "\nCost: 3\nHeuristic: 12"
-                            },
-                            {
-                                "children": [
-                                    {
-                                        "children": [],
-                                        "in_fringe": true,
-                                        "name": "((3, 2, 7), (8, 1, 5), (4, 0, 6))",
-                                        "tooltip": "\nCost: 4\nHeuristic: 13"
-                                    }
-                                ],
-                                "name": "((3, 2, 7), (8, 1, 5), (4, 6, 0))",
-                                "tooltip": "\nCost: 3\nHeuristic: 12"
-                            }
-                        ],
-                        "name": "((3, 2, 7), (8, 1, 0), (4, 6, 5))",
-                        "tooltip": "\nCost: 2\nHeuristic: 13"
-                    },
-                    {
-                        "children": [],
-                        "in_fringe": true,
-                        "name": "((3, 2, 7), (8, 6, 1), (4, 0, 5))",
-                        "tooltip": "\nCost: 2\nHeuristic: 15"
-                    }
-                ],
-                "name": "((3, 2, 7), (8, 0, 1), (4, 6, 5))",
-                "tooltip": "\nCost: 1\nHeuristic: 14"
-            },
-            {
-                "children": [],
-                "in_fringe": true,
-                "name": "((0, 3, 7), (8, 2, 1), (4, 6, 5))",
-                "tooltip": "\nCost: 1\nHeuristic: 16"
-            }
-        ],
-        "name": "((3, 0, 7), (8, 2, 1), (4, 6, 5))",
-        "tooltip": "\nCost: 0\nHeuristic: 15"
-    }
-
-];
+var treeData = {
+    "nodes_count": 22,
+    "max_depth": 6,
+    "nodes": [
+        {
+            "children": [
+                {
+                    "children": [
+                        {
+                            "in_fringe": true,
+                            "name": "((3, 7, 1), (8, 2, 0), (4, 6, 5))",
+                            "tooltip": "\nCost: 2\nHeuristic: 13"
+                        }
+                    ],
+                    "name": "((3, 7, 0), (8, 2, 1), (4, 6, 5))",
+                    "tooltip": "\nCost: 1\nHeuristic: 14"
+                },
+                {
+                    "children": [
+                        {
+                            "children": [
+                                {
+                                    "in_fringe": true,
+                                    "name": "((0, 2, 7), (3, 8, 1), (4, 6, 5))",
+                                    "tooltip": "\nCost: 3\nHeuristic: 12"
+                                },
+                                {
+                                    "children": [
+                                        {
+                                            "children": [
+                                                {
+                                                    "children": [
+                                                        {
+                                                            "in_fringe": true,
+                                                            "name": "((3, 2, 7), (0, 4, 1), (6, 8, 5))",
+                                                            "tooltip": "\nCost: 6\nHeuristic: 9"
+                                                        },
+                                                        {
+                                                            "in_fringe": true,
+                                                            "name": "((3, 2, 7), (4, 1, 0), (6, 8, 5))",
+                                                            "tooltip": "\nCost: 6\nHeuristic: 9"
+                                                        },
+                                                        {
+                                                            "in_fringe": true,
+                                                            "name": "((3, 0, 7), (4, 2, 1), (6, 8, 5))",
+                                                            "tooltip": "\nCost: 6\nHeuristic: 11"
+                                                        }
+                                                    ],
+                                                    "name": "((3, 2, 7), (4, 0, 1), (6, 8, 5))",
+                                                    "tooltip": "\nCost: 5\nHeuristic: 10"
+                                                },
+                                                {
+                                                    "in_fringe": true,
+                                                    "name": "((3, 2, 7), (4, 8, 1), (6, 5, 0))",
+                                                    "tooltip": "\nCost: 5\nHeuristic: 12"
+                                                }
+                                            ],
+                                            "name": "((3, 2, 7), (4, 8, 1), (6, 0, 5))",
+                                            "tooltip": "\nCost: 4\nHeuristic: 11"
+                                        }
+                                    ],
+                                    "name": "((3, 2, 7), (4, 8, 1), (0, 6, 5))",
+                                    "tooltip": "\nCost: 3\nHeuristic: 12"
+                                }
+                            ],
+                            "name": "((3, 2, 7), (0, 8, 1), (4, 6, 5))",
+                            "tooltip": "\nCost: 2\nHeuristic: 13"
+                        },
+                        {
+                            "children": [
+                                {
+                                    "children": [
+                                        {
+                                            "children": [
+                                                {
+                                                    "in_fringe": true,
+                                                    "name": "((3, 1, 2), (8, 0, 7), (4, 6, 5))",
+                                                    "tooltip": "\nCost: 5\nHeuristic: 10"
+                                                },
+                                                {
+                                                    "in_fringe": true,
+                                                    "name": "((0, 3, 2), (8, 1, 7), (4, 6, 5))",
+                                                    "tooltip": "\nCost: 5\nHeuristic: 12"
+                                                }
+                                            ],
+                                            "name": "((3, 0, 2), (8, 1, 7), (4, 6, 5))",
+                                            "tooltip": "\nCost: 4\nHeuristic: 11"
+                                        }
+                                    ],
+                                    "name": "((3, 2, 0), (8, 1, 7), (4, 6, 5))",
+                                    "tooltip": "\nCost: 3\nHeuristic: 12"
+                                },
+                                {
+                                    "children": [
+                                        {
+                                            "in_fringe": true,
+                                            "name": "((3, 2, 7), (8, 1, 5), (4, 0, 6))",
+                                            "tooltip": "\nCost: 4\nHeuristic: 13"
+                                        }
+                                    ],
+                                    "name": "((3, 2, 7), (8, 1, 5), (4, 6, 0))",
+                                    "tooltip": "\nCost: 3\nHeuristic: 12"
+                                }
+                            ],
+                            "name": "((3, 2, 7), (8, 1, 0), (4, 6, 5))",
+                            "tooltip": "\nCost: 2\nHeuristic: 13"
+                        },
+                        {
+                            "in_fringe": true,
+                            "name": "((3, 2, 7), (8, 6, 1), (4, 0, 5))",
+                            "tooltip": "\nCost: 2\nHeuristic: 15"
+                        }
+                    ],
+                    "name": "((3, 2, 7), (8, 0, 1), (4, 6, 5))",
+                    "tooltip": "\nCost: 1\nHeuristic: 14"
+                },
+                {
+                    "in_fringe": true,
+                    "name": "((0, 3, 7), (8, 2, 1), (4, 6, 5))",
+                    "tooltip": "\nCost: 1\nHeuristic: 16"
+                }
+            ],
+            "name": "((3, 0, 7), (8, 2, 1), (4, 6, 5))",
+            "tooltip": "\nCost: 0\nHeuristic: 15"
+        }
+    ],
+};
 
 
 // ************** Generate the tree diagram	 *****************
 
 var margin = { top: 20, right: 120, bottom: 20, left: 120 },
-    width = 960 - margin.right - margin.left,
-    height = 500 - margin.top - margin.bottom;
+    width = (treeData.nodes_count * 50) - margin.right - margin.left,
+    height = (treeData.max_depth * 200) - margin.top - margin.bottom;
 
 var i = 0,
     duration = 750,
@@ -322,7 +246,7 @@ function click(d) {
 }
 
 function render() {
-    root = treeData[0];
+    root = treeData.nodes[0];
     root.x0 = height / 2;
     root.y0 = 0;
     update(root);
