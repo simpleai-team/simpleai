@@ -24,6 +24,8 @@ But you can also have this commands:
 (write the command you want to use and then press Enter)
 * h: get help.
 * g PATH_TO_PNG_IMAGE: create png with graph of the current state.
+    (this requires pydot and graphviz to be installed. Instead, we recommend
+     using the web viewer, which has a better interactive graph)
 * e: run non-interactively to the end of the algorithm.
 * s: show statistics of the execution (max fringe size, visited nodes).
 * q: quit program.'''
@@ -119,7 +121,7 @@ class BaseViewer(object):
             description += '\nPath from initial to goal: %s' % str(node.path())
         self.log_event('no_more_runs', description)
 
-    def create_graph(self, image_format, image_path):
+    def create_static_graph(self, image_format, image_path):
         from pydot import Dot, Edge, Node
 
         graph = Dot(graph_type='digraph')
@@ -254,7 +256,7 @@ class ConsoleViewer(BaseViewer):
                     sys.exit()
                 elif option.startswith('g ') and len(option) > 2:
                     png_path = option[2:]
-                    self.create_graph('png', png_path)
+                    self.create_static_graph('png', png_path)
                     self.output('graph saved to %s' % png_path)
                     prompt = True
                 else:
