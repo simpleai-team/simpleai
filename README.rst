@@ -28,13 +28,6 @@ Just get it:
     pip install simpleai
 
 
-And if you want to use the interactive search viewers, also install:
-
-.. code-block::
-
-    pip install pydot flask
-
-
 You will need to have pip installed on your system. On linux install the 
 python-pip package, on windows follow `this <http://stackoverflow.com/questions/4750806/how-to-install-pip-on-windows>`_.
 Also, if you are on linux and not working with a virtualenv, remember to use

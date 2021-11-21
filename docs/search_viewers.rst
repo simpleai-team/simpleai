@@ -2,12 +2,6 @@ Search algorithms interactive viewers
 =====================================
 
 
-.. note::
-
-    To use the viewers you need to have graphviz (on linux: ``sudo apt-get install graphviz``), and the following pip packages:
-    ``pip install pydot flask`` (use ``sudo`` if on linux and not inside a virtualenv)
-
-
 A common issue when solving search problems, is debugging the search
 algorithms to find out why our problems aren't being solved as expected.
 
