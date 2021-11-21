@@ -23,9 +23,6 @@ On the prompt, you can just press Enter to continue to the next step.
 But you can also have this commands:
 (write the command you want to use and then press Enter)
 * h: get help.
-* g PATH_TO_PNG_IMAGE: create png with graph of the current state.
-    (this requires pydot and graphviz to be installed. Instead, we recommend
-     using the web viewer, which has a better interactive graph)
 * e: run non-interactively to the end of the algorithm.
 * s: show statistics of the execution (max fringe size, visited nodes).
 * q: quit program.'''
@@ -45,6 +42,7 @@ class BaseViewer(object):
             'max_fringe_size': 0,
             'visited_nodes': 0,
             'iterations': 0,
+            'max_depth': 0,
         }
 
         self.clear_nodes_data()
@@ -91,6 +89,11 @@ class BaseViewer(object):
 
         description = 'Expanded %s\nSuccessors: %s'
         description = description % (nodes, successors)
+        for successors_group in successors:
+            self.stats["max_depth"] = max(
+                self.stats["max_depth"],
+                *[node.depth for node in successors_group],
+            )
         self.log_event('expanded', description)
 
     def handle_finished(self, fringe, node, solution_type):
@@ -120,104 +123,6 @@ class BaseViewer(object):
         if node is not None and node.parent is not None:
             description += '\nPath from initial to goal: %s' % str(node.path())
         self.log_event('no_more_runs', description)
-
-    def create_static_graph(self, image_format, image_path):
-        from pydot import Dot, Edge, Node
-
-        graph = Dot(graph_type='digraph')
-
-        graph_nodes = {}
-        graph_edges = {}
-        done = set()
-
-        def add_node(node, expanded=False, chosen=False, in_fringe=False,
-                     in_successors=False, solution=False):
-            node_id = id(node)
-            if node_id not in graph_nodes:
-                label = node.state_representation()
-                if hasattr(node, 'cost'):
-                    label += '\nCost: %s' % node.cost
-                if hasattr(node, 'heuristic'):
-                    label += '\nHeuristic: %s' % node.heuristic
-                if hasattr(node, 'value'):
-                    label += '\nValue: %s' % node.value
-
-                new_g_node = Node(node_id,
-                                  label=label,
-                                  style='filled',
-                                  shape='circle',
-                                  fillcolor='#ffffff',
-                                  fontsize=self.font_size)
-
-                graph_nodes[node_id] = new_g_node
-
-            g_node =  graph_nodes[node_id]
-
-            if expanded or chosen:
-                g_node.set_fillcolor(self.fringe_color)
-            if in_fringe:
-                g_node.set_color(self.fringe_color)
-                # TODO find a way to do this in the new graphviz version:
-                # g_node.set_penwidth(3)
-            if in_successors:
-                g_node.set_color(self.successor_color)
-                g_node.set_fontcolor(self.successor_color)
-            if solution:
-                g_node.set_fillcolor(self.solution_color)
-
-            return g_node
-
-        def add_edge_to_parent(node, is_successor=False, parent=None):
-            if parent is None:
-                parent = node.parent
-
-            g_node = add_node(node, in_successors=is_successor)
-            g_parent_node = add_node(parent)
-
-            edge = Edge(g_parent_node,
-                        g_node,
-                        label=node.action_representation(),
-                        fontsize=self.font_size)
-
-            if is_successor:
-                edge.set_color(self.successor_color)
-                edge.set_labelfontcolor(self.successor_color)
-
-            graph_edges[id(node), id(parent)] = edge
-
-        if self.last_event.name == 'chosen_node':
-            add_node(self.last_chosen, chosen=True)
-
-        if self.last_event.name == 'finished':
-            if self.solution_node:
-                add_node(self.solution_node, solution=True)
-
-        if self.last_event.name == 'expanded':
-            for node, successors in zip(self.last_expandeds,
-                                        self.last_successors):
-                add_node(node, expanded=True)
-                for successor_node in successors:
-                    add_edge_to_parent(successor_node,
-                                       is_successor=True,
-                                       parent=node)
-
-        for node in self.current_fringe:
-            add_node(node, in_fringe=True)
-            while node is not None and node not in done:
-                if node.parent is not None:
-                    add_edge_to_parent(node)
-                else:
-                    add_node(node)
-
-                done.add(node)
-                node = node.parent
-
-        for node_id in sorted(graph_nodes.keys()):
-            graph.add_node(graph_nodes[node_id])
-        for node_id, parent_id in sorted(graph_edges.keys()):
-            graph.add_edge(graph_edges[node_id, parent_id])
-
-        graph.write(image_path, format=image_format)
 
 
 class ConsoleViewer(BaseViewer):
@@ -254,11 +159,6 @@ class ConsoleViewer(BaseViewer):
                     prompt = True
                 elif option == 'q':
                     sys.exit()
-                elif option.startswith('g ') and len(option) > 2:
-                    png_path = option[2:]
-                    self.create_static_graph('png', png_path)
-                    self.output('graph saved to %s' % png_path)
-                    prompt = True
                 else:
                     self.output('Incorrect command')
                     self.output(CONSOLE_HELP_TEXT)
@@ -274,11 +174,8 @@ class WebViewer(BaseViewer):
         self.host = host
         self.port = port
         self.status = 'paused'
-        self.creating_graph = False
+        self.updating_graph_data = False
         self.server_running = False
-
-        tmp_folder = mkdtemp(prefix='simpleai_web_server_')
-        self.graph_path = path.join(tmp_folder, 'graph.png')
 
     def event(self, name, *params):
         if name == 'started':
@@ -286,9 +183,9 @@ class WebViewer(BaseViewer):
 
         super(WebViewer, self).event(name, *params)
 
-        self.creating_graph = True
-        self.create_graph(self.graph_path.split('.')[-1], self.graph_path)
-        self.creating_graph = False
+        self.updating_graph_data = True
+        self.update_graph_data()
+        self.updating_graph_data = False
 
         if self.status == 'running_step':
             self.status = 'paused'
@@ -296,7 +193,85 @@ class WebViewer(BaseViewer):
         while self.status == 'paused':
             sleep(0.5)
 
-        sleep(0.5)
+        sleep(0.1)
+
+    def update_graph_data(self):
+        """
+        Update the graph data used by the interactive graph in the UI.
+        """
+        # visualizer nodes by search node id
+        vis_nodes = {}
+        root_vis_nodes = []
+
+        def node_to_visualizer(search_node):
+            """
+            If the searh node isn't known, add a visualizer node to the
+            visualizer nodes dict with the correct text, tooltip, etc.
+            """
+            search_node_id = id(search_node)
+            if search_node_id not in vis_nodes:
+                name = search_node.state_representation()
+                tooltip = ""
+                if hasattr(search_node, "cost"):
+                    tooltip += f"\nCost: {search_node.cost}"
+                if hasattr(search_node, 'heuristic'):
+                    tooltip += f"\nHeuristic: {search_node.heuristic}"
+                if hasattr(search_node, 'value'):
+                    tooltip += f"\nValue: {search_node.value}"
+
+                vis_node = {
+                    "name": name,
+                    "tooltip": tooltip,
+                }
+                vis_nodes[search_node_id] = vis_node
+
+                if search_node.parent is None:
+                    root_vis_nodes.append(vis_node)
+                else:
+                    parent_vis_node = node_to_visualizer(search_node.parent)
+                    children = parent_vis_node.setdefault("children", [])
+                    children.append(vis_node)
+
+            return vis_nodes[search_node_id]
+
+        if self.last_event.name == 'chosen_node':
+            # add node and its full path if not present
+            vis_node = node_to_visualizer(self.last_chosen)
+            # mark it as chosen node
+            vis_node["chosen"] = True
+
+        if self.last_event.name == 'finished':
+            if self.solution_node:
+                # add node and its full path if not present
+                vis_node = node_to_visualizer(self.solution_node)
+                # mark it as solution node
+                vis_node["solution_node"] = True
+
+        if self.last_event.name == 'expanded':
+            for node, successors in zip(self.last_expandeds,
+                                        self.last_successors):
+                # add expanded node and its full path if not present
+                vis_node = node_to_visualizer(node)
+                # mark it as expanded node
+                vis_node["expanded"] = True
+                for successor_node in successors:
+                    # add new child node and its full path if not present
+                    vis_node = node_to_visualizer(successor_node)
+                    # mark it as new child node
+                    vis_node["new_child"] = True
+
+        # and finally, add the rest of the graph starting from the pending
+        # nodes in the fringe
+        for node in self.current_fringe:
+            vis_node = node_to_visualizer(node)
+            # mark it as fringe node
+            vis_node["in_fringe"] = True
+
+        self.graph_data = {
+            "nodes": root_vis_nodes,
+            "nodes_count": len(vis_nodes),
+            "max_depth": self.stats["max_depth"],
+        }
 
     def start_server(self):
         if not self.server_running:

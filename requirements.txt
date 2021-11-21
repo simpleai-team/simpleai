@@ -1,7 +1,0 @@
-# Numpy required for the machine learning modules
-# (if you change this, update the docs/classification.rst)
-numpy
-# Required for the search viewers
-# (if you change this, update the docs/search_viewers.rst)
-pydot
-flask
