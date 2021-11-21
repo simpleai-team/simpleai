@@ -24,11 +24,11 @@ def run_server(viewer):
         return send_file(path.join(resources, 'index.html'))
 
 
-    @app.route('/graph')
-    def graph():
-        while viewer.creating_graph:
+    @app.route('/graph_data')
+    def graph_data():
+        while viewer.updating_graph_data:
             sleep(0.1)
-        return send_file(viewer.graph_path)
+        return {"graph_data": viewer.graph_data}
 
 
     @app.route('/control/<order>')

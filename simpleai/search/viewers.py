@@ -167,7 +167,7 @@ class BaseViewer(object):
 
             return g_node
 
-        def add_edge_to_parent(node, is_successor=False, parent=None):
+        def add_child(node, is_successor=False, parent=None):
             if parent is None:
                 parent = node.parent
 
@@ -274,11 +274,8 @@ class WebViewer(BaseViewer):
         self.host = host
         self.port = port
         self.status = 'paused'
-        self.creating_graph = False
+        self.updating_graph_data = False
         self.server_running = False
-
-        tmp_folder = mkdtemp(prefix='simpleai_web_server_')
-        self.graph_path = path.join(tmp_folder, 'graph.png')
 
     def event(self, name, *params):
         if name == 'started':
@@ -286,9 +283,9 @@ class WebViewer(BaseViewer):
 
         super(WebViewer, self).event(name, *params)
 
-        self.creating_graph = True
-        self.create_graph(self.graph_path.split('.')[-1], self.graph_path)
-        self.creating_graph = False
+        self.updating_graph_data = True
+        self.update_graph_data()
+        self.updating_graph_data = False
 
         if self.status == 'running_step':
             self.status = 'paused'
@@ -297,6 +294,80 @@ class WebViewer(BaseViewer):
             sleep(0.5)
 
         sleep(0.5)
+
+    def update_graph_data(self):
+        """
+        Update the graph data used by the interactive graph in the UI.
+        """
+        # visualizer nodes by search node id
+        vis_nodes = {}
+        root_vis_nodes = []
+
+        def node_to_visualizer(search_node):
+            """
+            If the searh node isn't known, add a visualizer node to the
+            visualizer nodes dict with the correct text, tooltip, etc.
+            """
+            search_node_id = id(search_node)
+            if search_node_id not in vis_nodes:
+                name = search_node.state_representation()
+                tooltip = ""
+                if hasattr(search_node, "cost"):
+                    tooltip += f"\nCost: {search_node.cost}"
+                if hasattr(search_node, 'heuristic'):
+                    tooltip += f"\nHeuristic: {search_node.heuristic}"
+                if hasattr(search_node, 'value'):
+                    tooltip += f"\nValue: {search_node.value}"
+
+                vis_node = {
+                    "name": name,
+                    "tooltip": tooltip,
+                }
+                vis_nodes[search_node_id] = vis_node
+
+                if search_node.parent is None:
+                    root_vis_nodes.append(vis_node)
+                else:
+                    parent_vis_node = node_to_visualizer(search_node.parent)
+                    children = parent_vis_node.setdefault("children", [])
+                    children.append(vis_node)
+
+            return vis_nodes[search_node_id]
+
+        if self.last_event.name == 'chosen_node':
+            # add node and its full path if not present
+            vis_node = node_to_visualizer(self.last_chosen)
+            # mark it as chosen node
+            vis_node["chosen"] = True
+
+        if self.last_event.name == 'finished':
+            if self.solution_node:
+                # add node and its full path if not present
+                vis_node = node_to_visualizer(self.solution_node)
+                # mark it as solution node
+                vis_node["solution_node"] = True
+
+        if self.last_event.name == 'expanded':
+            for node, successors in zip(self.last_expandeds,
+                                        self.last_successors):
+                # add expanded node and its full path if not present
+                vis_node = node_to_visualizer(node)
+                # mark it as expanded node
+                vis_node["expanded"] = True
+                for successor_node in successors:
+                    # add new child node and its full path if not present
+                    vis_node = node_to_visualizer(successor_node)
+                    # mark it as new child node
+                    vis_node["new_child"] = True
+
+        # and finally, add the rest of the graph starting from the pending
+        # nodes in the fringe
+        for node in self.current_fringe:
+            vis_node = node_to_visualizer(node)
+            # mark it as fringe node
+            vis_node["in_fringe"] = True
+
+        self.graph_data = root_vis_nodes
 
     def start_server(self):
         if not self.server_running:
