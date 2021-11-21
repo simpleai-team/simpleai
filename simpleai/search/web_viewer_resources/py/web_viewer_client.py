@@ -58,9 +58,9 @@ class WebViewerClient:
         """
         Show a specific tab to the user, and remember the active tab.
         """
-        self.current_tab = Tab.HELP
+        self.current_tab = tab
         jq(".tab").hide()
-        jq(f"#{tab.value}").show()
+        jq(f"#tab-{tab.value}").show()
 
     def initialize_event_stream(self):
         """
@@ -119,6 +119,5 @@ class WebViewerClient:
         """
         Show a specific tab, defined by the clicked control.
         """
-        tab_to_show = e.target.getAttribute("data-tab")
-        jq(".tab").hide()
-        jq(f"#{tab_to_show}").show()
+        tab = Tab(e.target.getAttribute("data-tab"))
+        self.switch_to_tab(tab)
