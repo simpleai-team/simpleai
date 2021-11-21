@@ -14,6 +14,7 @@ setup(
     packages=['simpleai', 'simpleai.search', 'simpleai.machine_learning'],
     package_data={'simpleai.search': ['web_viewer_resources/*.*']},
     license='LICENSE.txt',
+    install_requires=['flask'],
     classifiers=[
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
