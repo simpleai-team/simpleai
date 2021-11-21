@@ -45,6 +45,7 @@ class BaseViewer(object):
             'max_fringe_size': 0,
             'visited_nodes': 0,
             'iterations': 0,
+            'max_depth': 0,
         }
 
         self.clear_nodes_data()
@@ -91,6 +92,11 @@ class BaseViewer(object):
 
         description = 'Expanded %s\nSuccessors: %s'
         description = description % (nodes, successors)
+        for successors_group in successors:
+            self.stats["max_depth"] = max(
+                self.stats["max_depth"],
+                *[node.depth for node in successors_group],
+            )
         self.log_event('expanded', description)
 
     def handle_finished(self, fringe, node, solution_type):
