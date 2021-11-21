@@ -267,7 +267,11 @@ class WebViewer(BaseViewer):
             # mark it as fringe node
             vis_node["in_fringe"] = True
 
-        self.graph_data = root_vis_nodes
+        self.graph_data = {
+            "nodes": root_vis_nodes,
+            "nodes_count": len(vis_nodes),
+            "max_depth": self.stats["max_depth"],
+        }
 
     def start_server(self):
         if not self.server_running:
