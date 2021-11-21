@@ -50,24 +50,17 @@
       </div>
 
       <div id="tab-log" class="tab text_tab">
-        <div ng-repeat="event in events">
-          <h2>{{event.name}}:</h2>
-          <p>{{event.description}}</p>
-        </div>
+        <span id="log-display"></span>
       </div>
 
       <div id="tab-stats" class="tab text_tab">
-        <div ng-repeat="stat in stats">
-          <h2>{{stat.name}}:</h2>
-          <p>{{stat.value}}</p>
-        </div>
+        <span id="stats-display"></span>
       </div>
 
     </div>
 
     <div class="bottom-bar">
-      <h2>{{last_event.name}}</h2>
-      <p>{{last_event.description}}</p>
+      <span id="last-event-display"></span>
     </div>
 
     <script type="text/python">
