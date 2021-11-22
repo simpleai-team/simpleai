@@ -1,6 +1,6 @@
 from enum import Enum
 
-from browser import aio, window
+from browser import ajax, window
 
 
 jq = window.jQuery
@@ -90,6 +90,14 @@ class WebViewerClient:
         self.last_event_display.html(event_html)
         self.log_display.append(event_html)
 
+        ajax.get("/graph_data", oncomplete=self.on_new_graph_data)
+
+    def on_new_graph_data(self, req):
+        """
+        New graph data received, update graph.
+        """
+        window.renderGraph(jsjson.parse(req.text))
+
     def register_stats(self, stats):
         """
         Register new stats from the algorithm.
@@ -113,7 +121,7 @@ class WebViewerClient:
         Tell the running algorithm to do something.
         """
         action = e.target.getAttribute("data-action")
-        jq.ajax({"url": f"/control/{action}"})
+        ajax.get(f"/control/{action}")
 
     def on_show_tab_click(self, e):
         """
