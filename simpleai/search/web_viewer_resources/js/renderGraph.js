@@ -7,7 +7,7 @@ var treeData = {
                 {
                     "children": [
                         {
-                            "in_fringe": true,
+                            "modifiers": ["in_fringe"],
                             "name": "((3, 7, 1), (8, 2, 0), (4, 6, 5))",
                             "tooltip": "\nCost: 2\nHeuristic: 13"
                         }
@@ -20,7 +20,7 @@ var treeData = {
                         {
                             "children": [
                                 {
-                                    "in_fringe": true,
+                                    "modifiers": ["in_fringe"],
                                     "name": "((0, 2, 7), (3, 8, 1), (4, 6, 5))",
                                     "tooltip": "\nCost: 3\nHeuristic: 12"
                                 },
@@ -31,17 +31,17 @@ var treeData = {
                                                 {
                                                     "children": [
                                                         {
-                                                            "in_fringe": true,
+                                                            "modifiers": ["in_fringe"],
                                                             "name": "((3, 2, 7), (0, 4, 1), (6, 8, 5))",
                                                             "tooltip": "\nCost: 6\nHeuristic: 9"
                                                         },
                                                         {
-                                                            "in_fringe": true,
+                                                            "modifiers": ["in_fringe"],
                                                             "name": "((3, 2, 7), (4, 1, 0), (6, 8, 5))",
                                                             "tooltip": "\nCost: 6\nHeuristic: 9"
                                                         },
                                                         {
-                                                            "in_fringe": true,
+                                                            "modifiers": ["in_fringe"],
                                                             "name": "((3, 0, 7), (4, 2, 1), (6, 8, 5))",
                                                             "tooltip": "\nCost: 6\nHeuristic: 11"
                                                         }
@@ -50,7 +50,7 @@ var treeData = {
                                                     "tooltip": "\nCost: 5\nHeuristic: 10"
                                                 },
                                                 {
-                                                    "in_fringe": true,
+                                                    "modifiers": ["in_fringe"],
                                                     "name": "((3, 2, 7), (4, 8, 1), (6, 5, 0))",
                                                     "tooltip": "\nCost: 5\nHeuristic: 12"
                                                 }
@@ -73,12 +73,12 @@ var treeData = {
                                         {
                                             "children": [
                                                 {
-                                                    "in_fringe": true,
+                                                    "modifiers": ["in_fringe"],
                                                     "name": "((3, 1, 2), (8, 0, 7), (4, 6, 5))",
                                                     "tooltip": "\nCost: 5\nHeuristic: 10"
                                                 },
                                                 {
-                                                    "in_fringe": true,
+                                                    "modifiers": ["in_fringe"],
                                                     "name": "((0, 3, 2), (8, 1, 7), (4, 6, 5))",
                                                     "tooltip": "\nCost: 5\nHeuristic: 12"
                                                 }
@@ -93,7 +93,7 @@ var treeData = {
                                 {
                                     "children": [
                                         {
-                                            "in_fringe": true,
+                                            "modifiers": ["in_fringe"],
                                             "name": "((3, 2, 7), (8, 1, 5), (4, 0, 6))",
                                             "tooltip": "\nCost: 4\nHeuristic: 13"
                                         }
@@ -106,7 +106,7 @@ var treeData = {
                             "tooltip": "\nCost: 2\nHeuristic: 13"
                         },
                         {
-                            "in_fringe": true,
+                            "modifiers": ["in_fringe"],
                             "name": "((3, 2, 7), (8, 6, 1), (4, 0, 5))",
                             "tooltip": "\nCost: 2\nHeuristic: 15"
                         }
@@ -115,7 +115,7 @@ var treeData = {
                     "tooltip": "\nCost: 1\nHeuristic: 14"
                 },
                 {
-                    "in_fringe": true,
+                    "modifiers": ["in_fringe"],
                     "name": "((0, 3, 7), (8, 2, 1), (4, 6, 5))",
                     "tooltip": "\nCost: 1\nHeuristic: 16"
                 }
@@ -156,12 +156,30 @@ function update(source) {
     nodes.forEach(function (d) { d.y = d.depth * 180; });
 
     // Update the nodes…
-    var node = svg.selectAll("g.node")
-        .data(nodes, function (d) { return d.id || (d.id = ++i); });
+    var node = svg.selectAll("g.node").data(nodes, function (d) {
+        return d.id || (d.id = ++i);
+    });
 
     // Enter any new nodes at the parent's previous position.
     var nodeEnter = node.enter().append("g")
-        .attr("class", "node")
+        .attr("class", function (d) {
+            let classesCss = ""
+            d.modifiers?.forEach(modifier => {
+                switch (modifier) {
+                    case modifier === "choosen":
+                        classesCss += "choosen"
+                    case modifier === "newly":
+                        classesCss += "newly"
+                    case modifier === "goal":
+                        classesCss += "goal"
+                    case modifier === "visited":
+                        classesCss += "visited"
+                    default:
+                        classesCss += "newly"
+                }
+            })
+            return `node ${classesCss}`
+        })
         .attr("transform", function (d) { return "translate(" + source.x0 + "," + source.y0 + ")"; })
         .on("click", click);
 
@@ -173,7 +191,7 @@ function update(source) {
         .attr("x", function (d) { return d.children || d._children ? -13 : 13; })
         .attr("dy", ".35em")
         .attr("text-anchor", function (d) { return d.children || d._children ? "end" : "start"; })
-        .text(function (d) { return d.name; })
+        .text(function (d) { return `${d.name.slice(0, 10)}...`; }) /* Truncated name */
         .style("fill-opacity", 1e-6);
 
     // Transition nodes to their new position.
@@ -245,10 +263,17 @@ function click(d) {
     update(d);
 }
 
-function render() {
+function renderGraph() {
     root = treeData.nodes[0];
     root.x0 = height / 2;
     root.y0 = 0;
     update(root);
     d3.select(self.frameElement).style("height", "500px");
 }
+/*
+-Blue border, white background: nodes that are currently part of the fringe (waiting to be visited).
+-Blue border, blue background: current node, being analyzed or expanded.
+-Orange border, white background: newly created nodes, after expanding a parent node.
+-Black border, green background: the solution node (goal for traditional search, or best node for local search).
+-Black border, white background: the rest of the nodes kept in memory, needed to keep the search tree from the fringe to the initial node.
+*/
