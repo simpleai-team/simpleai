@@ -1,11 +1,50 @@
 <html ng-app>
   <head>
     <link rel="stylesheet" type="text/css" href="/static/styles.css">
+    <style>
+      .node {
+        cursor: pointer;
+      }
 
+      .node circle {
+        fill: #fff;
+        stroke: #2ba6cb;
+        stroke-width: 3px;
+      }
+
+      .node text {
+        font: 12px sans-serif;
+      }
+
+      .link {
+        fill: none;
+        stroke: #ccc;
+        stroke-width: 2px;
+      }
+
+      .choosen{
+        fill: #2ba6cb;
+      }
+
+      .newly{
+        stroke: rgb(228, 124, 27); /* change to Hexadecimal*/
+      }
+
+      .goal{
+        fill: green;
+      }
+
+      .visited{
+        stroke: black;
+      }
+
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
     <script type="text/javascript" src="/static/js/EventSource.js"></script>
     <script type="text/javascript" src="/static/js/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" src="/static/js/brython.min.js"></script>
     <script type="text/javascript" src="/static/js/brython_stdlib.min.js"></script>
+    <script src="/static/js/renderGraph.js" defer></script>
   </head>
   <body onload="brython({pythonpath: ['/static/py']})">
 
@@ -46,7 +85,7 @@
       </div>
 
       <div id="tab-graph" class="tab text_tab">
-        <img id="graph_image" src="/graph" />
+        <span id="graph-image"></span>
       </div>
 
       <div id="tab-log" class="tab text_tab">
@@ -67,5 +106,6 @@
         from web_viewer_client import WebViewerClient
         wv_client = WebViewerClient()
     </script>
+  </script>
   </body>
 </html>

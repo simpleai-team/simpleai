@@ -89,6 +89,7 @@ class WebViewerClient:
         event_html = self.event_as_html(event)
         self.last_event_display.html(event_html)
         self.log_display.append(event_html)
+        window.renderGraph()
 
         ajax.get("/graph_data", oncomplete=self.on_new_graph_data)
 
