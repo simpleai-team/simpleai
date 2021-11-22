@@ -174,6 +174,7 @@ class WebViewer(BaseViewer):
         self.host = host
         self.port = port
         self.status = 'paused'
+        self.graph_data = None
         self.updating_graph_data = False
         self.server_running = False
 
@@ -203,13 +204,20 @@ class WebViewer(BaseViewer):
         vis_nodes = {}
         root_vis_nodes = []
 
-        def node_to_visualizer(search_node):
+        def node_to_visualizer(search_node, modifier=None):
             """
             If the searh node isn't known, add a visualizer node to the
             visualizer nodes dict with the correct text, tooltip, etc.
             """
             search_node_id = id(search_node)
-            if search_node_id not in vis_nodes:
+
+            if search_node_id in vis_nodes:
+                # an existing node
+                vis_node = vis_nodes[search_node_id]
+                if modifier and modifier not in vis_node.setdefault("modifiers", []):
+                    vis_node["modifiers"].append(modifier)
+            else:
+                # a new node
                 name = search_node.state_representation()
                 tooltip = ""
                 if hasattr(search_node, "cost"):
@@ -223,6 +231,8 @@ class WebViewer(BaseViewer):
                     "name": name,
                     "tooltip": tooltip,
                 }
+                if modifier is not None:
+                    vis_node["modifiers"] = [modifier]
                 vis_nodes[search_node_id] = vis_node
 
                 if search_node.parent is None:
@@ -236,36 +246,26 @@ class WebViewer(BaseViewer):
 
         if self.last_event.name == 'chosen_node':
             # add node and its full path if not present
-            vis_node = node_to_visualizer(self.last_chosen)
-            # mark it as chosen node
-            vis_node["chosen"] = True
+            node_to_visualizer(self.last_chosen, modifier="chosen")
 
         if self.last_event.name == 'finished':
             if self.solution_node:
                 # add node and its full path if not present
-                vis_node = node_to_visualizer(self.solution_node)
-                # mark it as solution node
-                vis_node["solution_node"] = True
+                node_to_visualizer(self.solution_node, modifier="solution")
 
         if self.last_event.name == 'expanded':
             for node, successors in zip(self.last_expandeds,
                                         self.last_successors):
                 # add expanded node and its full path if not present
-                vis_node = node_to_visualizer(node)
-                # mark it as expanded node
-                vis_node["expanded"] = True
+                node_to_visualizer(node, modifier="expanded")
                 for successor_node in successors:
                     # add new child node and its full path if not present
-                    vis_node = node_to_visualizer(successor_node)
-                    # mark it as new child node
-                    vis_node["new_child"] = True
+                    node_to_visualizer(successor_node, modifier="new_child")
 
         # and finally, add the rest of the graph starting from the pending
         # nodes in the fringe
         for node in self.current_fringe:
-            vis_node = node_to_visualizer(node)
-            # mark it as fringe node
-            vis_node["in_fringe"] = True
+            node_to_visualizer(node, modifier="in_fringe")
 
         self.graph_data = {
             "nodes": root_vis_nodes,
