@@ -1,10 +1,10 @@
 // ************** Generate the tree diagram	 *****************
 function renderGraph(graphData) {
-    var margin = { top: 20, right: 120, bottom: 20, left: 120 },
-        width = (graphData.nodes_count * 50) - margin.right - margin.left,
+    var margin = { top: 30, right: 150, bottom: 30, left: 150 },
+        width = (graphData.nodes_count * 75) - margin.right - margin.left,
         height = (graphData.max_depth * 200) - margin.top - margin.bottom;
 
-    var i = 0,
+    var nodeIndex = 0,
         duration = 0,
         root;
 
@@ -12,6 +12,7 @@ function renderGraph(graphData) {
 
     var diagonal = d3.svg.diagonal().projection(function (d) { return [d.x, d.y]; });
 
+    /* It need to re-render the tree */
     $("#graph-image").html("");
 
     var svg = d3.select("#graph-image").append("svg")
@@ -30,7 +31,7 @@ function renderGraph(graphData) {
 
         // Update the nodes…
         var node = svg.selectAll("g.node").data(nodes, function (d) {
-            return d.id || (d.id = ++i);
+            return d.id || (d.id = ++nodeIndex);
         });
 
         // Enter any new nodes at the parent's previous position.
@@ -59,20 +60,21 @@ function renderGraph(graphData) {
         nodeEnter.append("circle")
             .attr("r", 1e-6)
             .style("fill", function (d) { return d._children ? "lightsteelblue" : "#fff"; })
-            .on("mouseenter", function(d){
-                d3.select(this.parentNode).select("text").text(function (d) { return d.name })
-                
+            .on("mouseenter", function (d) {
+                d3.select(this.parentNode).select("text")
+                .text(function (d) { return `${d.tooltip}` })
             })
             .on("mouseleave", function(d){
-                d3.select(this.parentNode).select("text").text(function (d) { return `${d.name.slice(0, 10)}...`; })
+                d3.select(this.parentNode).select("text").text(function (d) { return `${d.name}`; })
 
             });
 
         nodeEnter.append("text")
             .attr("x", function (d) { return d.children || d._children ? -13 : 13; })
-            .attr("dy", ".35em")
+            .attr("dy", "2.35em")
+            .attr("dx", function (d) { return d.children || d._children ? "6.35em" : "-6.35em";} )
             .attr("text-anchor", function (d) { return d.children || d._children ? "end" : "start"; })
-            .text(function (d) { return `${d.name.slice(0, 10)}...`; })
+            .text(function (d) { return `${d.name}` })
             .style("fill-opacity", 1e-6)
 
         // Transition nodes to their new position.
