@@ -10,7 +10,7 @@ function renderGraph(graphData) {
 
     var tree = d3.layout.tree().size([width, height]);
 
-    var diagonal = d3.svg.diagonal().projection(function (d) { return [d.x, d.y]; });
+    var diagonal = d3.svg.diagonal().projection(function (node) { return [node.x, node.y]; });
 
     /* It need to re-render the tree */
     $("#graph-image").html("");
@@ -27,11 +27,11 @@ function renderGraph(graphData) {
             links = tree.links(nodes);
 
         // Normalize for fixed-depth.
-        nodes.forEach(function (d) { d.y = d.depth * 180; });
+        nodes.forEach(function (node) { node.y = node.depth * 180; });
 
         // Update the nodes…
-        var node = svg.selectAll("g.node").data(nodes, function (d) {
-            return d.id || (d.id = ++nodeIndex);
+        var node = svg.selectAll("g.node").data(nodes, function (node) {
+            return node.id || (node.id = ++nodeIndex);
         });
 
         // Enter any new nodes at the parent's previous position.
@@ -54,37 +54,37 @@ function renderGraph(graphData) {
                 })
                 return `node ${classesCss}`
             })
-            .attr("transform", function (d) { return "translate(" + source.x0 + "," + source.y0 + ")"; })
+            .attr("transform", function (node) { return "translate(" + source.x0 + "," + source.y0 + ")"; })
             .on("click", click);
 
         nodeEnter.append("circle")
             .attr("r", 1e-6)
-            .style("fill", function (d) { return d._children ? "lightsteelblue" : "#fff"; })
-            .on("mouseenter", function (d) {
+            .style("fill", function (node) { return node._children ? "lightsteelblue" : "#fff"; })
+            .on("mouseenter", function (node) {
                 d3.select(this.parentNode).select("text")
-                .text(function (d) { return `${d.tooltip}` })
+                .text(function (node) { return `${node.tooltip}` })
             })
-            .on("mouseleave", function(d){
-                d3.select(this.parentNode).select("text").text(function (d) { return `${d.name}`; })
+            .on("mouseleave", function(node){
+                d3.select(this.parentNode).select("text").text(function (node) { return `${node.name}`; })
 
             });
 
         nodeEnter.append("text")
-            .attr("x", function (d) { return d.children || d._children ? -13 : 13; })
+            .attr("x", function (node) { return node.children || node._children ? -13 : 13; })
             .attr("dy", "2.35em")
-            .attr("dx", function (d) { return d.children || d._children ? "6.35em" : "-6.35em";} )
-            .attr("text-anchor", function (d) { return d.children || d._children ? "end" : "start"; })
-            .text(function (d) { return `${d.name}` })
+            .attr("dx", function (node) { return node.children || node._children ? "6.35em" : "-6.35em";} )
+            .attr("text-anchor", function (node) { return node.children || node._children ? "end" : "start"; })
+            .text(function (node) { return `${node.name}` })
             .style("fill-opacity", 1e-6)
 
         // Transition nodes to their new position.
         var nodeUpdate = node.transition()
             .duration(duration)
-            .attr("transform", function (d) { return "translate(" + d.x + "," + d.y + ")"; });
+            .attr("transform", function (node) { return "translate(" + node.x + "," + node.y + ")"; });
 
         nodeUpdate.select("circle")
             .attr("r", 10)
-            .style("fill", function (d) { return d._children ? "lightsteelblue" : "#fff"; });
+            .style("fill", function (node) { return node._children ? "lightsteelblue" : "#fff"; });
 
         nodeUpdate.select("text")
             .style("fill-opacity", 1);
@@ -92,7 +92,7 @@ function renderGraph(graphData) {
         // Transition exiting nodes to the parent's new position.
         var nodeExit = node.exit().transition()
             .duration(duration)
-            .attr("transform", function (d) { return "translate(" + source.x + "," + source.y + ")"; })
+            .attr("transform", function (node) { return "translate(" + source.x + "," + source.y + ")"; })
             .remove();
 
         nodeExit.select("circle")
@@ -103,12 +103,12 @@ function renderGraph(graphData) {
 
         // Update the links…
         var link = svg.selectAll("path.link")
-            .data(links, function (d) { return d.target.id; });
+            .data(links, function (node) { return node.target.id; });
 
         // Enter any new links at the parent's previous position.
         link.enter().insert("path", "g")
             .attr("class", "link")
-            .attr("d", function (d) {
+            .attr("d", function (node) {
                 var o = { x: source.x0, y: source.y0 };
                 return diagonal({ source: o, target: o });
             });
@@ -121,29 +121,29 @@ function renderGraph(graphData) {
         // Transition exiting nodes to the parent's new position.
         link.exit().transition()
             .duration(duration)
-            .attr("d", function (d) {
+            .attr("d", function (node) {
                 var o = { x: source.x, y: source.y };
                 return diagonal({ source: o, target: o });
             })
             .remove();
 
         // Stash the old positions for transition.
-        nodes.forEach(function (d) {
-            d.x0 = d.x;
-            d.y0 = d.y;
+        nodes.forEach(function (node) {
+            node.x0 = node.x;
+            node.y0 = node.y;
         });
     }
 
     // Toggle children on click.
-    function click(d) {
-        if (d.children) {
-            d._children = d.children;
-            d.children = null;
+    function click(node) {
+        if (node.children) {
+            node._children = node.children;
+            node.children = null;
         } else {
-            d.children = d._children;
-            d._children = null;
+            node.children = node._children;
+            node._children = null;
         }
-        update(d);
+        update(node);
     }
 
     root = graphData.nodes[0];
