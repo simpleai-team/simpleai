@@ -134,7 +134,7 @@ var margin = { top: 20, right: 120, bottom: 20, left: 120 },
     height = (treeData.max_depth * 200) - margin.top - margin.bottom;
 
 var i = 0,
-    duration = 750,
+    duration = 0,
     root;
 
 var tree = d3.layout.tree().size([width, height]);
