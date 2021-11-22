@@ -185,14 +185,21 @@ function update(source) {
 
     nodeEnter.append("circle")
         .attr("r", 1e-6)
-        .style("fill", function (d) { return d._children ? "lightsteelblue" : "#fff"; });
+        .style("fill", function (d) { return d._children ? "lightsteelblue" : "#fff"; })
+        .on("mouseenter", function(d){
+            d3.select(this.parentNode).select("text").style("visibility", "visible");
+        })
+        .on("mouseleave", function(d){
+            d3.select(this.parentNode).select("text").style("visibility", "hidden");
+        });
 
     nodeEnter.append("text")
         .attr("x", function (d) { return d.children || d._children ? -13 : 13; })
         .attr("dy", ".35em")
         .attr("text-anchor", function (d) { return d.children || d._children ? "end" : "start"; })
-        .text(function (d) { return `${d.name.slice(0, 10)}...`; }) /* Truncated name */
-        .style("fill-opacity", 1e-6);
+        .text(function (d) { return `${d.name.slice(0, 10)}...`; })
+        .style("fill-opacity", 1e-6)
+        .style("visibility", "hidden")
 
     // Transition nodes to their new position.
     var nodeUpdate = node.transition()
