@@ -96,7 +96,7 @@ class WebViewerClient:
         """
         New graph data received, update graph.
         """
-        window.renderGraph(jsjson.parse(req.text))
+        window.renderGraph(jsjson.parse(req.text)["graph_data"])
 
     def register_stats(self, stats):
         """
