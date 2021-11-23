@@ -59,7 +59,7 @@ function renderGraph(graphData) {
 
         nodeEnter.append("circle")
             .attr("r", 1e-6)
-            .style("fill", function (node) { return node._children ? "lightsteelblue" : "#fff"; })
+            .style("fill", function (node) { return node._children ? "lightsteelblue" : "#fff"; }) // Color aqui
             .on("mouseenter", function (node) {
                 d3.select(this.parentNode).select("text")
                 .text(function (node) { return `${node.tooltip}` })
