@@ -2,7 +2,7 @@
 function renderGraph(graphData) {
     var margin = { top: 20, right: 120, bottom: 20, left: 120 },
         width = (graphData.nodes_count * 50) - margin.right - margin.left,
-        height = (graphData.max_depth * 200) - margin.top - margin.bottom;
+        height = ((graphData.max_depth + 1) * 200) - margin.top - margin.bottom;
 
     var i = 0,
         duration = 0,
