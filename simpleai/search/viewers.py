@@ -230,30 +230,32 @@ class WebViewer(BaseViewer):
                 vis_node = {
                     "name": name,
                     "tooltip": tooltip,
+                    "children": [],
+                    "modifiers": [],
                 }
                 if modifier is not None:
-                    vis_node["modifiers"] = [modifier]
+                    vis_node["modifiers"].append(modifier)
+
                 vis_nodes[search_node_id] = vis_node
 
                 if search_node.parent is None:
                     root_vis_nodes.append(vis_node)
                 else:
                     parent_vis_node = node_to_visualizer(search_node.parent)
-                    children = parent_vis_node.setdefault("children", [])
-                    children.append(vis_node)
+                    parent_vis_node["children"].append(vis_node)
 
             return vis_nodes[search_node_id]
 
-        if self.last_event.name == 'chosen_node':
+        if self.last_event.name == "chosen_node":
             # add node and its full path if not present
             node_to_visualizer(self.last_chosen, modifier="chosen")
 
-        if self.last_event.name == 'finished':
+        if self.last_event.name == "finished":
             if self.solution_node:
                 # add node and its full path if not present
                 node_to_visualizer(self.solution_node, modifier="solution")
 
-        if self.last_event.name == 'expanded':
+        if self.last_event.name == "expanded":
             for node, successors in zip(self.last_expandeds,
                                         self.last_successors):
                 # add expanded node and its full path if not present
