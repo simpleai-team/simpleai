@@ -123,6 +123,11 @@ class WebViewerClient:
         action = e.target.getAttribute("data-action")
         ajax.get(f"/control/{action}")
 
+        in_help = self.current_tab == Tab.HELP
+        wants_to_advance = AlgorithmAction(action) in (AlgorithmAction.PLAY, AlgorithmAction.STEP)
+        if in_help and wants_to_advance:
+            self.switch_to_tab(Tab.GRAPH)
+
     def on_show_tab_click(self, e):
         """
         Show a specific tab, defined by the clicked control.
