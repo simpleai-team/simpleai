@@ -7,37 +7,54 @@
       }
 
       .node circle {
-        fill: #fff;
-        stroke: #2ba6cb;
+        fill: #FFFFFF;
+        stroke: #000000;
         stroke-width: 3px;
       }
 
       .node text {
         font: 12px sans-serif;
+        color: #000000;
       }
 
       .link {
         fill: none;
-        stroke: #ccc;
+        stroke: #CCCCCC;
         stroke-width: 2px;
       }
 
-      .choosen{
+      .new_child circle { 
+        stroke: #DD4814;
+      }
+
+      .solution circle {
+        fill: #008844;
+      }
+
+      .solution text {
+        color: #FFFFFF;
+      }
+
+      .in_fringe circle {
         fill: #2ba6cb;
+        stroke: #2ba6cb;
       }
 
-      .newly{
-        stroke: rgb(228, 124, 27); /* change to Hexadecimal*/
+      .chosen circle {
+        fill: #DD4814 !important;
       }
 
-      .goal{
-        fill: green;
+      .chosen text {
+        color: #FFFFFF;
       }
 
-      .visited{
-        stroke: black;
+      .expanded circle {
+        stroke: #DD4814;
       }
 
+      .expanded text {
+        color: #FFFFFF;
+      }
     </style>
     <script type="text/javascript" src="/static/js/d3.min.js"></script>
     <script type="text/javascript" src="/static/js/EventSource.js"></script>
