@@ -2,7 +2,10 @@ from enum import Enum
 
 from browser import ajax, window
 
+from graphs import render_graph
 
+
+# javascript "imports"
 jq = window.jQuery
 EventSource = window.EventSource
 jsjson = window.JSON
@@ -96,7 +99,8 @@ class WebViewerClient:
         """
         New graph data received, update graph.
         """
-        window.renderGraph(jsjson.parse(req.text)["graph_data"])
+        graph_data = jsjson.parse(req.text)["graph_data"]
+        render_graph(graph_data.nodes, graph_data.nodes_count, graph_data.max_depth)
 
     def register_stats(self, stats):
         """
