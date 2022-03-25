@@ -92,11 +92,10 @@
         <p>You can also zoom and pan on the graph view using your mouse wheel and buttons. To restore to the original zoom, click again on the "Graph" link.</p>
         <p>The colors of the nodes on the graph have special meanings:</p>
         <ul>
-          <li><p><strong>Blue border, white background:</strong> nodes that are currently part of the fringe (waiting to be visited).</p></li>
-          <li><p><strong>Blue border, blue background:</strong> current node, being analyzed or expanded.</p></li>
-          <li><p><strong>Orange border, white background:</strong> newly created nodes, after expanding a parent node.</p></li>
-          <li><p><strong>Black border, green background:</strong> the solution node (goal for traditional search, or best node for local search).</p></li>
-          <li><p><strong>Black border, white background:</strong> the rest of the nodes kept in memory, needed to keep the search tree from the fringe to the initial node.</p></li>
+          <li><p><strong>Blue nodes:</strong> nodes that are currently part of the fringe (waiting to be visited).</p></li>
+          <li><p><strong>Orange node:</strong> current node, being analyzed or expanded.</p></li>
+          <li><p><strong>Blue nodes with orange border:</strong> newly created nodes, after expanding a parent node.</p></li>
+          <li><p><strong>Green node:</strong> the solution node (goal for traditional search, or best node for local search).</p></li>
         </ul>
         <p>Happy debugging!</p>
       </div>
