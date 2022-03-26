@@ -22,11 +22,17 @@ def run_server(viewer):
 
     @app.route('/')
     def index():
+        """
+        Home page to show the web viewer.
+        """
         return send_file(path.join(resources, 'index.html'))
 
 
     @app.route('/graph_data')
     def graph_data():
+        """
+        Return the current graph data to show in the viewer, as json.
+        """
         while viewer.updating_graph_data:
             sleep(0.1)
         return {"graph_data": viewer.graph_data}
@@ -34,6 +40,9 @@ def run_server(viewer):
 
     @app.route('/control/<order>')
     def control(order):
+        """
+        Control the running algorithm.
+        """
         if order == 'play':
             viewer.status = 'running'
         elif order == 'step':
@@ -48,6 +57,9 @@ def run_server(viewer):
 
     @app.route('/set_stream_interval/<float:interval>')
     def set_stream_interval(interval):
+        """
+        Set the interval between events for the running algorithm.
+        """
         app.stream_interval = interval
 
         return {"result": "ok"}
@@ -55,6 +67,9 @@ def run_server(viewer):
 
     @app.route('/event_stream')
     def stream():
+        """
+        The stream of events published from the algorithm to the web viewer.
+        """
         def event_stream():
             announced = 0
             while True:
@@ -73,6 +88,14 @@ def run_server(viewer):
                     announced = news_limit
 
         return Response(event_stream(), mimetype="text/event-stream")
+
+
+    @app.route('/health_check')
+    def health_check():
+        """
+        Simple endpoint to check if the server is running or not.
+        """
+        return {"result": "ok"}
 
 
     try:
