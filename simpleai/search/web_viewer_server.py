@@ -52,6 +52,7 @@ def run_server(viewer):
 
         return {"result": "ok"}
 
+
     @app.route('/event_stream')
     def stream():
         def event_stream():
