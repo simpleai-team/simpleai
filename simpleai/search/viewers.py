@@ -230,6 +230,7 @@ class WebViewer(BaseViewer):
                 vis_node = {
                     "name": name,
                     "tooltip": tooltip,
+                    "action": search_node.action,
                     "children": [],
                     "modifiers": [],
                 }
