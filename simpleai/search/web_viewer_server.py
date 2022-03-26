@@ -17,6 +17,7 @@ def run_server(viewer):
                 static_url_path='/static')
 
     app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
+    app.stream_interval = 1
 
 
     @app.route('/')
@@ -42,15 +43,21 @@ def run_server(viewer):
         elif order == 'stop':
             stop_server()
 
-        return 'ok' # TODO should be a json or something
+        return {"result": "ok"}
 
+
+    @app.route('/set_stream_interval/<float:interval>')
+    def set_stream_interval(interval):
+        app.stream_interval = interval
+
+        return {"result": "ok"}
 
     @app.route('/event_stream')
     def stream():
         def event_stream():
             announced = 0
             while True:
-                sleep(0.1)
+                sleep(app.stream_interval)
                 if len(viewer.events) > announced:
                     news_limit = len(viewer.events)
 
