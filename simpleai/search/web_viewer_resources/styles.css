@@ -112,3 +112,61 @@ div.bottom-bar h2 {
     margin: 0 0 10px 0;
     font-size: 20px;
 }
+
+/* graph styles */
+
+.node {
+    cursor: pointer;
+}
+
+.node circle {
+    fill: #ffffff;
+    stroke: #000000;
+    stroke-width: 3px;
+}
+
+.node text {
+    font: 12px sans-serif;
+    color: #000000;
+}
+
+.link {
+    fill: none;
+    stroke: #cccccc;
+    stroke-width: 2px;
+}
+
+.new_child circle { 
+    stroke: #dd4814;
+}
+
+.solution circle {
+    fill: #008844;
+}
+
+.solution text {
+    color: #ffffff;
+}
+
+.in_fringe circle {
+    fill: #2ba6cb;
+    stroke: #2ba6cb;
+}
+
+.chosen circle {
+    fill: #dd4814 !important;
+}
+
+.chosen text {
+    color: #ffffff;
+}
+
+.expanded circle {
+    fill: #2ba6cb;
+    stroke: #dd4814;
+}
+
+.expanded text {
+    color: #ffffff;
+}
+
