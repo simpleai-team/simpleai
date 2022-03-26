@@ -23,6 +23,12 @@ body, div, h1, h2, ul, li, a, p {
     background-color: #000000;
 }
 
+#server-alert {
+    color: #e83858;
+    margin-left: 30px;
+    margin-right: 30px;
+}
+
 .nav-bar {
     color: #ffffff;
     display: block;

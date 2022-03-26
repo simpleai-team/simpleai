@@ -8,6 +8,7 @@ from graphs import render_graph
 # javascript "imports"
 jq = window.jQuery
 EventSource = window.EventSource
+set_interval = window.setInterval
 jsjson = window.JSON
 
 
@@ -52,9 +53,11 @@ class WebViewerClient:
         self.stats_display = jq("#stats-display")
         self.last_event_display = jq("#last-event-display")
         self.log_display = jq("#log-display")
+        self.server_alert_span = jq("#server-alert")
 
         self.switch_to_tab(Tab.HELP)
         self.initialize_event_stream()
+        self.initialize_health_checks()
 
         print("Web Viewer Client ready")
 
@@ -72,6 +75,48 @@ class WebViewerClient:
         """
         self.event_source = EventSource.new("/event_stream")
         self.event_source.onmessage = self.on_message
+
+    def initialize_health_checks(self):
+        """
+        Start periodically pinging the server to check it's still running.
+        """
+        set_interval(self.health_check, 3000)
+
+    def health_check(self):
+        """
+        Query the server to check it's running.
+        """
+        ajax.get("/health_check", oncomplete=self.on_health_check_done)
+
+    def on_health_check_done(self, req):
+        """
+        Update the UI depending on the result of the health check.
+        """
+        try:
+            if req.text:
+                result = jsjson.parse(req.text)["result"]
+
+                if result == "ok":
+                    # if we got a response, and it says ok, the server is up
+                    self.server_is_up()
+                    return
+        except Exception:
+            pass
+
+        # in any other case, the server isn't working
+        self.server_is_down()
+
+    def server_is_up(self):
+        """
+        Everything is all right, no need to alert the user.
+        """
+        self.server_alert_span.html("")
+
+    def server_is_down(self):
+        """
+        Inform the user that the server is no longer running.
+        """
+        self.server_alert_span.html("(unable to connect)")
 
     def on_message(self, event):
         """
