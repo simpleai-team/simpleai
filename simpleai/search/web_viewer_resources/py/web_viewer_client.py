@@ -93,13 +93,11 @@ class WebViewerClient:
         Update the UI depending on the result of the health check.
         """
         try:
-            if req.text:
-                result = jsjson.parse(req.text)["result"]
-
-                if result == "ok":
-                    # if we got a response, and it says ok, the server is up
-                    self.server_alert_span.html("")
-                    return
+            result = jsjson.parse(req.text)["result"]
+            if result == "ok":
+                # if we got a response, and it says ok, the server is up
+                self.server_alert_span.html("")
+                return
         except Exception:
             pass
 
