@@ -42,8 +42,8 @@ class WebViewerClient:
         print("Initializing Web Viewer Client...")
 
         jq(".control-algorithm-btn").on("click", self.on_control_algorithm_click)
-        jq(".control-speed-btn").on("click", self.on_control_speed_click)
         jq(".show-tab-btn").on("click", self.on_show_tab_click)
+        jq("#speed-sldr").on("input", self.on_speed_slider_change)
 
         self.last_event = None
         self.event_log = []
@@ -133,11 +133,11 @@ class WebViewerClient:
         if in_help and wants_to_advance:
             self.switch_to_tab(Tab.GRAPH)
 
-    def on_control_speed_click(self, e):
+    def on_speed_slider_change(self, e):
         """
         Tell the running algorithm to change speed (setting the interval between events).
         """
-        interval = float(e.target.getAttribute("data-interval"))
+        interval = 1.0 / (2 ** int(jq(e.target).val()))
         ajax.get(f"/set_stream_interval/{interval:.10f}")
 
     def on_show_tab_click(self, e):
