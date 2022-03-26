@@ -104,7 +104,7 @@ class WebViewerClient:
             pass
 
         # in any other case, inform the user that we can't connect to the server
-        self.server_alert_span.html("(unable to connect)")
+        self.server_alert_span.html("(disconnected)")
 
     def on_message(self, event):
         """
