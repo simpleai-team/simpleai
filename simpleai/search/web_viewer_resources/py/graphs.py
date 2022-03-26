@@ -5,6 +5,7 @@ from browser import ajax, window
 d3 = window.d3
 jq = window.jQuery
 
+node_radius = 30
 
 def render_graph(root_nodes, nodes_count, max_depth):
     """
@@ -27,7 +28,8 @@ def render_graph(root_nodes, nodes_count, max_depth):
     # initialize the svg to draw on it with d3
     svg = d3.select("#graph-image").append("svg")\
             .attr("width", width)\
-            .attr("height", height)
+            .attr("height", height + 30)\
+
     graph = svg.append("g")
 
     # draw the links between nodes (before the nodes themselves, so the nodes come on top)
@@ -36,7 +38,7 @@ def render_graph(root_nodes, nodes_count, max_depth):
          .enter().append("path")\
          .attr("class", "link")\
          .attr("d", get_curved_path)
-
+ 
     # tie all the nodes to their data
     node = graph.selectAll(".node")\
                 .data(nodes.descendants())\
@@ -46,7 +48,7 @@ def render_graph(root_nodes, nodes_count, max_depth):
 
     # draw the circles for each node
     node.append("circle")\
-        .attr("r", 30)
+        .attr("r", node_radius)
 
     # draw the labels for each node
     node.append("text")\
@@ -73,15 +75,21 @@ def translate_to_position(d, *args):
     """
     Translate a d3 element to the position of its related node.
     """
-    return f"translate({d.y},{d.x})"
+    return f"translate({d.x},{d.y})"
 
 
 def get_curved_path(d, *args):
     """
     Get the parameters required for a curved path in a link.
     """
+    parent_y = d.parent.y 
+    parent_x = d.parent.x
+    y = d.y
+    x = d.x
+
     return (
-        f"M{d.y},{d.x}C{(d.y + d.parent.y) / 2},{d.x}"
-        f" {(d.y + d.parent.y) / 2},{d.parent.x}"
-        f" {d.parent.y},{d.parent.x}"
+        f"M{x},{y}" 
+        f"C{x}, {(y + parent_y) / 2}"
+        f" {parent_x}, {(y + parent_y) / 2}"
+        f" {parent_x},{parent_y}"
     )
