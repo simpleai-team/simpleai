@@ -76,7 +76,8 @@ div.content p {
 }
 
 div.text_tab {
-    padding: 10px 10px 100px 150px;
+    display: block;
+    /* padding: 10px 10px 100px 150px; */
 }
 
 div#graph {
