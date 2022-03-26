@@ -35,7 +35,7 @@ def render_graph(root_nodes, nodes_count, max_depth):
     svg = d3.select("#graph-image").append("svg")\
             .attr("width", width)\
             .attr("height", height)\
-            .attr("viewbox", f"{width / 2 } {max_depth * 150} 0 0")
+            .attr("viewbox", f"{width / 2 } {height/2} {width} {height}")
 
     # attach d3.zoom to svg figure
     graph = svg.call(zoom)\
