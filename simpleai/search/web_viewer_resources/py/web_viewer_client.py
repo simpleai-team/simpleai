@@ -98,24 +98,12 @@ class WebViewerClient:
 
                 if result == "ok":
                     # if we got a response, and it says ok, the server is up
-                    self.server_is_up()
+                    self.server_alert_span.html("")
                     return
         except Exception:
             pass
 
-        # in any other case, the server isn't working
-        self.server_is_down()
-
-    def server_is_up(self):
-        """
-        Everything is all right, no need to alert the user.
-        """
-        self.server_alert_span.html("")
-
-    def server_is_down(self):
-        """
-        Inform the user that the server is no longer running.
-        """
+        # in any other case, inform the user that we can't connect to the server
         self.server_alert_span.html("(unable to connect)")
 
     def on_message(self, event):
