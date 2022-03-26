@@ -141,7 +141,8 @@ div.bottom-bar h2 {
 }
 
 .solution circle {
-    fill: #008844;
+    fill: #2f8f4a !important;
+    stroke: #2f8f4a !important;
 }
 
 .solution text {
@@ -155,6 +156,7 @@ div.bottom-bar h2 {
 
 .chosen circle {
     fill: #dd4814 !important;
+    stroke: #dd4814;
 }
 
 .chosen text {
@@ -162,7 +164,7 @@ div.bottom-bar h2 {
 }
 
 .expanded circle {
-    fill: #2ba6cb;
+    fill: #dd4814;
     stroke: #dd4814;
 }
 
