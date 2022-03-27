@@ -83,7 +83,7 @@ div.content p {
 
 div.text_tab {
     display: block;
-    /* padding: 10px 10px 100px 150px; */
+    padding: 10px 10px 100px 150px;
 }
 
 div#graph {
