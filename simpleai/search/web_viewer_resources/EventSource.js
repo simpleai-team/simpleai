@@ -2,7 +2,7 @@
 
 if ("EventSource" in global) return;
 
-var reTrim = /^(\s|\u00A0)+|(\s|\u00A0)+$/g;
+var reTrim = /^(?:(\s|\u00A0)+|(\s|\u00A0))+$/g;
 
 var EventSource = function (url) {
   var eventsource = this,  
@@ -106,7 +106,7 @@ var EventSource = function (url) {
       xhr.send();
     
       setTimeout(function () {
-        if (true || xhr.readyState == 3) xhr.abort();
+        xhr.abort();
       }, xhr.timeout);
       
       eventsource._xhr = xhr;
