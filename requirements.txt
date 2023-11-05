@@ -5,3 +5,4 @@ numpy
 # (if you change this, update the docs/search_viewers.rst)
 pydot
 flask
+coverage
