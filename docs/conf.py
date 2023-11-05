@@ -43,6 +43,8 @@ master_doc = 'index'
 # General information about the project.
 project = u'simpleai'
 copyright = u'2012, Juan Pedro Fisanotti'
+documentationName = u'simpleai Documentation'
+authorName = u'Juan Pedro Fisanotti'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -184,8 +186,8 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'simpleai.tex', u'simpleai Documentation',
-   u'Juan Pedro Fisanotti', 'manual'),
+  ('index', 'simpleai.tex', documentationName,
+   authorName, 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -214,8 +216,8 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'simpleai', u'simpleai Documentation',
-     [u'Juan Pedro Fisanotti'], 1)
+    ('index', 'simpleai', documentationName,
+     [authorName], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -228,8 +230,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'simpleai', u'simpleai Documentation',
-   u'Juan Pedro Fisanotti', 'simpleai', 'One line description of project.',
+  ('index', 'simpleai', documentationName,
+   authorName, 'simpleai', 'One line description of project.',
    'Miscellaneous'),
 ]
 
