@@ -17,7 +17,6 @@ At this moment, the implementation includes:
 * Machine Learning
     * Statistical Classification 
 
-
 Installation
 ============
 
@@ -34,12 +33,10 @@ And if you want to use the interactive search viewers, also install:
 
     pip install pydot flask
 
-
 You will need to have pip installed on your system. On linux install the 
 python-pip package, on windows follow `this <http://stackoverflow.com/questions/4750806/how-to-install-pip-on-windows>`_.
 Also, if you are on linux and not working with a virtualenv, remember to use
 ``sudo`` for both commands (``sudo pip install ...``).
-
 
 Examples
 ========
@@ -84,7 +81,6 @@ This problem tries to create the string "HELLO WORLD" using the A* algorithm:
     print(result.state)
     print(result.path())
 
-
 More detailed documentation
 ===========================
 
@@ -95,7 +91,6 @@ Help and discussion
 ===================
 
 Join us at the Simple AI `google group <http://groups.google.com/group/simpleai>`_.
-
     
 Authors
 =======
