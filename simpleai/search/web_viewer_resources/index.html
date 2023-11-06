@@ -1,4 +1,5 @@
-<html ng-app>
+<!DOCTYPE html>
+<html lang="en" ng-app>
   <head>
     <title>SimpleAI web viewer</title>
     <link rel="stylesheet" type="text/css" href="/static/styles.css">
@@ -45,9 +46,9 @@
       </div>
 
       <div id="graph" class="tab text_tab">
-        <img id="graph_image" src="/graph" />
+        <img id="graph_image" src="/graph" alt="An image about a graph">
       </div>
-
+      
       <div id="log" class="tab text_tab">
         <div ng-repeat="event in events">
           <h2>{{event.name}}:</h2>
