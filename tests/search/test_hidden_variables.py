@@ -48,3 +48,30 @@ class TestHiddenVariableRepr(unittest.TestCase):
 
         domain = sorted(d['hidden1'])
         self.assertEqual(domain, [(2,)])
+
+    def test_hidden_variable_domain_reuses_same_variable_value(self):
+        variables = ('A', 'E', 'carry')
+        domains = {
+            'A': [0, 1],
+            'E': [0, 1],
+            'carry': [0, 1],
+        }
+        constraints = [
+            (('A', 'A', 'E', 'carry'), lambda _vars, _values: True),
+        ]
+
+        _variables, new_domains, _constraints = convert_to_binary(
+            variables, domains, constraints)
+
+        self.assertEqual(
+            sorted(new_domains['hidden0']),
+            [
+                (0, 0, 0, 0),
+                (0, 0, 0, 1),
+                (0, 0, 1, 0),
+                (0, 0, 1, 1),
+                (1, 1, 0, 0),
+                (1, 1, 0, 1),
+                (1, 1, 1, 0),
+                (1, 1, 1, 1),
+            ])

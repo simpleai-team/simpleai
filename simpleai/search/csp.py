@@ -223,6 +223,15 @@ def convert_to_binary(variables, domains, constraints):
         diff.no_wrap = True  # so it's not wrapped to swap values
         return diff
 
+    def same_variable_same_assignment(vars_, values):
+        """Return whether repeated variables have the same assigned value."""
+        assignments = {}
+        for variable, value in zip(vars_, values):
+            if variable in assignments and assignments[variable] != value:
+                return False
+            assignments[variable] = value
+        return True
+
     new_constraints = []
     new_domains = copy(domains)
     new_variables = list(variables)
@@ -236,7 +245,10 @@ def convert_to_binary(variables, domains, constraints):
         hidden = 'hidden%d' % last
         new_variables.append(hidden)
         last += 1
-        new_domains[hidden] = [t for t in product(*map(domains.get, vars_)) if const(vars_, t)]
+        new_domains[hidden] = [
+            t for t in product(*map(domains.get, vars_))
+            if same_variable_same_assignment(vars_, t) and const(vars_, t)
+        ]
         for var in vars_:
             new_constraints.append(((hidden, var), wdiff(vars_)))
     return new_variables, new_domains, new_constraints
